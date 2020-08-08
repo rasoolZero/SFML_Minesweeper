@@ -5,8 +5,11 @@ using namespace sf;
 
 Cell::Cell(int i,int j,float size)
 {
+
     this->value=0;
     this->state=CellState::Hidden;
+    index.x=i;
+    index.y=j;
     setPosition(i*size,j*size);
     setScale(size,size);
 }

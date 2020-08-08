@@ -22,6 +22,7 @@ class Cell : public Drawable, public Transformable
 
     private:
         int value;
+        Vector2i index;
         CellState state;
 
 };
