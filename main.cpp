@@ -1,25 +1,30 @@
+#include <SFML/System.hpp>
+#include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+
 using namespace sf;
 
-int main()
-{
-    RenderWindow window(VideoMode::getFullscreenModes()[0], "Minesweeper",Style::Fullscreen);
-    CircleShape shape(100.f);
-    shape.setFillColor(Color::Green);
+int main() {
+
+    sf::RenderWindow window(VideoMode::getDesktopMode(), "SFML_Minesweeper", Style::Fullscreen);
 
     while (window.isOpen())
     {
         Event event;
         while (window.pollEvent(event))
         {
-            if (event.type == Event::Closed)
+
+            if (event.type == sf::Event::Closed)
                 window.close();
+            if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) { //close the window on ESC keypress
+                window.close();
+            }
         }
 
-        window.clear(Color::White);
-        window.draw(shape);
+        window.clear();
         window.display();
-    }
 
-    return 0;
+    }
+	return 0;
 }

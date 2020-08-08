@@ -2,3 +2,7 @@
 bin
 obj
 Minesweeper.*
+SFML_Minesweeper.vcxproj
+SFML_Minesweeper.vcxproj.filters
+SFML_Minesweeper.vcxproj.user
+/debug
