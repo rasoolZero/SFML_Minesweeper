@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 using namespace sf;
 
-class Cell : public Drawable,public Transformable
+class Cell : public Drawable, public Transformable
 {
     public:
         Cell();
