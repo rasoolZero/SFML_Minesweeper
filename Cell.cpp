@@ -1,6 +1,7 @@
 #include "Cell.h"
 
-Cell::Cell()
+Cell::Cell(RenderWindow * window_ptr)
 {
-    //ctor
+    this->state=CellState::Hidden;
+    setWindow(window_ptr);
 }
