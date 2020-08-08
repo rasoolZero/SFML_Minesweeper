@@ -3,23 +3,24 @@
 #include <SFML/Graphics.hpp>
 using namespace sf;
 
-enum CellState{Hidden,Revealed,Flagged};
 
 class Cell : public Drawable, public Transformable
 {
+    enum CellState{Hidden,Revealed,Flagged};
+
     public:
-        Cell(RenderWindow * window_ptr);
-        void setWindow(RenderWindow * window_ptr){this->window_ptr=window_ptr;}
+        Cell(int i,int j,float size);
         void setValue(int value){this->value=value;}
         int getValue(){return value;}
         void setState(CellState state){this->state=state;}
         CellState getState(){return state;}
-
+        virtual void draw(RenderTarget& target, RenderStates states) const;
+        void reveal();
+        void flag();
 
     protected:
 
     private:
-        RenderWindow *window_ptr;
         int value;
         CellState state;
 
