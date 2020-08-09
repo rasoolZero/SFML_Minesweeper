@@ -37,7 +37,7 @@ void Cell::draw(RenderTarget& target, RenderStates states) const{
     //drawing background
     {
         RectangleShape square(getScale());
-        square.setOrigin(getPosition());
+        square.setPosition(getPosition());
         Texture* background=new Texture();
         background->loadFromFile("images/cell.png");
         square.setTexture(background);
@@ -48,7 +48,7 @@ void Cell::draw(RenderTarget& target, RenderStates states) const{
 
     if(state==CellState::Flagged){
         RectangleShape square(getScale());
-        square.setOrigin(getPosition());
+        square.setPosition(getPosition());
         Texture* background=new Texture();
         background->loadFromFile("images/flag.png");
         square.setTexture(background);
@@ -58,7 +58,7 @@ void Cell::draw(RenderTarget& target, RenderStates states) const{
     if(state==CellState::Revealed){
         if(value==-1){
             RectangleShape square(getScale());
-            square.setOrigin(getPosition());
+            square.setPosition(getPosition());
             Texture* background=new Texture();
             background->loadFromFile("images/bomb.png");
             square.setTexture(background);
@@ -67,7 +67,7 @@ void Cell::draw(RenderTarget& target, RenderStates states) const{
         }
         if(value>0){
             RectangleShape square(getScale());
-            square.setOrigin(getPosition());
+            square.setPosition(getPosition());
             Texture* background=new Texture();
             background->loadFromFile("images/"+std::to_string(value)+".png");
             square.setTexture(background);
