@@ -38,41 +38,45 @@ void Cell::draw(RenderTarget& target, RenderStates states) const{
     {
         RectangleShape square(getScale());
         square.setPosition(getPosition());
-        Texture* background=new Texture();
-        background->loadFromFile("images/cell.png");
-        square.setTexture(background);
+        Texture* texture=new Texture();
+        if(!texture->loadFromFile("images/cell.png"))
+            throw std::runtime_error("could not load cell background image");
+        square.setTexture(texture);
         target.draw(square);
-        delete background;
+        delete texture;
     }
 
 
     if(state==CellState::Flagged){
         RectangleShape square(getScale());
         square.setPosition(getPosition());
-        Texture* background=new Texture();
-        background->loadFromFile("images/flag.png");
-        square.setTexture(background);
+        Texture* texture=new Texture();
+        if(!texture->loadFromFile("images/flag.png"))
+            throw std::runtime_error("could not load flag image");
+        square.setTexture(texture);
         target.draw(square);
-        delete background;
+        delete texture;
     }
     if(state==CellState::Revealed){
         if(value==-1){
             RectangleShape square(getScale());
             square.setPosition(getPosition());
-            Texture* background=new Texture();
-            background->loadFromFile("images/bomb.png");
-            square.setTexture(background);
+            Texture* texture=new Texture();
+            if(!texture->loadFromFile("images/bomb.png"))
+                throw std::runtime_error("could not load bomb image");
+            square.setTexture(texture);
             target.draw(square);
-            delete background;
+            delete texture;
         }
         if(value>0){
             RectangleShape square(getScale());
             square.setPosition(getPosition());
-            Texture* background=new Texture();
-            background->loadFromFile("images/"+std::to_string(value)+".png");
-            square.setTexture(background);
+            Texture* texture=new Texture();
+            if(!texture->loadFromFile("images/"+std::to_string(value)+".png"))
+                throw std::runtime_error("could not load a cell number image");
+            square.setTexture(texture);
             target.draw(square);
-            delete background;
+            delete texture;
         }
     }
 }
