@@ -8,6 +8,7 @@ using namespace sf;
 bool isFocused;
 
 int main() {
+    isFocused=true;
 
 
 
