@@ -3,14 +3,14 @@
 #include <SFML/Graphics.hpp>
 using namespace sf;
 
-Cell::Cell(int i,int j,float size)
+Cell::Cell(int i,int j,float size,Vector2f _offset):offset(_offset)
 {
 
     this->value=0;
     this->state=CellState::Hidden;
     index.x=i;
     index.y=j;
-    setPosition(i*size,j*size);
+    setPosition(i*size+_offset.x,j*size+_offset.y);
     setScale(size,size);
 }
 

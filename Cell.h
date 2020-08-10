@@ -9,7 +9,7 @@ class Cell : public Drawable, public Transformable
     enum CellState{Hidden,Revealed,Flagged};
 
     public:
-        Cell(int i,int j,float size);
+        Cell(int i,int j,float size,Vector2f _offset);
         void setValue(int value){this->value=value;}
         int getValue(){return value;}
         void setState(CellState state){this->state=state;}
@@ -23,6 +23,7 @@ class Cell : public Drawable, public Transformable
     private:
         int value;
         Vector2i index;
+        Vector2f offset;
         CellState state;
 
 };
