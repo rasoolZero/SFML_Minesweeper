@@ -1,11 +1,12 @@
 #include "Grid.h"
+#include <iostream>
 using namespace std;
 using namespace sf;
 
 Grid::Grid(RenderWindow & w_ref,int width,int height) : window_ref(w_ref)
 {
     topMargin=48;
-    float maxSize = w_ref.getSize().x/(float)width < (w_ref.getSize().y-topMargin)/(float)(height) ? w_ref.getSize().x/(float)width : (w_ref.getSize().y-topMargin)/(float)(height) ;
+    maxSize = w_ref.getSize().x/(float)width < (w_ref.getSize().y-topMargin)/(float)(height) ? w_ref.getSize().x/(float)width : (w_ref.getSize().y-topMargin)/(float)(height) ;
     topLeftCorner.x=(w_ref.getSize().x-maxSize*width)/2;
     topLeftCorner.y=(w_ref.getSize().y-topMargin-maxSize*height)/2 + topMargin;
     this->width=width;
@@ -39,13 +40,45 @@ void Grid::checkInput(){
     static bool prevLeftButtonStatus = false;
 
     if(Mouse::isButtonPressed(Mouse::Right) && !prevRightButtonStatus){
-        //flagging a cell
+        //flag cells
+        Vector2i pos=mousePos();
+        if(isMouseOnGrid(pos)){
+            Vector2i index2D=mousePosToIndex(pos);
+            int index = indexConverter(index2D);
+            cells[index].flag();
+        }
     }
     else if(Mouse::isButtonPressed(Mouse::Left) && !prevLeftButtonStatus){
         //revealing cells;
+        Vector2i pos=mousePos();
+        if(isMouseOnGrid(pos)){
+            Vector2i index2D=mousePosToIndex(pos);
+            int index = indexConverter(index2D);
+            cells[index].reveal();
+        }
     }
 
 
     prevRightButtonStatus=Mouse::isButtonPressed(Mouse::Right);
     prevLeftButtonStatus=Mouse::isButtonPressed(Mouse::Left);
+}
+Vector2i Grid::mousePos(){
+    return Mouse::getPosition(window_ref);
+}
+
+bool Grid::isMouseOnGrid(Vector2i & pos){
+    if(pos.x>=topLeftCorner.x && pos.x<=topLeftCorner.x + width*maxSize)
+        if(pos.y>=topLeftCorner.y && pos.y<=topLeftCorner.y + height*maxSize)
+            return true;
+    return false;
+}
+Vector2i Grid::mousePosToIndex(Vector2i & pos){
+    Vector2i result;
+    Vector2i posOnGrid=pos-static_cast<Vector2i>(topLeftCorner);
+    result.x=posOnGrid.x/maxSize;
+    result.y=posOnGrid.y/maxSize;
+    return result;
+}
+int Grid::indexConverter(Vector2i & index){
+    return height*index.x+index.y;
 }
