@@ -27,17 +27,23 @@ void MenuManager::setSelectedOption(SelectedOption selectedOption)
 }
 
 void MenuManager::manageInput()
-{	
-	if(Keyboard::isKeyPressed(Keyboard::Up)){
+{
+    static bool prevUpKeyStatus = false;
+    static bool prevDownKeyStatus = false;
+
+	if(Keyboard::isKeyPressed(Keyboard::Up) && !prevUpKeyStatus){
 		options[static_cast<int>(selectedOption)].setFillColor(normalTextColor);
 		setSelectedOption((SelectedOption)(((int)this->selectedOption + 3) % 4)); // goes to previous state in the cycle
 	}
-	else if (Keyboard::isKeyPressed(Keyboard::Down))
+	else if (Keyboard::isKeyPressed(Keyboard::Down) && !prevDownKeyStatus )
 	{
 		options[static_cast<int>(selectedOption)].setFillColor(normalTextColor);
 		setSelectedOption((SelectedOption)(((int)this->selectedOption + 1) % 4)); // goes to next state in the cycle
 	}
 	options[static_cast<int>(selectedOption)].setFillColor(selectedTextColor);
+
+    prevUpKeyStatus=Keyboard::isKeyPressed(Keyboard::Up);
+    prevDownKeyStatus=Keyboard::isKeyPressed(Keyboard::Down);
 }
 
 void MenuManager::update()
