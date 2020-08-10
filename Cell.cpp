@@ -35,6 +35,7 @@ void Cell::flag(){
 
 void Cell::draw(RenderTarget& target, RenderStates states) const{
     //drawing background
+    if(state!=CellState::Revealed)
     {
         RectangleShape square(getScale());
         square.setPosition(getPosition());
@@ -58,6 +59,16 @@ void Cell::draw(RenderTarget& target, RenderStates states) const{
         delete texture;
     }
     if(state==CellState::Revealed){
+        {
+            RectangleShape square(getScale());
+            square.setPosition(getPosition());
+            Texture* texture=new Texture();
+            if(!texture->loadFromFile("images/revealed.png"))
+                throw std::runtime_error("could not load revealed image");
+            square.setTexture(texture);
+            target.draw(square);
+            delete texture;
+        }
         if(value==-1){
             RectangleShape square(getScale());
             square.setPosition(getPosition());
