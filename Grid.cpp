@@ -18,6 +18,7 @@ Grid::Grid(RenderWindow & w_ref,int width,int height) : window_ref(w_ref)
 
 void Grid::update(){
     window_ref.clear(Color(200,200,200));
+    checkInput();
     drawTop();
     draw();
 }
@@ -31,4 +32,20 @@ void Grid::drawTop(){
     RectangleShape shape({window_ref.getSize().x,topMargin});
     shape.setFillColor(Color(150,150,150));
     window_ref.draw(shape);
+}
+
+void Grid::checkInput(){
+    static bool prevRightButtonStatus = false;
+    static bool prevLeftButtonStatus = false;
+
+    if(Mouse::isButtonPressed(Mouse::Right) && !prevRightButtonStatus){
+        //flagging a cell
+    }
+    else if(Mouse::isButtonPressed(Mouse::Left) && !prevLeftButtonStatus){
+        //revealing cells;
+    }
+
+
+    prevRightButtonStatus=Mouse::isButtonPressed(Mouse::Right);
+    prevLeftButtonStatus=Mouse::isButtonPressed(Mouse::Left);
 }

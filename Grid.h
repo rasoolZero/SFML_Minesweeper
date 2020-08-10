@@ -23,6 +23,7 @@ class Grid
         Vector2f topLeftCorner;
         void draw();
         void drawTop();
+        void checkInput();
 };
 
 #endif // GRID_H
