@@ -19,6 +19,7 @@ class Grid
         RenderWindow & window_ref;
         int width;
         int height;
+        int topMargin;
         Vector2f topLeftCorner;
         void draw();
         void drawTop();
