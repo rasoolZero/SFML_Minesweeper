@@ -21,6 +21,7 @@ class Grid
         int height;
         Vector2f topLeftCorner;
         void draw();
+        void drawTop();
 };
 
 #endif // GRID_H
