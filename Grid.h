@@ -33,6 +33,8 @@ class Grid
         void calculateValue();
         void firstClickCheck(int index);
         void revealNeighbors(Vector2i pos);
+        void checkGame();
+        void gameover();
 };
 
 #endif // GRID_H

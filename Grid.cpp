@@ -69,15 +69,21 @@ void Grid::checkInput(){
         if(isMouseOnGrid(pos)){
             Vector2i index2D=mousePosToIndex(pos);
             int index=indexConverter(index2D);
+
             if(firstClick){
                 firstClickCheck(index);
                 firstClick=false;
             }
+
             if(cells[index].getState() == Cell::CellState::Hidden){
                 cells[index].reveal();
                 if(cells[index].getValue()==0){
                     revealNeighbors(index2D);
                 }
+                if(cells[index].getValue()==-1){
+                    gameover();
+                }
+                checkGame();
             }
         }
     }
@@ -155,6 +161,27 @@ void Grid::revealNeighbors(Vector2i pos){
                     }
                 }
             }
+        }
+    }
+}
+void Grid::checkGame(){
+    bool won=true;
+    for(auto cell : cells){
+        if( cell.getValue() >=0 ){
+            if(cell.getState() != Cell::CellState::Revealed){
+                won = false;
+            }
+        }
+    }
+    if(won){
+        //you won =D
+    }
+}
+void Grid::gameover(){
+    //you lost =(
+    for(int i=0;i<cells.size();i++){
+        if(cells[i].getValue()==-1){
+            cells[i].reveal();
         }
     }
 }
