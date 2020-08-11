@@ -1,5 +1,4 @@
 #include "SoundManager.h"
-#include <iostream>
 using namespace std;
 using namespace sf;
 
@@ -39,4 +38,26 @@ void SoundManager::stopAll(){
     for(int i=0;i<sounds.size();i++){
         sounds[i].stop();
     }
+}
+
+void SoundManager::changeVolumeSoundEffects(float delta){
+    for(int i=0;i<5;i++){
+        sounds[i].setVolume(sounds[i].getVolume()+delta);
+        if(sounds[i].getVolume()>100)
+            sounds[i].setVolume(100);
+    }
+}
+void SoundManager::changeVolumeMusics(float delta){
+    for(int i=5;i<sounds.size();i++){
+        sounds[i].setVolume(sounds[i].getVolume()+delta);
+        if(sounds[i].getVolume()>100)
+            sounds[i].setVolume(100);
+    }
+}
+
+float SoundManager::getSoundEffectVolume(){
+    return sounds[0].getVolume();
+}
+float SoundManager::getMusicVolume(){
+    return sounds[sounds.size()-1].getVolume();
 }

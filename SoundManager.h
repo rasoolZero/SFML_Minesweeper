@@ -12,6 +12,10 @@ class SoundManager
         void play(Sounds sound);
         void stop(Sounds sound);
         void stopAll();
+        void changeVolumeSoundEffects(float delta);
+        void changeVolumeMusics(float delta);
+        float getSoundEffectVolume();
+        float getMusicVolume();
 
     protected:
 
