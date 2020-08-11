@@ -31,7 +31,6 @@ Grid::Grid(RenderWindow & w_ref,int width,int height,int bombNumber) : window_re
             bombsPlaced++;
         }
     }
-    calculateValue();
 }
 
 void Grid::update(){
@@ -69,7 +68,12 @@ void Grid::checkInput(){
         Vector2i pos=mousePos();
         if(isMouseOnGrid(pos)){
             Vector2i index2D=mousePosToIndex(pos);
-            cells[indexConverter(index2D)].reveal();
+            int index=indexConverter(index2D);
+            if(firstClick){
+                firstClickCheck(index);
+                firstClick=false;
+            }
+            cells[index].reveal();
         }
     }
 
@@ -119,4 +123,15 @@ void Grid::calculateValue(){
 int Grid::indexConverter(Vector2i index){
     return width*index.y+index.x;
 }
-
+void Grid::firstClickCheck(int index){
+    if(cells[index].getValue()==-1){
+        cells[index].setValue(0);
+        if(!cells[0].getValue()){
+            cells[0].setValue(-1);
+        }
+        else{
+            cells[width-1].setValue(-1);
+        }
+    }
+    calculateValue();
+}

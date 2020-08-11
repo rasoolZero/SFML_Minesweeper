@@ -31,6 +31,7 @@ class Grid
         int indexConverter(Vector2i index);
         bool firstClick;
         void calculateValue();
+        void firstClickCheck(int index);
 };
 
 #endif // GRID_H
