@@ -9,7 +9,7 @@ using namespace sf;
 class Grid
 {
     public:
-        Grid(RenderWindow & w_ref,int width,int height);
+        Grid(RenderWindow & w_ref,int width,int height,int bombChance=10);
         void update();
 
     protected:
