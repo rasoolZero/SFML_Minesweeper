@@ -6,10 +6,10 @@ using namespace sf;
 
 class Cell : public Drawable, public Transformable
 {
-    enum CellState{Hidden,Revealed,Flagged};
 
     public:
         Cell(int i,int j,float size,Vector2f _offset,int value=0);
+        enum CellState{Hidden,Revealed,Flagged};
         void setValue(int value){this->value=value;}
         int getValue(){return value;}
         void setState(CellState state){this->state=state;}

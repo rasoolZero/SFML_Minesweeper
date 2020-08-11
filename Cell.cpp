@@ -42,12 +42,6 @@ Cell::Cell(int i,int j,float size,Vector2f _offset,int value):offset(_offset)
 void Cell::reveal(){
     if(state!=CellState::Flagged){
         state=CellState::Revealed;
-        if(value==0){
-            //reveal neighbor cells
-        }
-        if(value==-1){
-            //game over!
-        }
     }
 }
 void Cell::flag(){
