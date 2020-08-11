@@ -4,7 +4,7 @@
 using namespace std;
 using namespace sf;
 
-Grid::Grid(RenderWindow & w_ref,int width,int height,int bombChance) : window_ref(w_ref)
+Grid::Grid(RenderWindow & w_ref,int width,int height,int bombNumber) : window_ref(w_ref)
 {
     topMargin=48;
     maxSize = w_ref.getSize().x/(float)width < (w_ref.getSize().y-topMargin)/(float)(height) ? w_ref.getSize().x/(float)width : (w_ref.getSize().y-topMargin)/(float)(height) ;
@@ -13,14 +13,21 @@ Grid::Grid(RenderWindow & w_ref,int width,int height,int bombChance) : window_re
     this->width=width;
     this->height=height;
     cells = vector<Cell>();
+
+
+    // bomb based on a fixed amount of bombs and a random index;
     for(int i=0;i<width;i++)
-        for(int j=0;j<height;j++){
-            int chance=rand()%100+1;
-            if(chance<=bombChance)
-                cells.push_back(Cell(i,j,maxSize,topLeftCorner,-1));
-            else
-                cells.push_back(Cell(i,j,maxSize,topLeftCorner));
+        for(int j=0;j<height;j++)
+            cells.push_back(Cell(i,j,maxSize,topLeftCorner));
+
+    int bombsPlaced=0;
+    while(bombsPlaced!=bombNumber){
+        int index=indexConverter({rand()%width,rand()%height});
+        if( !cells[index].getValue() ){
+            cells[index].setValue(-1);
+            bombsPlaced++;
         }
+    }
 }
 
 void Grid::update(){
@@ -59,8 +66,7 @@ void Grid::checkInput(){
         Vector2i pos=mousePos();
         if(isMouseOnGrid(pos)){
             Vector2i index2D=mousePosToIndex(pos);
-            int index = indexConverter(index2D);
-            cells[index].reveal();
+            cells[indexConverter(index2D)].reveal();
         }
     }
 
@@ -85,6 +91,6 @@ Vector2i Grid::mousePosToIndex(Vector2i & pos){
     result.y=posOnGrid.y/maxSize;
     return result;
 }
-int Grid::indexConverter(Vector2i & index){
+int Grid::indexConverter(Vector2i index){
     return height*index.x+index.y;
 }

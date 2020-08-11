@@ -9,7 +9,7 @@ using namespace sf;
 class Grid
 {
     public:
-        Grid(RenderWindow & w_ref,int width,int height,int bombChance=10);
+        Grid(RenderWindow & w_ref,int width,int height,int bombNumber=10);
         void update();
 
     protected:
@@ -28,7 +28,7 @@ class Grid
         Vector2i mousePos();
         bool isMouseOnGrid(Vector2i & pos);
         Vector2i mousePosToIndex(Vector2i & pos);
-        int indexConverter(Vector2i & index);
+        int indexConverter(Vector2i index);
 };
 
 #endif // GRID_H
