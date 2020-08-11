@@ -27,3 +27,16 @@ SoundManager::SoundManager()
         sounds.push_back(Sound(buffers[i]));
     }
 }
+void SoundManager::play(Sounds sound){
+    sounds[(int)sound].play();
+}
+
+void SoundManager::stop(Sounds sound){
+    sounds[(int)sound].stop();
+}
+
+void SoundManager::stopAll(){
+    for(int i=0;i<sounds.size();i++){
+        sounds[i].stop();
+    }
+}

@@ -7,7 +7,11 @@ using namespace std;
 class SoundManager
 {
     public:
+        enum Sounds{Explosion,Victory,FlagOn,FlagOff,Reveal,GameMusic,MenuMusic};
         SoundManager();
+        void play(Sounds sound);
+        void stop(Sounds sound);
+        void stopAll();
 
     protected:
 
