@@ -2,22 +2,21 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-
+#include "MenuManager.h"
 using namespace sf;
 
 bool isFocused;
 int main() {
     isFocused = true;
 
-    sf::RenderWindow window(VideoMode::getDesktopMode(), "SFML_Minesweeper", Style::Fullscreen);
-
+    RenderWindow window(VideoMode::getDesktopMode(), "SFML_Minesweeper", Style::Fullscreen);
+    MenuManager menu(window);
     while (window.isOpen())
     {
         Event event;
         while (window.pollEvent(event))
         {
-
-            if (event.type == sf::Event::Closed)
+            if (event.type == Event::Closed)
                 window.close();
             if (event.type == Event::GainedFocus)
                 isFocused = true;
@@ -29,11 +28,12 @@ int main() {
         }
 
         window.clear();
+        window.clear(Color(235, 235, 250));
         if (isFocused) {
-            //update
+        menu.update();
         }
         window.display();
-
+        sleep(milliseconds(5));
     }
 	return 0;
 }
