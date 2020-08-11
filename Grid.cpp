@@ -1,16 +1,16 @@
 #include "Grid.h"
 #include <random>
-#include <iostream>
 using namespace std;
 using namespace sf;
 
 Grid::Grid(RenderWindow & w_ref,int width,int height,int bombNumber) : window_ref(w_ref)
 {
+    state=GridState::Playing;
     firstClick=true;
     topMargin=48;
     float widthRatio=w_ref.getSize().x/(float)width;
     float heightRatio=(w_ref.getSize().y-topMargin)/(float)(height);
-    maxSize =  widthRatio < heightRatio ? widthRatio : heightRatio ;
+    maxSize = widthRatio < heightRatio ? widthRatio : heightRatio ;
     topLeftCorner.x=(w_ref.getSize().x-maxSize*width)/2;
     topLeftCorner.y=(w_ref.getSize().y-topMargin-maxSize*height)/2 + topMargin;
     this->width=width;
@@ -52,6 +52,8 @@ void Grid::drawTop(){
 }
 
 void Grid::checkInput(){
+    if(state!=GridState::Playing)
+        return;
     static bool prevRightButtonStatus = false;
     static bool prevLeftButtonStatus = false;
 
@@ -174,11 +176,13 @@ void Grid::checkGame(){
         }
     }
     if(won){
+        state=GridState::Won;
         //you won =D
     }
 }
 void Grid::gameover(){
     //you lost =(
+    state=GridState::Lost;
     for(int i=0;i<cells.size();i++){
         if(cells[i].getValue()==-1){
             cells[i].reveal();

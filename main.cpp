@@ -2,6 +2,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include "Grid.h"
 
 using namespace sf;
 
@@ -11,8 +12,9 @@ int main() {
     isFocused=true;
 
 
-
     sf::RenderWindow window(VideoMode::getFullscreenModes()[0], "SFML_Minesweeper", Style::Fullscreen);
+    Grid grid(window,10,20,10);
+
     while (window.isOpen())
     {
         Event event;
@@ -32,10 +34,9 @@ int main() {
 
         window.clear(Color::White);
         if(isFocused){
-            //update
+
         }
         window.display();
-
     }
 	return 0;
 }

@@ -10,6 +10,9 @@ class Grid
 {
     public:
         Grid(RenderWindow & w_ref,int width,int height,int bombNumber=10);
+        enum GridState{Playing,Won,Lost,Paused};
+        void setState(GridState _state){state=_state;}
+        GridState getState(){return state;}
         void update();
 
     protected:
@@ -35,6 +38,7 @@ class Grid
         void revealNeighbors(Vector2i pos);
         void checkGame();
         void gameover();
+        GridState state;
 };
 
 #endif // GRID_H
