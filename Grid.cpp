@@ -6,8 +6,11 @@ using namespace sf;
 
 Grid::Grid(RenderWindow & w_ref,int width,int height,int bombNumber) : window_ref(w_ref)
 {
+    firstClick=true;
     topMargin=48;
-    maxSize = w_ref.getSize().x/(float)width < (w_ref.getSize().y-topMargin)/(float)(height) ? w_ref.getSize().x/(float)width : (w_ref.getSize().y-topMargin)/(float)(height) ;
+    float widthRatio=w_ref.getSize().x/(float)width;
+    float heightRatio=(w_ref.getSize().y-topMargin)/(float)(height);
+    maxSize =  widthRatio < heightRatio ? widthRatio : heightRatio ;
     topLeftCorner.x=(w_ref.getSize().x-maxSize*width)/2;
     topLeftCorner.y=(w_ref.getSize().y-topMargin-maxSize*height)/2 + topMargin;
     this->width=width;
@@ -15,9 +18,9 @@ Grid::Grid(RenderWindow & w_ref,int width,int height,int bombNumber) : window_re
     cells = vector<Cell>();
 
 
-    // bomb based on a fixed amount of bombs and a random index;
-    for(int i=0;i<width;i++)
-        for(int j=0;j<height;j++)
+    // bomb based on a fixed amount of bombs and a random index
+    for(int j=0;j<height;j++)
+        for(int i=0;i<width;i++)
             cells.push_back(Cell(i,j,maxSize,topLeftCorner));
 
     int bombsPlaced=0;
@@ -28,6 +31,7 @@ Grid::Grid(RenderWindow & w_ref,int width,int height,int bombNumber) : window_re
             bombsPlaced++;
         }
     }
+    calculateValue();
 }
 
 void Grid::update(){
@@ -57,8 +61,7 @@ void Grid::checkInput(){
         Vector2i pos=mousePos();
         if(isMouseOnGrid(pos)){
             Vector2i index2D=mousePosToIndex(pos);
-            int index = indexConverter(index2D);
-            cells[index].flag();
+            cells[indexConverter(index2D)].flag();
         }
     }
     else if(Mouse::isButtonPressed(Mouse::Left) && !prevLeftButtonStatus){
@@ -91,6 +94,29 @@ Vector2i Grid::mousePosToIndex(Vector2i & pos){
     result.y=posOnGrid.y/maxSize;
     return result;
 }
-int Grid::indexConverter(Vector2i index){
-    return height*index.x+index.y;
+void Grid::calculateValue(){
+    for(int j=0;j<height;j++){
+        for(int i=0;i<width;i++){
+            int index=indexConverter({i,j});
+            if(cells[index].getValue()==-1)
+                continue;
+
+            int neighborBombs=0;
+            for(int x=j-1;x<=j+1;x++){
+                for(int k=i-1;k<=i+1;k++){
+                    if( !(k==i && x==j) && x>=0 && x < height && k>=0 && k < width){
+                        int index2=indexConverter({k,x});
+                        if(cells[index2].getValue()==-1)
+                            neighborBombs++;
+                    }
+                }
+            }
+            cells[index].setValue(neighborBombs);
+        }
+    }
 }
+
+int Grid::indexConverter(Vector2i index){
+    return width*index.y+index.x;
+}
+

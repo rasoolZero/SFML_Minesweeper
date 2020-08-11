@@ -29,6 +29,8 @@ class Grid
         bool isMouseOnGrid(Vector2i & pos);
         Vector2i mousePosToIndex(Vector2i & pos);
         int indexConverter(Vector2i index);
+        bool firstClick;
+        void calculateValue();
 };
 
 #endif // GRID_H
