@@ -14,7 +14,8 @@ private:
 
 	bool state;
 
-	short int fontSize;
+	short int normalFontSize = 40;
+	short int selectedFontSize = 48;
 	Font font;
 	Text options[4];
 
@@ -32,12 +33,13 @@ private:
 
 	void setState(bool state) { this->state = state; }
 	void setSelectedOption(SelectedOption selectedOption);
+	void setSelectedOption(int selectedOptionIndex);
 	void manageInput();
 public:
 	bool getState() { return this->state; }
 
-	void setFontSize(short int fontSize) { this->fontSize = fontSize; }
-	short int getFontSize() { return this->fontSize; }
+	void setFontSize(short int fontSize) { this->normalFontSize = fontSize; }
+	short int getFontSize() { return this->normalFontSize; }
 
 	SelectedOption getSelectedOption() { return this->selectedOption; }
 
