@@ -32,6 +32,7 @@ class Grid
         bool firstClick;
         void calculateValue();
         void firstClickCheck(int index);
+        void revealNeighbors(Vector2i pos);
 };
 
 #endif // GRID_H

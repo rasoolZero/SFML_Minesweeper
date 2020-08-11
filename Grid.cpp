@@ -73,7 +73,12 @@ void Grid::checkInput(){
                 firstClickCheck(index);
                 firstClick=false;
             }
-            cells[index].reveal();
+            if(cells[index].getState() == Cell::CellState::Hidden){
+                cells[index].reveal();
+                if(cells[index].getValue()==0){
+                    revealNeighbors(index2D);
+                }
+            }
         }
     }
 
@@ -134,4 +139,22 @@ void Grid::firstClickCheck(int index){
         }
     }
     calculateValue();
+}
+
+void Grid::revealNeighbors(Vector2i pos){
+    int j=pos.y;
+    int i=pos.x;
+    for(int x=j-1;x<=j+1;x++){
+        for(int k=i-1;k<=i+1;k++){
+            if( !(k==i && x==j) && x>=0 && x < height && k>=0 && k < width){
+                int index=indexConverter({k,x});
+                if(cells[index].getState() == Cell::CellState::Hidden){
+                    cells[index].reveal();
+                    if(cells[index].getValue()==0){
+                        revealNeighbors({k,x});
+                    }
+                }
+            }
+        }
+    }
 }
