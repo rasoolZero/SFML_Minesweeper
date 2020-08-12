@@ -25,6 +25,8 @@ SoundManager::SoundManager()
     for(int i=0;i<buffers.size();i++){
         sounds.push_back(Sound(buffers[i]));
     }
+    sounds[5].setLoop(true);
+    sounds[6].setLoop(true);
 }
 void SoundManager::play(Sounds sound){
     sounds[(int)sound].play();
