@@ -48,7 +48,8 @@ public:
 	SelectedOption getSelectedOption() { return this->selectedOption; }
 
 	void update();
-	void loadSettings();
+	//void loadSettings();
+	//void SaveSettings();
 
 	Settings(RenderWindow& window, MenuManager& menu);
 
