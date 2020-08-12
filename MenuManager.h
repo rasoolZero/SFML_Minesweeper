@@ -22,7 +22,7 @@ private:
 	Color selectedTextColor = Color(255, 0, 0);
 	Color normalTextColor = Color::Black;
 
-	enum SelectedOption { play, settings, leaderboard, exit };
+	enum class SelectedOption { play, settings, leaderboard, exit };
 	SelectedOption selectedOption = SelectedOption::play;
 
 	void draw();
@@ -33,7 +33,7 @@ private:
 
 	void setState(bool state) { this->state = state; }
 	void setSelectedOption(SelectedOption selectedOption);
-	void setSelectedOption(int selectedOptionIndex);
+	void setSelectedOption(short int selectedOptionIndex);
 	void manageInput();
 public:
 	bool getState() { return this->state; }

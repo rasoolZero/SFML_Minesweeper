@@ -48,7 +48,7 @@ void MenuManager::setSelectedOption(SelectedOption selectedOption)
 	this->selectedOption = selectedOption;
 
 }
-void MenuManager::setSelectedOption(int selectedOptionIndex)
+void MenuManager::setSelectedOption(short int selectedOptionIndex)
 {
 	this->selectedOption = static_cast<SelectedOption>(selectedOptionIndex);
 
