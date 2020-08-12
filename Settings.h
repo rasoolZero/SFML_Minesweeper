@@ -7,7 +7,7 @@ class Settings
 private:
 	RenderWindow& window_ref;
 	MenuManager& menuManager_ref;
-	
+
 	//SoundManager& soundManager_ref;
 	enum class SelectedOption {soundToggle, soundAdjust, musicToggle, musicAdjust, leaderboardReset, back};
 	SelectedOption selectedOption = SelectedOption::soundToggle;

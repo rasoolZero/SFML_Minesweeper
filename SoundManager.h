@@ -14,6 +14,8 @@ class SoundManager
         void stopAll();
         void changeVolumeSoundEffects(float delta);
         void changeVolumeMusics(float delta);
+        void setVolumeSoundEffects(float value);
+        void setVolumeMusics(float value);
         float getSoundEffectVolume();
         float getMusicVolume();
 

@@ -54,6 +54,20 @@ void SoundManager::changeVolumeMusics(float delta){
             sounds[i].setVolume(100);
     }
 }
+void SoundManager::setVolumeSoundEffects(float value){
+    for(int i=0;i<5;i++){
+        sounds[i].setVolume(value);
+        if(sounds[i].getVolume()>100)
+            sounds[i].setVolume(100);
+    }
+}
+void SoundManager::setVolumeMusics(float value){
+    for(int i=5;i<sounds.size();i++){
+        sounds[i].setVolume(value);
+        if(sounds[i].getVolume()>100)
+            sounds[i].setVolume(100);
+    }
+}
 
 float SoundManager::getSoundEffectVolume(){
     return sounds[0].getVolume();
