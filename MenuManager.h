@@ -1,4 +1,5 @@
 #ifndef MenuManager_h
+#define MenuManager_h
 
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
