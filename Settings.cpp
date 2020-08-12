@@ -14,6 +14,13 @@ Settings::Settings(RenderWindow& window, MenuManager& menu)
 	if (!font.loadFromFile("fonts\\arial.ttf")) {
 		throw std::runtime_error("menu font could not be loaded\n");
 	}
+	if (!textures[0].loadFromFile("images\\unchecked.png")) {
+		throw std::runtime_error("uncheckedd texbox image could not be loaded\n");
+	}
+	if (!textures[1].loadFromFile("images\\checked.png")) {
+		throw std::runtime_error("checkedd texbox image could not be loaded\n");
+	}
+	
 	options[0].setString("sound effects");
 	options[1].setString("volume");
 	options[2].setString("music");
@@ -41,15 +48,23 @@ Settings::Settings(RenderWindow& window, MenuManager& menu)
 		}
 		
 	}
+	for (int i = 0; i < 2; i++)
+	{
+		FloatRect endOfText = options[2 * i].getGlobalBounds();
+	toggles[i] = CheckBox(32, Vector2f(endOfText.left + endOfText.width + 30, endOfText.top + 3), textures[0], textures[1]);
+	toggles[i].setTexture(&textures[0]);
+	}
 }
 
 void Settings::draw()
 {	
+	
 	drawTitle();
 	drawSoundEffectOption();
 	drawMusicOption();
 	drawResetLeaderboard();
 	drawBack();
+	drawModifiers();
 }
 
 void Settings::drawTitle()
@@ -85,6 +100,15 @@ void Settings::drawResetLeaderboard()
 void Settings::drawBack()
 {
 	this->window_ref.draw(options[5]);
+}
+
+void Settings::drawModifiers()
+{
+	Drawable* mods[4] = { &toggles[0], &toggles[1] };
+	for (int i = 0; i < 2; i++)
+	{
+		window_ref.draw(*mods[i]);
+	}
 }
 
 void Settings::setSelectedOption(SelectedOption selectedOption)

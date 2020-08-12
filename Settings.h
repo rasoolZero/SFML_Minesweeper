@@ -1,6 +1,7 @@
 #ifndef Settings_h
+#define Settings_h
 #include "MenuManager.h"
-
+#include "CheckBox.h"
 class Settings
 {
 private:
@@ -11,7 +12,8 @@ private:
 	enum class SelectedOption {soundToggle, soundAdjust, musicToggle, musicAdjust, leaderboardReset, back};
 	SelectedOption selectedOption = SelectedOption::soundToggle;
 	Text options[6];
-	
+	Texture textures[2];
+	CheckBox toggles[2];
 	Color normalTextColor = Color::Black;
 	Color selectedTextColor = Color::Red;
 
@@ -31,6 +33,7 @@ private:
 	void drawMusicOption();
 	void drawResetLeaderboard();
 	void drawBack();
+	void drawModifiers();
 
 	void setState(bool state) { this->state = state; }
 	void setSelectedOption(SelectedOption selectedOption);

@@ -6,7 +6,7 @@ using namespace sf;
 class CheckBox : public RectangleShape
 {
 private:
-	bool state;
+	bool state = false;
 	Texture checked;
 	Texture unchecked;
 public:
@@ -14,6 +14,7 @@ public:
 	bool getState() { return this->state; }
 
 	CheckBox(short int length, Vector2f position, Texture& unchecked, Texture& checked);
+	CheckBox();
 };
 
 #endif // !CheckBox_h

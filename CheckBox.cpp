@@ -16,7 +16,14 @@ void CheckBox::setState(bool state)
 CheckBox::CheckBox(short int length, Vector2f position, Texture& unchecked, Texture& checked)
 	:checked(checked)
 	,unchecked(unchecked)
-{
-	setSize(Vector2f(length, length));
+	,RectangleShape(Vector2f(length, length))
+{	
+	this->setTexture(&this->unchecked);
 	setPosition(position);
+}
+
+CheckBox::CheckBox()
+{	
+	this->setTexture(&this->unchecked);
+	//default ctor
 }
