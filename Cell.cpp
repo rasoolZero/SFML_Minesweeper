@@ -44,11 +44,16 @@ void Cell::reveal(){
         state=CellState::Revealed;
     }
 }
-void Cell::flag(){
-    if(state==CellState::Hidden)
+bool Cell::flag(){
+    if(state==CellState::Hidden){
         state=CellState::Flagged;
-    else if(state == CellState::Flagged)
+        return true;
+    }
+    else if(state == CellState::Flagged){
         state=CellState::Hidden;
+        return true;
+    }
+    return false;
 }
 
 

@@ -3,7 +3,8 @@
 using namespace std;
 using namespace sf;
 
-Grid::Grid(RenderWindow & w_ref,int width,int height,int bombNumber) : window_ref(w_ref)
+Grid::Grid(RenderWindow & w_ref,SoundManager & _soundManager,int width,int height,int bombNumber)
+: window_ref(w_ref) , soundManager(_soundManager)
 {
     state=GridState::Playing;
     firstClick=true;
@@ -62,7 +63,13 @@ void Grid::checkInput(){
         Vector2i pos=mousePos();
         if(isMouseOnGrid(pos)){
             Vector2i index2D=mousePosToIndex(pos);
-            cells[indexConverter(index2D)].flag();
+            int index=indexConverter(index2D);
+            if(cells[index].flag()){
+                if(cells[index].getState() == Cell::Flagged)
+                    soundManager.play(SoundManager::FlagOn);
+                else
+                    soundManager.play(SoundManager::FlagOff);
+            }
         }
     }
     else if(Mouse::isButtonPressed(Mouse::Left) && !prevLeftButtonStatus){
@@ -85,6 +92,8 @@ void Grid::checkInput(){
                 if(cells[index].getValue()==-1){
                     gameover();
                 }
+                else
+                    soundManager.play(SoundManager::Reveal);
                 checkGame();
             }
         }
@@ -177,12 +186,14 @@ void Grid::checkGame(){
     }
     if(won){
         state=GridState::Won;
+        soundManager.play(SoundManager::Victory);
         //you won =D
     }
 }
 void Grid::gameover(){
     //you lost =(
     state=GridState::Lost;
+    soundManager.play(SoundManager::Explosion);
     for(int i=0;i<cells.size();i++){
         if(cells[i].getValue()==-1){
             cells[i].reveal();

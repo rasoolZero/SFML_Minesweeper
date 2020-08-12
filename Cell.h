@@ -16,7 +16,7 @@ class Cell : public Drawable, public Transformable
         CellState getState(){return state;}
         virtual void draw(RenderTarget& target, RenderStates states) const;
         void reveal();
-        void flag();
+        bool flag();
 
     protected:
 
