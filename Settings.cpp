@@ -125,21 +125,40 @@ void Settings::manageInput()
 {
 	static bool prevUpKeyStatus = false;
 	static bool prevDownKeyStatus = false;
+	static bool prevToggleKeyStatus = false; //for Enter and Space keys
 	int selectedOptionIndex = static_cast<int>(this->selectedOption);
-	//if (options[selectedOptionIndex].getCharacterSize() == selectedFontSize) {
 
-		if (Keyboard::isKeyPressed(Keyboard::Up) && !prevUpKeyStatus) {
-			options[selectedOptionIndex].setFillColor(normalTextColor);
-			setSelectedOption((selectedOptionIndex += 5) %= 6); // goes to previous state in the cycle
+	if (Keyboard::isKeyPressed(Keyboard::Up) && !prevUpKeyStatus) {
+		options[selectedOptionIndex].setFillColor(normalTextColor);
+		setSelectedOption((selectedOptionIndex += 5) %= 6); // goes to previous state in the cycle
+	}
+	else if (Keyboard::isKeyPressed(Keyboard::Down) && !prevDownKeyStatus)
+	{
+		options[selectedOptionIndex].setFillColor(normalTextColor);
+		setSelectedOption((selectedOptionIndex += 1) %= 6); // goes to next state in the cycle
+	}
+	if ((Keyboard::isKeyPressed(Keyboard::Enter) || Keyboard::isKeyPressed(Keyboard::Space)) && !prevToggleKeyStatus) {
+		if (selectedOption == SelectedOption::soundToggle) {
+			toggles[0].swtitchState();
+			//toggle sound
+			//play sound feedback
 		}
-		else if (Keyboard::isKeyPressed(Keyboard::Down) && !prevDownKeyStatus)
-		{
-			options[selectedOptionIndex].setFillColor(normalTextColor);
-			setSelectedOption((selectedOptionIndex += 1) %= 6); // goes to next state in the cycle
+		else if (selectedOption == SelectedOption::musicToggle) {
+			toggles[1].swtitchState();
+			//toggle music
+			//play sound feedback
 		}
-		options[selectedOptionIndex].setFillColor(selectedTextColor);
-	//}
+		else if (selectedOption == SelectedOption::leaderboardReset) {
+			// reset leaderboard
+			//sound feedback
+		}
+		else { //back
+			//go back to menu
+		}
+	}
+	options[selectedOptionIndex].setFillColor(selectedTextColor);
 
 	prevUpKeyStatus = Keyboard::isKeyPressed(Keyboard::Up);
 	prevDownKeyStatus = Keyboard::isKeyPressed(Keyboard::Down);
+	prevToggleKeyStatus = Keyboard::isKeyPressed(Keyboard::Enter) | Keyboard::isKeyPressed(Keyboard::Space);
 }

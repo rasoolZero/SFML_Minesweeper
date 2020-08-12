@@ -1,5 +1,7 @@
 #include "CheckBox.h"
 
+
+
 void CheckBox::setState(bool state)
 {
 	if (this->state != state) {
@@ -10,6 +12,17 @@ void CheckBox::setState(bool state)
 			this->setTexture(&this->unchecked);
 		}
 		this->state = state;
+	}
+}
+
+void CheckBox::swtitchState()
+{
+	this->state = !this->state;
+	if (state) {
+		this->setTexture(&this->checked);
+	}
+	else {
+		this->setTexture(&this->unchecked);
 	}
 }
 
