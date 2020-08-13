@@ -3,10 +3,13 @@
 #include <fstream>
 #include <string>
 #include <cstring>
+#include "ManagerManager.h"
 using namespace std;
 using namespace sf;
 
-Leaderboard::Leaderboard(RenderWindow & _window_ref): window_ref(_window_ref)
+Leaderboard::Leaderboard(RenderWindow & _window_ref, ManagerManager& manager_ref)
+    : window_ref(_window_ref)
+    ,manager_ref(manager_ref)
 {
 
     ifstream f(fileName);
@@ -75,7 +78,7 @@ void Leaderboard::addScore(Time time,char name[16],Difficulties difficulty){
             highScores[diffIndex][j+1]=highScores[diffIndex][j];
         }
         Record newScore={"",time};
-        strcpy(newScore.name,name);
+        strncpy(newScore.name,name, 16);
         highScores[diffIndex][index]=newScore;
     }
     save();
@@ -141,7 +144,7 @@ void Leaderboard::drawOptions(){
 void Leaderboard::drawScores(){
     int diffIndex=static_cast<int>(selectedOption);
     Text text;
-    text.setColor(Color::Black);
+    text.setFillColor(Color::Black);
     text.setFont(font);
     text.setCharacterSize(normalFontSize);
     for(int i=0;i<10;i++){
@@ -161,7 +164,7 @@ void Leaderboard::drawScores(){
 }
 void Leaderboard::drawBack(){
     Text text;
-    text.setColor(Color::Black);
+    text.setFillColor(Color::Black);
     text.setFont(font);
     text.setCharacterSize(normalFontSize);
     text.setString("[Esc] back");

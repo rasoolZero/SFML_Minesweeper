@@ -16,9 +16,9 @@ int main() {
     window.setVerticalSyncEnabled(true);
     ManagerManager manager(&window);
     MenuManager menu(window, manager);
-
+    Leaderboard leaderboard(window, manager);
     Settings settings(window, manager);
-    manager.setPointers(&menu, &settings);
+    manager.setPointers(&menu, &settings, &leaderboard);
     while (window.isOpen())
     {
         Event event;

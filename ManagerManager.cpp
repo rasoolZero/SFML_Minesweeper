@@ -14,10 +14,11 @@ ManagerManager::ManagerManager(RenderWindow* window_ptr)
 
 }
 
-void ManagerManager::setPointers(MenuManager* menuManager_ptr, Settings* settings_ptr)
+void ManagerManager::setPointers(MenuManager* menuManager_ptr, Settings* settings_ptr, Leaderboard* leaderboard_ptr)
 {
 	this->menuManager_ptr = menuManager_ptr;
 	this->settings_ptr = settings_ptr;
+	this->leaderboard_ptr = leaderboard_ptr;
 }
 
 void ManagerManager::manage()
@@ -42,7 +43,10 @@ void ManagerManager::update()
 		settings_ptr->update();
 		break;
 	}
-	//case State::leaderboard:
+	case State::leaderboard: {
+		leaderboard_ptr->update();
+		break;
+	}
 	default: //menu
 		menuManager_ptr->update();
 	}

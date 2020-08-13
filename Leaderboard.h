@@ -4,6 +4,8 @@
 using namespace sf;
 using namespace std;
 
+class ManagerManager;
+
 typedef struct Record{
     char name[16];
     Time score;
@@ -12,7 +14,7 @@ typedef struct Record{
 class Leaderboard
 {
     public:
-        Leaderboard(RenderWindow & _window_ref);
+        Leaderboard(RenderWindow & _window_ref, ManagerManager& manager_ref);
         enum Difficulties{Easy,Normal,Hard};
         bool isHighscore(Time time,Difficulties difficulty);
         void addScore(Time time,char name[16],Difficulties difficulty);
@@ -27,7 +29,7 @@ class Leaderboard
         Record highScores[3][10];
         string fileName="scores.dat";
         RenderWindow & window_ref;
-
+        ManagerManager& manager_ref;
 
         short int normalFontSize = 24;
         short int selectedFontSize = 30;
