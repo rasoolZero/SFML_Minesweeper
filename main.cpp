@@ -3,6 +3,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include "ManagerManager.h"
 #include "MenuManager.h"
 #include "Settings.h"
 using namespace sf;
@@ -13,10 +14,11 @@ int main() {
     isFocused = true;
     RenderWindow window(VideoMode::getDesktopMode(), "SFML_Minesweeper", Style::Fullscreen);
     window.setVerticalSyncEnabled(true);
-    MenuManager menu(window);
+    ManagerManager manager(&window);
+    MenuManager menu(window, manager);
 
-    Settings settings(window, menu);
-
+    Settings settings(window, manager);
+    manager.setPointers(&menu, &settings);
     while (window.isOpen())
     {
         Event event;
@@ -35,13 +37,11 @@ int main() {
                 window.close();
             }
         }
-
-
+        
         
         if (isFocused) {
             window.clear(Color(235, 235, 250));
-            //menu.update();
-            settings.update();
+            manager.manage();
             window.display();
         }
     }

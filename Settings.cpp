@@ -1,4 +1,6 @@
 #include "Settings.h"
+#include "ManagerManager.h"
+
 
 void Settings::update()
 {
@@ -7,12 +9,12 @@ void Settings::update()
 	manageInput();
 }
 
-Settings::Settings(RenderWindow& window, MenuManager& menu)
+Settings::Settings(RenderWindow& window, ManagerManager& manager_ref)
 	:window_ref(window)
-	,menuManager_ref(menu)
+	,manager_ref(manager_ref)
 {
 	if (!font.loadFromFile("fonts\\arial.ttf")) {
-		throw std::runtime_error("menu font could not be loaded\n");
+		throw std::runtime_error("default font could not be loaded\n");
 	}
 	if (!textures[0].loadFromFile("images\\unchecked.png")) {
 		throw std::runtime_error("uncheckedd texbox image could not be loaded\n");
@@ -153,7 +155,11 @@ void Settings::manageInput()
 			//sound feedback
 		}
 		else { //back
-			//go back to menu
+
+ 			options[selectedOptionIndex].setFillColor(normalTextColor);
+			selectedOption = SelectedOption::soundToggle;
+			selectedOptionIndex = 0;
+			manager_ref.setState();
 		}
 	}
 	options[selectedOptionIndex].setFillColor(selectedTextColor);
@@ -161,10 +167,4 @@ void Settings::manageInput()
 	prevUpKeyStatus = Keyboard::isKeyPressed(Keyboard::Up);
 	prevDownKeyStatus = Keyboard::isKeyPressed(Keyboard::Down);
 	prevToggleKeyStatus = Keyboard::isKeyPressed(Keyboard::Enter) | Keyboard::isKeyPressed(Keyboard::Space);
-}
-
-void Settings::setState(bool state)
-{
-	this->state = state;
-	setSelectedOption(0);
 }

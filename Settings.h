@@ -1,13 +1,13 @@
 #ifndef Settings_h
 #define Settings_h
-#include "MenuManager.h"
+
 #include "CheckBox.h"
+class ManagerManager;
 class Settings
 {
 private:
 	RenderWindow& window_ref;
-	MenuManager& menuManager_ref;
-
+	ManagerManager& manager_ref;
 	//SoundManager& soundManager_ref;
 	enum class SelectedOption {soundToggle, soundAdjust, musicToggle, musicAdjust, leaderboardReset, back};
 	SelectedOption selectedOption = SelectedOption::soundToggle;
@@ -25,8 +25,6 @@ private:
 	bool music_enabled = true;
 	bool soundEffects_enabled = true;
 
-	bool state;
-
 	void draw();
 	void drawTitle();
 	void drawSoundEffectOption();
@@ -42,16 +40,13 @@ public:
 	void setFontSize(short int size) { this->fontSize = size; }
 	short int getFontSize() { return this->fontSize; }
 
-	void setState(bool state);
-	bool getState() { return this->state; }
-
 	SelectedOption getSelectedOption() { return this->selectedOption; }
 
 	void update();
 	//void loadSettings();
 	//void SaveSettings();
 
-	Settings(RenderWindow& window, MenuManager& menu);
+	Settings(RenderWindow& window, ManagerManager& manager_ref);
 
 };
 

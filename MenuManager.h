@@ -5,15 +5,14 @@
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
+
+class ManagerManager;
+
 class MenuManager
 {
 private:
-	//GameManager& gameManager_ref
+	ManagerManager& manager_ref;
 	RenderWindow& window_ref;
-	//ScoreManager& scoreManager_ref;
-	//Settings& settings_ref;
-
-	bool state;
 
 	short int normalFontSize = 40;
 	short int selectedFontSize = 48;
@@ -36,8 +35,6 @@ private:
 	void setSelectedOption(short int selectedOptionIndex);
 	void manageInput();
 public:
-	bool getState() { return this->state; }
-	void setState(bool state) { this->state = state; }
 
 	void setFontSize(short int fontSize) { this->normalFontSize = fontSize; }
 	short int getFontSize() { return this->normalFontSize; }
@@ -45,7 +42,7 @@ public:
 	SelectedOption getSelectedOption() { return this->selectedOption; }
 
 	void update();
-	MenuManager(RenderWindow& window);
+	MenuManager(RenderWindow& window, ManagerManager& manager_ref);
 };
 #endif // !MenuManager_h
 

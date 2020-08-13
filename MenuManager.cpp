@@ -1,4 +1,5 @@
 #include "MenuManager.h"
+#include "ManagerManager.h"
 
 void MenuManager::draw()
 {
@@ -58,6 +59,8 @@ void MenuManager::manageInput()
 {
     static bool prevUpKeyStatus = false;
     static bool prevDownKeyStatus = false;
+	static bool prevToggleKeyStatus = false; //for Enter and Space keys
+
 	int selectedOptionIndex = static_cast<int>(this->selectedOption);
 	if (options[selectedOptionIndex].getCharacterSize() == selectedFontSize) {
 
@@ -70,11 +73,15 @@ void MenuManager::manageInput()
 			options[selectedOptionIndex].setFillColor(normalTextColor);
 			setSelectedOption( (selectedOptionIndex += 1) %= 4 ); // goes to next state in the cycle
 		}
+		if ((Keyboard::isKeyPressed(Keyboard::Enter) || Keyboard::isKeyPressed(Keyboard::Space)) && !prevToggleKeyStatus) {
+			manager_ref.setState(static_cast<ManagerManager::State>(this->selectedOption));
+		}
 		options[selectedOptionIndex].setFillColor(selectedTextColor);
 	}
 
     prevUpKeyStatus=Keyboard::isKeyPressed(Keyboard::Up);
     prevDownKeyStatus=Keyboard::isKeyPressed(Keyboard::Down);
+	prevToggleKeyStatus = Keyboard::isKeyPressed(Keyboard::Enter) | Keyboard::isKeyPressed(Keyboard::Space);
 }
 
 void MenuManager::update()
@@ -83,8 +90,9 @@ void MenuManager::update()
 	draw();
 }
 
-MenuManager::MenuManager(RenderWindow& window)
+MenuManager::MenuManager(RenderWindow& window, ManagerManager& manager_ref)
 	:window_ref(window)
+	,manager_ref(manager_ref)
 {
 	if (!font.loadFromFile("fonts\\arial.ttf")) {
 		throw std::runtime_error("menu font could not be loaded\n");

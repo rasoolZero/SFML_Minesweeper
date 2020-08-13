@@ -1,7 +1,6 @@
 #ifndef CheckBox_h
 #define CheckBox_h
 #include <SFML/Graphics.hpp>
-//#include <SFML/Window.hpp>
 using namespace sf;
 class CheckBox : public RectangleShape
 {
