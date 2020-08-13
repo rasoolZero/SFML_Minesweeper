@@ -32,12 +32,12 @@ private:
 	void drawLeaderBoard();
 	void drawExit();
 
-	void setState(bool state) { this->state = state; }
 	void setSelectedOption(SelectedOption selectedOption);
 	void setSelectedOption(short int selectedOptionIndex);
 	void manageInput();
 public:
 	bool getState() { return this->state; }
+	void setState(bool state) { this->state = state; }
 
 	void setFontSize(short int fontSize) { this->normalFontSize = fontSize; }
 	short int getFontSize() { return this->normalFontSize; }

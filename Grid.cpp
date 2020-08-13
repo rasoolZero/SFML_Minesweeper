@@ -47,7 +47,7 @@ void Grid::draw(){
     }
 }
 void Grid::drawTop(){
-    RectangleShape shape({window_ref.getSize().x,topMargin});
+    RectangleShape shape(Vector2f(window_ref.getSize().x,topMargin));
     shape.setFillColor(Color(150,150,150));
     window_ref.draw(shape);
 }

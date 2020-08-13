@@ -1,3 +1,4 @@
+#include <iostream>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
@@ -7,13 +8,15 @@
 using namespace sf;
 
 bool isFocused;
+
 int main() {
     isFocused = true;
-
     RenderWindow window(VideoMode::getDesktopMode(), "SFML_Minesweeper", Style::Fullscreen);
     window.setVerticalSyncEnabled(true);
     MenuManager menu(window);
-    Settings settings(window,menu);
+
+    Settings settings(window, menu);
+
     while (window.isOpen())
     {
         Event event;
@@ -21,17 +24,23 @@ int main() {
         {
             if (event.type == Event::Closed)
                 window.close();
-            if (event.type == Event::GainedFocus)
+            if (event.type == Event::GainedFocus) {
                 isFocused = true;
-            if (event.type == Event::LostFocus)
+            }
+            if (event.type == Event::LostFocus) {
                 isFocused = false;
+            }
+
             if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) { //close the window on ESC keypress
                 window.close();
             }
         }
 
+
+        
         if (isFocused) {
             window.clear(Color(235, 235, 250));
+            //menu.update();
             settings.update();
             window.display();
         }

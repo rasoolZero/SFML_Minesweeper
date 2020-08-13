@@ -35,7 +35,6 @@ private:
 	void drawBack();
 	void drawModifiers();
 
-	void setState(bool state) { this->state = state; }
 	void setSelectedOption(SelectedOption selectedOption);
 	void setSelectedOption(short int selectedOptionIndex);
 	void manageInput();
@@ -43,6 +42,7 @@ public:
 	void setFontSize(short int size) { this->fontSize = size; }
 	short int getFontSize() { return this->fontSize; }
 
+	void setState(bool state);
 	bool getState() { return this->state; }
 
 	SelectedOption getSelectedOption() { return this->selectedOption; }

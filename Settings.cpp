@@ -162,3 +162,9 @@ void Settings::manageInput()
 	prevDownKeyStatus = Keyboard::isKeyPressed(Keyboard::Down);
 	prevToggleKeyStatus = Keyboard::isKeyPressed(Keyboard::Enter) | Keyboard::isKeyPressed(Keyboard::Space);
 }
+
+void Settings::setState(bool state)
+{
+	this->state = state;
+	setSelectedOption(0);
+}
