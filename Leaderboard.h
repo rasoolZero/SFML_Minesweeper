@@ -1,7 +1,6 @@
 #ifndef LEADERBOARD_H
 #define LEADERBOARD_H
 #include <SFML/Graphics.hpp>
-#include <cstring>
 using namespace sf;
 using namespace std;
 
@@ -14,6 +13,10 @@ class Leaderboard
 {
     public:
         Leaderboard();
+        enum Difficulties{Easy,Normal,Hard};
+        bool isHighscore(Time time,Difficulties difficulty);
+        void addScore(Time time,char name[16],Difficulties difficulty);
+
 
     protected:
 
