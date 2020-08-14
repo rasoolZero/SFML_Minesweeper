@@ -11,16 +11,9 @@ class ManagerManager;
 class MenuManager : public Screen
 {
 private:
-	//ManagerManager& manager_ref;
-	//RenderWindow& window_ref;
-
-	//short int normalFontSize = 40;
 	short int selectedFontSize = 48;
 	//Font font;
 	Text options[4];
-
-	//Color selectedTextColor = Color(255, 0, 0);
-	//Color normalTextColor = Color::Black;
 
 	enum class SelectedOption { play, settings, leaderboard, exit };
 	SelectedOption selectedOption = SelectedOption::play;
@@ -35,10 +28,6 @@ private:
 	void setSelectedOption(short int selectedOptionIndex);
 	void manageInput();
 public:
-
-	//void setFontSize(short int fontSize) { this->NormalFontSize = fontSize; }
-	//short int getFontSize() { return this->normalFontSize; }
-
 	SelectedOption getSelectedOption() { return this->selectedOption; }
 
 	virtual void update();

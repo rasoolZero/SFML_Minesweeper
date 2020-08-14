@@ -52,6 +52,7 @@ Settings::Settings(RenderWindow& window, ManagerManager& manager_ref)
 		FloatRect endOfText = options[2 * i].getGlobalBounds();
 	toggles[i] = CheckBox(32, Vector2f(endOfText.left + endOfText.width + 30, endOfText.top + 3), textures[0], textures[1]);
 	toggles[i].setTexture(&textures[1]);
+	toggles[i].swtitchState();
 	}
 }
 

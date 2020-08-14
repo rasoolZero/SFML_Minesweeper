@@ -29,15 +29,10 @@ class Leaderboard : public Screen
     private:
         Record highScores[3][10];
         string fileName="scores.dat";
-        //RenderWindow & window_ref;
-        //ManagerManager& manager_ref;
 
-        //short int normalFontSize = 24;
         short int selectedFontSize = 30;
         Font font;
         Text options[3];
-        //Color selectedTextColor = Color::Red;
-        //Color normalTextColor = Color::Black;
 
         Difficulties selectedOption = Difficulties::Easy;
 
