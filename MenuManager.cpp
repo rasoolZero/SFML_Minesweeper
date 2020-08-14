@@ -55,38 +55,34 @@ void MenuManager::setSelectedOption(short int selectedOptionIndex)
 
 }
 
-void MenuManager::manageInput()
+void MenuManager::manageInput(Keyboard::Key key)
 {
-    static bool prevUpKeyStatus = false;
-    static bool prevDownKeyStatus = false;
-	static bool prevToggleKeyStatus = false; //for Enter and Space keys
-
 	int selectedOptionIndex = static_cast<int>(this->selectedOption);
 	if (options[selectedOptionIndex].getCharacterSize() == selectedFontSize) {
 
-		if (Keyboard::isKeyPressed(Keyboard::Up) && !prevUpKeyStatus) {
+		if (key == Keyboard::Up) {
 			options[selectedOptionIndex].setFillColor(getNormalTextColor());
 			setSelectedOption( (selectedOptionIndex += 3) %= 4 ); // goes to previous state in the cycle
 		}
-		else if (Keyboard::isKeyPressed(Keyboard::Down) && !prevDownKeyStatus )
+		else if (key == Keyboard::Down)
 		{
 			options[selectedOptionIndex].setFillColor(getNormalTextColor());
 			setSelectedOption( (selectedOptionIndex += 1) %= 4 ); // goes to next state in the cycle
 		}
-		if ((Keyboard::isKeyPressed(Keyboard::Enter) || Keyboard::isKeyPressed(Keyboard::Space)) && !prevToggleKeyStatus) {
+		else if (key == Keyboard::Enter || key == Keyboard::Space) {
 			getManager_ref().setState(static_cast<ManagerManager::State>(this->selectedOption));
+		}
+		else if (key == Keyboard::Escape) {
+			getWindow_ref().close();
+			return;
 		}
 		options[selectedOptionIndex].setFillColor(getSelectedTextColor());
 	}
-
-    prevUpKeyStatus=Keyboard::isKeyPressed(Keyboard::Up);
-    prevDownKeyStatus=Keyboard::isKeyPressed(Keyboard::Down);
-	prevToggleKeyStatus = Keyboard::isKeyPressed(Keyboard::Enter) | Keyboard::isKeyPressed(Keyboard::Space);
 }
 
 void MenuManager::update()
 {
-	manageInput();
+	//manageInput();
 	draw();
 }
 
@@ -100,8 +96,11 @@ MenuManager::MenuManager(RenderWindow& window, ManagerManager& manager_ref)
 	options[3].setString("Exit");
 	for (int i = 0; i < 4; i++) {
 		options[i].setFont(getFont());
-		options[i].setFillColor(getNormalTextColor());
+		if (i) {
+			options[i].setFillColor(getNormalTextColor());
+		}
 		options[i].setCharacterSize(getNormalFontSize());
 		options[i].setPosition(50, getWindow_ref().getSize().y / 2 + i * 65);
 	}
+	options[0].setFillColor(getSelectedTextColor());
 }

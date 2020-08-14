@@ -38,5 +38,4 @@ CheckBox::CheckBox(short int length, Vector2f position, Texture& unchecked, Text
 CheckBox::CheckBox()
 {	
 	this->setTexture(&this->unchecked);
-	//default ctor
 }

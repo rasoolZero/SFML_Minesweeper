@@ -26,11 +26,13 @@ Leaderboard::Leaderboard(RenderWindow& _window_ref, ManagerManager& manager_ref)
 	options[2].setString("Hard highscores");
 	for (int i = 0; i < 3; i++) {
 		options[i].setFont(font);
+        if (i) {
 		options[i].setFillColor(getNormalTextColor());
+        }
 		options[i].setCharacterSize(getNormalFontSize());
 		options[i].setPosition( (getWindow_ref().getSize().x/6*(i*2+1)) - options[i].getGlobalBounds().width/2 , 24);
 	}
-
+    options[0].setFillColor(getSelectedTextColor());
 }
 void Leaderboard::init(){
     for(int j=0;j<3;j++)
@@ -84,7 +86,7 @@ void Leaderboard::addScore(Time time,char name[16],Difficulties difficulty){
 }
 
 void Leaderboard::update(){
-    checkInput();
+    //checkInput();
     draw();
 }
 
@@ -111,27 +113,27 @@ void Leaderboard::draw(){
     drawBack();
 }
 
-void Leaderboard::checkInput(){
-    static bool prevLeftKeyStatus = false;
-    static bool prevRightKeyStatus = false;
+void Leaderboard::manageInput(Keyboard::Key key) {
 	int selectedOptionIndex = static_cast<int>(this->selectedOption);
 	if (options[selectedOptionIndex].getCharacterSize() == selectedFontSize) {
 
-		if (Keyboard::isKeyPressed(Keyboard::Left) && !prevLeftKeyStatus) {
+		if (key == Keyboard::Left) {
 			options[selectedOptionIndex].setFillColor(getNormalTextColor());
 			setSelectedOption( (selectedOptionIndex += 2) %= 3 ); // goes to previous state in the cycle
 		}
-		else if (Keyboard::isKeyPressed(Keyboard::Right) && !prevRightKeyStatus )
+		else if (key == Keyboard::Right)
 		{
 			options[selectedOptionIndex].setFillColor(getNormalTextColor());
 			setSelectedOption( (selectedOptionIndex += 1) %= 3 ); // goes to next state in the cycle
 		}
+        else if (key == Keyboard::Escape) {
+            options[selectedOptionIndex].setFillColor(getNormalTextColor());
+            selectedOption = Difficulties::Easy;
+            selectedOptionIndex = 0;
+            getManager_ref().setState();
+        }
 		options[selectedOptionIndex].setFillColor(getSelectedTextColor());
 	}
-
-    prevLeftKeyStatus=Keyboard::isKeyPressed(Keyboard::Left);
-    prevRightKeyStatus=Keyboard::isKeyPressed(Keyboard::Right);
-
 }
 
 void Leaderboard::drawOptions(){

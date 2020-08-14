@@ -12,7 +12,6 @@ class MenuManager : public Screen
 {
 private:
 	short int selectedFontSize = 48;
-	//Font font;
 	Text options[4];
 
 	enum class SelectedOption { play, settings, leaderboard, exit };
@@ -26,11 +25,11 @@ private:
 
 	void setSelectedOption(SelectedOption selectedOption);
 	void setSelectedOption(short int selectedOptionIndex);
-	void manageInput();
+	virtual void manageInput(Keyboard::Key); //from Screen
 public:
 	SelectedOption getSelectedOption() { return this->selectedOption; }
 
-	virtual void update();
+	virtual void update(); //from Screen
 	MenuManager(RenderWindow& window, ManagerManager& manager_ref);
 };
 #endif // !MenuManager_h

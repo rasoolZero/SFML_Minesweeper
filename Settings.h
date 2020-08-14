@@ -30,7 +30,7 @@ private:
 
 	void setSelectedOption(SelectedOption selectedOption);
 	void setSelectedOption(short int selectedOptionIndex);
-	void manageInput();
+	virtual void manageInput(Keyboard::Key);
 public:
 
 	SelectedOption getSelectedOption() { return this->selectedOption; }

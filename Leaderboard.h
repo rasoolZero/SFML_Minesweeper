@@ -20,7 +20,7 @@ class Leaderboard : public Screen
         bool isHighscore(Time time,Difficulties difficulty);
         void addScore(Time time,char name[16],Difficulties difficulty);
 
-        virtual void update();
+        virtual void update(); //from Screen
 
         void reset();
 
@@ -44,7 +44,7 @@ class Leaderboard : public Screen
         void load();
         void save();
 
-        void checkInput();
+        virtual void manageInput(Keyboard::Key); //from Screen
         void draw();
         void drawScores();
         void drawOptions();

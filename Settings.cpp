@@ -6,7 +6,7 @@ void Settings::update()
 {
 	draw();
 	
-	manageInput();
+	//manageInput();
 }
 
 Settings::Settings(RenderWindow& window, ManagerManager& manager_ref)
@@ -31,7 +31,9 @@ Settings::Settings(RenderWindow& window, ManagerManager& manager_ref)
 	for (int i = 0; i < 6; i++)
 	{
 		options[i].setFont(getFont());
-		options[i].setFillColor(getNormalTextColor());
+		if (i) {
+			options[i].setFillColor(getNormalTextColor());
+		}
 		if (i == 1 || i == 3) {
 			options[i].setCharacterSize(getNormalFontSize() - 10);
 			options[i].setPosition(220, initial_pos + 80 + 160 * (i / 2));
@@ -45,8 +47,8 @@ Settings::Settings(RenderWindow& window, ManagerManager& manager_ref)
 				options[i].setPosition(180, initial_pos + 160 * (i / 2));
 			}
 		}
-		
 	}
+	options[0].setFillColor(getSelectedTextColor());
 	for (int i = 0; i < 2; i++)
 	{
 		FloatRect endOfText = options[2 * i].getGlobalBounds();
@@ -121,23 +123,26 @@ void Settings::setSelectedOption(short int selectedOptionIndex)
 	this->selectedOption = static_cast<SelectedOption>(selectedOptionIndex);
 }
 
-void Settings::manageInput()
+void Settings::manageInput(Keyboard::Key key)
 {
-	static bool prevUpKeyStatus = false;
-	static bool prevDownKeyStatus = false;
-	static bool prevToggleKeyStatus = false; //for Enter and Space keys
 	int selectedOptionIndex = static_cast<int>(this->selectedOption);
 
-	if (Keyboard::isKeyPressed(Keyboard::Up) && !prevUpKeyStatus) {
+	if (key == Keyboard::Up) {
 		options[selectedOptionIndex].setFillColor(getNormalTextColor());
 		setSelectedOption((selectedOptionIndex += 5) %= 6); // goes to previous state in the cycle
 	}
-	else if (Keyboard::isKeyPressed(Keyboard::Down) && !prevDownKeyStatus)
+	else if (key == Keyboard::Down)
 	{
 		options[selectedOptionIndex].setFillColor(getNormalTextColor());
 		setSelectedOption((selectedOptionIndex += 1) %= 6); // goes to next state in the cycle
 	}
-	if ((Keyboard::isKeyPressed(Keyboard::Enter) || Keyboard::isKeyPressed(Keyboard::Space)) && !prevToggleKeyStatus) {
+	else if (key == Keyboard::Escape) {
+		options[selectedOptionIndex].setFillColor(getNormalTextColor());
+		selectedOption = SelectedOption::soundToggle;
+		selectedOptionIndex = 0;
+		getManager_ref().setState();
+	}
+	else if (key == Keyboard::Enter || key == Keyboard::Space) {
 		if (selectedOption == SelectedOption::soundToggle) {
 			toggles[0].swtitchState();
 			//toggle sound
@@ -161,8 +166,4 @@ void Settings::manageInput()
 		}
 	}
 	options[selectedOptionIndex].setFillColor(getSelectedTextColor());
-
-	prevUpKeyStatus = Keyboard::isKeyPressed(Keyboard::Up);
-	prevDownKeyStatus = Keyboard::isKeyPressed(Keyboard::Down);
-	prevToggleKeyStatus = Keyboard::isKeyPressed(Keyboard::Enter) | Keyboard::isKeyPressed(Keyboard::Space);
 }

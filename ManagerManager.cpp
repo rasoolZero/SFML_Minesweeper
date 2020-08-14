@@ -1,9 +1,8 @@
 #include "ManagerManager.h"
 
-ManagerManager::ManagerManager(RenderWindow* window_ptr, MenuManager* menuManager_ptr, Settings* settings_ptr)
+ManagerManager::ManagerManager(/*GameManager* gameManager_ptr, */RenderWindow* window_ptr, Settings* settings_ptr, Leaderboard* leaderboard_ptr, MenuManager* menuManager_ptr)
 	:window_ptr(window_ptr)
-	,menuManager_ptr(menuManager_ptr)
-	,settings_ptr(settings_ptr)
+	, screen_ptr{/*gameManager_ptr, */settings_ptr, leaderboard_ptr, menuManager_ptr}
 {
 
 }
@@ -14,17 +13,18 @@ ManagerManager::ManagerManager(RenderWindow* window_ptr)
 
 }
 
-void ManagerManager::setPointers(MenuManager* menuManager_ptr, Settings* settings_ptr, Leaderboard* leaderboard_ptr)
+void ManagerManager::setPointers(/*GameManager* gameManager_ptr, */Settings* settings_ptr, Leaderboard* leaderboard_ptr, MenuManager* menuManager_ptr)
 {
-	this->menuManager_ptr = menuManager_ptr;
-	this->settings_ptr = settings_ptr;
-	this->leaderboard_ptr = leaderboard_ptr;
+	//this->screen_ptr[0] = gameManager_ptr;
+	this->screen_ptr[1] = settings_ptr;
+	this->screen_ptr[2] = leaderboard_ptr;
+	this->screen_ptr[3] = menuManager_ptr;
 }
 
 void ManagerManager::manage()
 {
-	update();
-	//checkEvents();
+	//update();
+	checkEvents();
 }
 
 void ManagerManager::setState(State state)
@@ -32,22 +32,39 @@ void ManagerManager::setState(State state)
 	this->state = state;
 }
 
+void ManagerManager::checkEvents()
+{
+	bool isFocused;
+	isFocused = true;
+	while (window_ptr->isOpen())
+	{
+		Event event;
+		while (window_ptr->pollEvent(event))
+		{
+			if (event.type == Event::Closed)
+				window_ptr->close();
+			else if (event.type == Event::GainedFocus) {
+				isFocused = true;
+			}
+			else if (event.type == Event::LostFocus) {
+				isFocused = false;
+			}
+
+			else if (event.type == Event::KeyPressed) {
+				screen_ptr[State_to_int()]->manageInput(event.key.code);
+			}
+		}
+
+
+		if (isFocused) {
+			window_ptr->clear(Color(235, 235, 250));
+			update();
+			window_ptr->display();
+		}
+	}
+}
+
 void ManagerManager::update()
 {
-	switch (state){
-	//case State::game:
-	/*case State::menu: {
-		break; //this or default?
-	}*/
-	case State::settings: {
-		settings_ptr->update();
-		break;
-	}
-	case State::leaderboard: {
-		leaderboard_ptr->update();
-		break;
-	}
-	default: //menu
-		menuManager_ptr->update();
-	}
+	screen_ptr[State_to_int()]->update();
 }
