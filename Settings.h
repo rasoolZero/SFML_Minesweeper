@@ -2,23 +2,25 @@
 #define Settings_h
 
 #include "CheckBox.h"
+#include "Screen.h"
+
 class ManagerManager;
-class Settings
+class Settings : public Screen
 {
 private:
-	RenderWindow& window_ref;
-	ManagerManager& manager_ref;
+	//RenderWindow& window_ref;
+	//ManagerManager& manager_ref;
 	//SoundManager& soundManager_ref;
 	enum class SelectedOption {soundToggle, soundAdjust, musicToggle, musicAdjust, leaderboardReset, back};
 	SelectedOption selectedOption = SelectedOption::soundToggle;
 	Text options[6];
 	Texture textures[2];
 	CheckBox toggles[2];
-	Color normalTextColor = Color::Black;
-	Color selectedTextColor = Color::Red;
+	//Color normalTextColor = Color::Black;
+	//Color selectedTextColor = Color::Red;
 
-	Font font;
-	short int fontSize = 40;
+	//Font font;
+	//short int fontSize = 40;
 
 	short int soundEffectVolume = 100;
 	short int musicVolume = 100;
@@ -37,12 +39,12 @@ private:
 	void setSelectedOption(short int selectedOptionIndex);
 	void manageInput();
 public:
-	void setFontSize(short int size) { this->fontSize = size; }
-	short int getFontSize() { return this->fontSize; }
+	//void setFontSize(short int size) { this->fontSize = size; }
+	//short int getFontSize() { return this->fontSize; }
 
 	SelectedOption getSelectedOption() { return this->selectedOption; }
 
-	void update();
+	virtual void update();
 	//void loadSettings();
 	//void SaveSettings();
 

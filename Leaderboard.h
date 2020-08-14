@@ -1,5 +1,6 @@
 #ifndef LEADERBOARD_H
 #define LEADERBOARD_H
+#include "Screen.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
@@ -11,7 +12,7 @@ typedef struct Record{
     Time score;
 }Record;
 
-class Leaderboard
+class Leaderboard : public Screen
 {
     public:
         Leaderboard(RenderWindow & _window_ref, ManagerManager& manager_ref);
@@ -19,7 +20,7 @@ class Leaderboard
         bool isHighscore(Time time,Difficulties difficulty);
         void addScore(Time time,char name[16],Difficulties difficulty);
 
-        void update();
+        virtual void update();
 
         void reset();
 
@@ -28,15 +29,15 @@ class Leaderboard
     private:
         Record highScores[3][10];
         string fileName="scores.dat";
-        RenderWindow & window_ref;
-        ManagerManager& manager_ref;
+        //RenderWindow & window_ref;
+        //ManagerManager& manager_ref;
 
-        short int normalFontSize = 24;
+        //short int normalFontSize = 24;
         short int selectedFontSize = 30;
         Font font;
         Text options[3];
-        Color selectedTextColor = Color::Red;
-        Color normalTextColor = Color::Black;
+        //Color selectedTextColor = Color::Red;
+        //Color normalTextColor = Color::Black;
 
         Difficulties selectedOption = Difficulties::Easy;
 

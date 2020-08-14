@@ -7,9 +7,8 @@
 using namespace std;
 using namespace sf;
 
-Leaderboard::Leaderboard(RenderWindow & _window_ref, ManagerManager& manager_ref)
-    : window_ref(_window_ref)
-    ,manager_ref(manager_ref)
+Leaderboard::Leaderboard(RenderWindow& _window_ref, ManagerManager& manager_ref)
+    : Screen(_window_ref, manager_ref, "fonts\\arial.ttf", 24)
 {
 
     ifstream f(fileName);
@@ -27,9 +26,9 @@ Leaderboard::Leaderboard(RenderWindow & _window_ref, ManagerManager& manager_ref
 	options[2].setString("Hard highscores");
 	for (int i = 0; i < 3; i++) {
 		options[i].setFont(font);
-		options[i].setFillColor(normalTextColor);
-		options[i].setCharacterSize(normalFontSize);
-		options[i].setPosition( (window_ref.getSize().x/6*(i*2+1)) - options[i].getGlobalBounds().width/2 , 24);
+		options[i].setFillColor(getNormalTextColor());
+		options[i].setCharacterSize(getNormalFontSize());
+		options[i].setPosition( (getWindow_ref().getSize().x/6*(i*2+1)) - options[i].getGlobalBounds().width/2 , 24);
 	}
 
 }
@@ -90,7 +89,7 @@ void Leaderboard::update(){
 }
 
 void Leaderboard::draw(){
-    window_ref.clear(Color(235,235,250));
+    getWindow_ref().clear(Color(235,235,250));
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -101,7 +100,7 @@ void Leaderboard::draw(){
 			}
 		}
 		else {
-			if (currentSize != normalFontSize) {
+			if (currentSize != getNormalFontSize()) {
 				options[i].setCharacterSize(currentSize - 1);
 			}
 		}
@@ -119,15 +118,15 @@ void Leaderboard::checkInput(){
 	if (options[selectedOptionIndex].getCharacterSize() == selectedFontSize) {
 
 		if (Keyboard::isKeyPressed(Keyboard::Left) && !prevLeftKeyStatus) {
-			options[selectedOptionIndex].setFillColor(normalTextColor);
+			options[selectedOptionIndex].setFillColor(getNormalTextColor());
 			setSelectedOption( (selectedOptionIndex += 2) %= 3 ); // goes to previous state in the cycle
 		}
 		else if (Keyboard::isKeyPressed(Keyboard::Right) && !prevRightKeyStatus )
 		{
-			options[selectedOptionIndex].setFillColor(normalTextColor);
+			options[selectedOptionIndex].setFillColor(getNormalTextColor());
 			setSelectedOption( (selectedOptionIndex += 1) %= 3 ); // goes to next state in the cycle
 		}
-		options[selectedOptionIndex].setFillColor(selectedTextColor);
+		options[selectedOptionIndex].setFillColor(getSelectedTextColor());
 	}
 
     prevLeftKeyStatus=Keyboard::isKeyPressed(Keyboard::Left);
@@ -137,7 +136,7 @@ void Leaderboard::checkInput(){
 
 void Leaderboard::drawOptions(){
     for(int i=0;i<3;i++){
-        window_ref.draw(options[i]);
+        getWindow_ref().draw(options[i]);
     }
 }
 
@@ -146,11 +145,11 @@ void Leaderboard::drawScores(){
     Text text;
     text.setFillColor(Color::Black);
     text.setFont(font);
-    text.setCharacterSize(normalFontSize);
+    text.setCharacterSize(getNormalFontSize());
     for(int i=0;i<10;i++){
         text.setString(highScores[diffIndex][i].name);
-        text.setPosition(window_ref.getSize().x/4 , 100 + ((window_ref.getSize().y-100)/10*i));
-        window_ref.draw(text);
+        text.setPosition(getWindow_ref().getSize().x/4 , 100 + ((getWindow_ref().getSize().y-100)/10*i));
+        getWindow_ref().draw(text);
     }
 
     for(int i=0;i<10;i++){
@@ -158,18 +157,18 @@ void Leaderboard::drawScores(){
         int minutes = seconds/60;
         seconds%=60;
         text.setString( to_string(minutes ) + ":"+to_string(seconds));
-        text.setPosition(window_ref.getSize().x/4*3 , 100 + ((window_ref.getSize().y-100)/10*i));
-        window_ref.draw(text);
+        text.setPosition(getWindow_ref().getSize().x/4*3 , 100 + ((getWindow_ref().getSize().y-100)/10*i));
+        getWindow_ref().draw(text);
     }
 }
 void Leaderboard::drawBack(){
     Text text;
     text.setFillColor(Color::Black);
     text.setFont(font);
-    text.setCharacterSize(normalFontSize);
+    text.setCharacterSize(getNormalFontSize());
     text.setString("[Esc] back");
-    text.setPosition(5,window_ref.getSize().y-40);
-    window_ref.draw(text);
+    text.setPosition(5,getWindow_ref().getSize().y-40);
+    getWindow_ref().draw(text);
 }
 
 void Leaderboard::setSelectedOption(Difficulties selectedOption)

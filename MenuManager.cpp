@@ -12,7 +12,7 @@ void MenuManager::draw()
 			}
 		}
 		else {
-			if (currentSize != normalFontSize) {
+			if (currentSize != getNormalFontSize()) {
 				options[i].setCharacterSize(currentSize - 1);
 			}
 		}
@@ -26,22 +26,22 @@ void MenuManager::draw()
 void MenuManager::drawPlay()
 {
 	
-	this->window_ref.draw(options[0]);
+	this->getWindow_ref().draw(options[0]);
 }
 
 void MenuManager::drawSettings()
 {
-	this->window_ref.draw(options[1]);
+	this->getWindow_ref().draw(options[1]);
 }
 
 void MenuManager::drawLeaderBoard()
 {
-	this->window_ref.draw(options[2]);
+	this->getWindow_ref().draw(options[2]);
 }
 
 void MenuManager::drawExit()
 {
-	this->window_ref.draw(options[3]);
+	this->getWindow_ref().draw(options[3]);
 }
 
 void MenuManager::setSelectedOption(SelectedOption selectedOption)
@@ -65,18 +65,18 @@ void MenuManager::manageInput()
 	if (options[selectedOptionIndex].getCharacterSize() == selectedFontSize) {
 
 		if (Keyboard::isKeyPressed(Keyboard::Up) && !prevUpKeyStatus) {
-			options[selectedOptionIndex].setFillColor(normalTextColor);
+			options[selectedOptionIndex].setFillColor(getNormalTextColor());
 			setSelectedOption( (selectedOptionIndex += 3) %= 4 ); // goes to previous state in the cycle
 		}
 		else if (Keyboard::isKeyPressed(Keyboard::Down) && !prevDownKeyStatus )
 		{
-			options[selectedOptionIndex].setFillColor(normalTextColor);
+			options[selectedOptionIndex].setFillColor(getNormalTextColor());
 			setSelectedOption( (selectedOptionIndex += 1) %= 4 ); // goes to next state in the cycle
 		}
 		if ((Keyboard::isKeyPressed(Keyboard::Enter) || Keyboard::isKeyPressed(Keyboard::Space)) && !prevToggleKeyStatus) {
-			manager_ref.setState(static_cast<ManagerManager::State>(this->selectedOption));
+			getManager_ref().setState(static_cast<ManagerManager::State>(this->selectedOption));
 		}
-		options[selectedOptionIndex].setFillColor(selectedTextColor);
+		options[selectedOptionIndex].setFillColor(getSelectedTextColor());
 	}
 
     prevUpKeyStatus=Keyboard::isKeyPressed(Keyboard::Up);
@@ -91,20 +91,17 @@ void MenuManager::update()
 }
 
 MenuManager::MenuManager(RenderWindow& window, ManagerManager& manager_ref)
-	:window_ref(window)
-	,manager_ref(manager_ref)
+	:Screen(window, manager_ref, "fonts\\arial.ttf", 40)
 {
-	if (!font.loadFromFile("fonts\\arial.ttf")) {
-		throw std::runtime_error("menu font could not be loaded\n");
-	}
+	
 	options[0].setString("Play");
 	options[1].setString("Settings");
 	options[2].setString("Leaderboard");
 	options[3].setString("Exit");
 	for (int i = 0; i < 4; i++) {
-		options[i].setFont(font);
-		options[i].setFillColor(normalTextColor);
-		options[i].setCharacterSize(normalFontSize);
-		options[i].setPosition(50, window_ref.getSize().y / 2 + i * 65);
+		options[i].setFont(getFont());
+		options[i].setFillColor(getNormalTextColor());
+		options[i].setCharacterSize(getNormalFontSize());
+		options[i].setPosition(50, getWindow_ref().getSize().y / 2 + i * 65);
 	}
 }
