@@ -1,25 +1,26 @@
 #include "Settings.h"
 #include "ManagerManager.h"
+using namespace sf;
 
 
 void Settings::update()
 {
 	draw();
-	
+
 	//manageInput();
 }
 
-Settings::Settings(RenderWindow& window, ManagerManager& manager_ref)
-	:Screen(window, manager_ref, "fonts\\arial.ttf")
+Settings::Settings(RenderWindow& window, ManagerManager& manager_ref,SoundManager & _soundManager_ref)
+	:Screen(window, manager_ref, "fonts\\arial.ttf"),soundManager_ref(_soundManager_ref)
 {
-	
+
 	if (!textures[0].loadFromFile("images\\unchecked.png")) {
 		throw std::runtime_error("unchecked texbox image could not be loaded\n");
 	}
 	if (!textures[1].loadFromFile("images\\checked.png")) {
 		throw std::runtime_error("checked texbox image could not be loaded\n");
 	}
-	
+
 	options[0].setString("sound effects");
 	options[1].setString("volume");
 	options[2].setString("music");
@@ -59,8 +60,8 @@ Settings::Settings(RenderWindow& window, ManagerManager& manager_ref)
 }
 
 void Settings::draw()
-{	
-	
+{
+
 	drawTitle();
 	drawSoundEffectOption();
 	drawMusicOption();
@@ -85,6 +86,20 @@ void Settings::drawSoundEffectOption()
 	this->getWindow_ref().draw(options[0]);
 
 	this->getWindow_ref().draw(options[1]);
+    drawSoundEffectBar();
+}
+
+void Settings::drawSoundEffectBar(){
+    RectangleShape shape(Vector2f ( 200 ,options[1].getGlobalBounds().height ) );
+    shape.setPosition( options[1].getGlobalBounds().left + options[1].getGlobalBounds().width + 40  , options[1].getGlobalBounds().top );
+    shape.setFillColor(Color::Transparent);
+    shape.setOutlineThickness(2);
+    shape.setOutlineColor(Color::Black);
+    this->getWindow_ref().draw(shape);
+    shape.setSize(Vector2f (soundEffectVolume * 2  ,options[1].getGlobalBounds().height ) );
+    shape.setFillColor(Color::Red);
+    shape.setOutlineThickness(0);
+    this->getWindow_ref().draw(shape);
 }
 
 void Settings::drawMusicOption()
@@ -92,6 +107,21 @@ void Settings::drawMusicOption()
 	this->getWindow_ref().draw(options[2]);
 
 	this->getWindow_ref().draw(options[3]);
+	drawMusicBar();
+}
+
+void Settings::drawMusicBar(){
+
+    RectangleShape shape(Vector2f ( 200 ,options[3].getGlobalBounds().height ) );
+    shape.setPosition( options[3].getGlobalBounds().left + options[3].getGlobalBounds().width + 40  , options[3].getGlobalBounds().top );
+    shape.setFillColor(Color::Transparent);
+    shape.setOutlineThickness(2);
+    shape.setOutlineColor(Color::Black);
+    this->getWindow_ref().draw(shape);
+    shape.setSize(Vector2f (musicVolume * 2  ,options[3].getGlobalBounds().height ) );
+    shape.setFillColor(Color::Red);
+    shape.setOutlineThickness(0);
+    this->getWindow_ref().draw(shape);
 }
 
 void Settings::drawResetLeaderboard()
@@ -142,16 +172,55 @@ void Settings::manageInput(Keyboard::Key key)
 		selectedOptionIndex = 0;
 		getManager_ref().setState();
 	}
+	else if(key == Keyboard::Left || key == Keyboard::Right ){
+	    short int delta;
+        if(key == Keyboard::Left)
+            delta=-5;
+        else
+            delta=5;
+        if (selectedOption == SelectedOption::soundAdjust){
+            soundEffectVolume+=delta;
+            if(soundEffectVolume<0)
+                soundEffectVolume=0;
+            else if(soundEffectVolume>100)
+                soundEffectVolume=100;
+            soundManager_ref.setVolumeSoundEffects(soundEffectVolume);
+            soundManager_ref.play(SoundManager::Reveal);
+        }
+        if (selectedOption == SelectedOption::musicAdjust){
+            musicVolume+=delta;
+            if(musicVolume<0)
+                musicVolume=0;
+            else if(musicVolume>100)
+                musicVolume=100;
+            soundManager_ref.setVolumeMusics(musicVolume);
+        }
+	}
 	else if (key == Keyboard::Enter || key == Keyboard::Space) {
 		if (selectedOption == SelectedOption::soundToggle) {
 			toggles[0].swtitchState();
-			//toggle sound
-			//play sound feedback
+			if(soundEffects_enabled){
+                soundEffects_enabled=false;
+                soundManager_ref.setVolumeSoundEffects(0);
+			}
+			else{
+                soundEffects_enabled=true;
+                soundManager_ref.setVolumeSoundEffects(soundEffectVolume);
+                soundManager_ref.play(SoundManager::Reveal);
+			}
 		}
 		else if (selectedOption == SelectedOption::musicToggle) {
 			toggles[1].swtitchState();
-			//toggle music
-			//play sound feedback
+			if(music_enabled){
+                music_enabled=false;
+                soundManager_ref.setVolumeMusics(0);
+                soundManager_ref.stopAll();
+			}
+			else{
+                music_enabled=true;
+                soundManager_ref.setVolumeMusics(musicVolume);
+                soundManager_ref.play(SoundManager::MenuMusic);
+			}
 		}
 		else if (selectedOption == SelectedOption::leaderboardReset) {
 			// reset leaderboard

@@ -3,6 +3,7 @@
 
 #include "CheckBox.h"
 #include "Screen.h"
+#include "SoundManager.h"
 
 class ManagerManager;
 class Settings : public Screen
@@ -20,10 +21,14 @@ private:
 	bool music_enabled = true;
 	bool soundEffects_enabled = true;
 
+	SoundManager & soundManager_ref;
+
 	void draw();
 	void drawTitle();
 	void drawSoundEffectOption();
+	void drawSoundEffectBar();
 	void drawMusicOption();
+	void drawMusicBar();
 	void drawResetLeaderboard();
 	void drawBack();
 	void drawModifiers();
@@ -39,7 +44,7 @@ public:
 	//void loadSettings();
 	//void SaveSettings();
 
-	Settings(RenderWindow& window, ManagerManager& manager_ref);
+	Settings(RenderWindow& window, ManagerManager& manager_ref ,SoundManager & _soundManager_ref);
 
 };
 
