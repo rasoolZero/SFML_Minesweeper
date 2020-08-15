@@ -2,6 +2,7 @@
 #define Settings_h
 
 #include "CheckBox.h"
+#include "AdjustBar.h"
 #include "Screen.h"
 #include "SoundManager.h"
 
@@ -15,6 +16,7 @@ private:
 	Text options[6];
 	Texture textures[2];
 	CheckBox toggles[2];
+	AdjustBar bars[2];
 
 	short int soundEffectVolume = 100;
 	short int musicVolume = 100;
@@ -26,9 +28,9 @@ private:
 	void draw();
 	void drawTitle();
 	void drawSoundEffectOption();
-	void drawSoundEffectBar();
 	void drawMusicOption();
-	void drawMusicBar();
+	void drawMusicVolume();
+	void drawSoundEffectVolume();
 	void drawResetLeaderboard();
 	void drawBack();
 	void drawModifiers();

@@ -12,6 +12,7 @@ void Settings::update()
 
 Settings::Settings(RenderWindow& window, ManagerManager& manager_ref,SoundManager & _soundManager_ref)
 	:Screen(window, manager_ref, "fonts\\arial.ttf"),soundManager_ref(_soundManager_ref)
+	,bars {  {100,FloatRect()},{100,FloatRect()} }
 {
 
 	if (!textures[0].loadFromFile("images\\unchecked.png")) {
@@ -57,6 +58,8 @@ Settings::Settings(RenderWindow& window, ManagerManager& manager_ref,SoundManage
 	toggles[i].setTexture(&textures[1]);
 	toggles[i].swtitchState();
 	}
+	bars[0] = AdjustBar( soundEffectVolume,options[1].getGlobalBounds() );
+	bars[1] = AdjustBar( musicVolume,options[3].getGlobalBounds());
 }
 
 void Settings::draw()
@@ -86,20 +89,15 @@ void Settings::drawSoundEffectOption()
 	this->getWindow_ref().draw(options[0]);
 
 	this->getWindow_ref().draw(options[1]);
-    drawSoundEffectBar();
+    drawSoundEffectVolume();
 }
+void Settings::drawSoundEffectVolume(){
 
-void Settings::drawSoundEffectBar(){
-    RectangleShape shape(Vector2f ( 200 ,options[1].getGlobalBounds().height ) );
-    shape.setPosition( options[1].getGlobalBounds().left + options[1].getGlobalBounds().width + 40  , options[1].getGlobalBounds().top );
-    shape.setFillColor(Color::Transparent);
-    shape.setOutlineThickness(2);
-    shape.setOutlineColor(Color::Black);
-    this->getWindow_ref().draw(shape);
-    shape.setSize(Vector2f (soundEffectVolume * 2  ,options[1].getGlobalBounds().height ) );
-    shape.setFillColor(Color::Red);
-    shape.setOutlineThickness(0);
-    this->getWindow_ref().draw(shape);
+    Text text(to_string(soundEffectVolume),getFont(),getNormalFontSize() - 10);
+    text.setFillColor(Color::Black);
+	short int initial_pos = getWindow_ref().getSize().y / 2 - 160;
+    text.setPosition( 600, initial_pos + 80 + 160 * (1 / 2) );
+    this->getWindow_ref().draw(text);
 }
 
 void Settings::drawMusicOption()
@@ -107,21 +105,15 @@ void Settings::drawMusicOption()
 	this->getWindow_ref().draw(options[2]);
 
 	this->getWindow_ref().draw(options[3]);
-	drawMusicBar();
+    drawMusicVolume();
 }
+void Settings::drawMusicVolume(){
 
-void Settings::drawMusicBar(){
-
-    RectangleShape shape(Vector2f ( 200 ,options[3].getGlobalBounds().height ) );
-    shape.setPosition( options[3].getGlobalBounds().left + options[3].getGlobalBounds().width + 40  , options[3].getGlobalBounds().top );
-    shape.setFillColor(Color::Transparent);
-    shape.setOutlineThickness(2);
-    shape.setOutlineColor(Color::Black);
-    this->getWindow_ref().draw(shape);
-    shape.setSize(Vector2f (musicVolume * 2  ,options[3].getGlobalBounds().height ) );
-    shape.setFillColor(Color::Red);
-    shape.setOutlineThickness(0);
-    this->getWindow_ref().draw(shape);
+    Text text(to_string(musicVolume),getFont(),getNormalFontSize() - 10);
+    text.setFillColor(Color::Black);
+	short int initial_pos = getWindow_ref().getSize().y / 2 - 160;
+    text.setPosition( 600, initial_pos + 80 + 160 * (3 / 2) );
+    this->getWindow_ref().draw(text);
 }
 
 void Settings::drawResetLeaderboard()
@@ -136,8 +128,10 @@ void Settings::drawBack()
 
 void Settings::drawModifiers()
 {
-	Drawable* mods[4] = { &toggles[0], &toggles[1] };
-	for (int i = 0; i < 2; i++)
+    bars[0].setValue(soundEffectVolume);
+    bars[1].setValue(musicVolume);
+	Drawable* mods[4] = { &toggles[0], &toggles[1],&bars[0], &bars[1] };
+	for (int i = 0; i < 4; i++)
 	{
 		getWindow_ref().draw(*mods[i]);
 	}
