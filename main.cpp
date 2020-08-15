@@ -17,7 +17,7 @@ int main() {
     ManagerManager manager(&window);
     MenuManager menu(window, manager);
     Leaderboard leaderboard(window, manager);
-    Settings settings(window, manager,soundManager);
+    Settings settings(window, manager,soundManager,leaderboard);
     manager.setPointers(&settings, &leaderboard, &menu);
     soundManager.play(SoundManager::MenuMusic);
 

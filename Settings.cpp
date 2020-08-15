@@ -10,8 +10,8 @@ void Settings::update()
 	//manageInput();
 }
 
-Settings::Settings(RenderWindow& window, ManagerManager& manager_ref,SoundManager & _soundManager_ref)
-	:Screen(window, manager_ref, "fonts\\arial.ttf"),soundManager_ref(_soundManager_ref)
+Settings::Settings(RenderWindow& window, ManagerManager& manager_ref,SoundManager & _soundManager_ref,Leaderboard & _leaderBoard_ref)
+	:Screen(window, manager_ref, "fonts\\arial.ttf"),soundManager_ref(_soundManager_ref),leaderBoard_ref(_leaderBoard_ref)
 	,bars {  {100,FloatRect()},{100,FloatRect()} }
 {
 
@@ -217,7 +217,8 @@ void Settings::manageInput(Keyboard::Key key)
 			}
 		}
 		else if (selectedOption == SelectedOption::leaderboardReset) {
-			// reset leaderboard
+			leaderBoard_ref.reset();
+			soundManager_ref.play(SoundManager::Reveal);
 			//sound feedback
 		}
 		else { //back

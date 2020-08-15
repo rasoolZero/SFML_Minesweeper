@@ -5,6 +5,7 @@
 #include "AdjustBar.h"
 #include "Screen.h"
 #include "SoundManager.h"
+#include "Leaderboard.h"
 
 class ManagerManager;
 class Settings : public Screen
@@ -24,6 +25,7 @@ private:
 	bool soundEffects_enabled = true;
 
 	SoundManager & soundManager_ref;
+	Leaderboard & leaderBoard_ref;
 
 	void draw();
 	void drawTitle();
@@ -46,7 +48,7 @@ public:
 	//void loadSettings();
 	//void SaveSettings();
 
-	Settings(RenderWindow& window, ManagerManager& manager_ref ,SoundManager & _soundManager_ref);
+	Settings(RenderWindow& window, ManagerManager& manager_ref ,SoundManager & _soundManager_ref,Leaderboard & _leaderBoard_ref);
 
 };
 
