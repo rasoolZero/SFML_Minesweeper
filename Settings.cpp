@@ -1,11 +1,16 @@
 #include "Settings.h"
 #include "ManagerManager.h"
+#include <fstream>
+#include <sstream>
+#include <iostream>
 using namespace sf;
+using namespace std;
 
 
 void Settings::update()
 {
 	draw();
+    save();
 
 	//manageInput();
 }
@@ -21,6 +26,11 @@ Settings::Settings(RenderWindow& window, ManagerManager& manager_ref,SoundManage
 	if (!textures[1].loadFromFile("images\\checked.png")) {
 		throw std::runtime_error("checked texbox image could not be loaded\n");
 	}
+    ifstream f(fileName);
+    if(!f.good())
+        save();
+    else
+        load();
 
 	options[0].setString("sound effects");
 	options[1].setString("volume");
@@ -54,10 +64,13 @@ Settings::Settings(RenderWindow& window, ManagerManager& manager_ref,SoundManage
 	for (int i = 0; i < 2; i++)
 	{
 		FloatRect endOfText = options[2 * i].getGlobalBounds();
-	toggles[i] = CheckBox(32, Vector2f(endOfText.left + endOfText.width + 30, endOfText.top + 3), textures[0], textures[1]);
-	toggles[i].setTexture(&textures[1]);
-	toggles[i].swtitchState();
+        toggles[i] = CheckBox(32, Vector2f(endOfText.left + endOfText.width + 30, endOfText.top + 3), textures[0], textures[1]);
+        toggles[i].swtitchState();
 	}
+
+    toggles[0].setState(soundEffects_enabled);
+    toggles[1].setState(music_enabled);
+
 	bars[0] = AdjustBar( soundEffectVolume,options[1].getGlobalBounds() );
 	bars[1] = AdjustBar( musicVolume,options[3].getGlobalBounds());
 }
@@ -178,8 +191,10 @@ void Settings::manageInput(Keyboard::Key key)
                 soundEffectVolume=0;
             else if(soundEffectVolume>100)
                 soundEffectVolume=100;
-            soundManager_ref.setVolumeSoundEffects(soundEffectVolume);
-            soundManager_ref.play(SoundManager::Reveal);
+            if(soundEffects_enabled){
+                soundManager_ref.setVolumeSoundEffects(soundEffectVolume);
+                soundManager_ref.play(SoundManager::Reveal);
+            }
         }
         if (selectedOption == SelectedOption::musicAdjust){
             musicVolume+=delta;
@@ -187,12 +202,13 @@ void Settings::manageInput(Keyboard::Key key)
                 musicVolume=0;
             else if(musicVolume>100)
                 musicVolume=100;
-            soundManager_ref.setVolumeMusics(musicVolume);
+            if(music_enabled){
+                soundManager_ref.setVolumeMusics(musicVolume);
+            }
         }
 	}
 	else if (key == Keyboard::Enter || key == Keyboard::Space) {
 		if (selectedOption == SelectedOption::soundToggle) {
-			toggles[0].swtitchState();
 			if(soundEffects_enabled){
                 soundEffects_enabled=false;
                 soundManager_ref.setVolumeSoundEffects(0);
@@ -200,11 +216,12 @@ void Settings::manageInput(Keyboard::Key key)
 			else{
                 soundEffects_enabled=true;
                 soundManager_ref.setVolumeSoundEffects(soundEffectVolume);
+                sleep(microseconds(10));
                 soundManager_ref.play(SoundManager::Reveal);
 			}
+			toggles[0].setState(soundEffects_enabled);
 		}
 		else if (selectedOption == SelectedOption::musicToggle) {
-			toggles[1].swtitchState();
 			if(music_enabled){
                 music_enabled=false;
                 soundManager_ref.setVolumeMusics(0);
@@ -215,6 +232,7 @@ void Settings::manageInput(Keyboard::Key key)
                 soundManager_ref.setVolumeMusics(musicVolume);
                 soundManager_ref.play(SoundManager::MenuMusic);
 			}
+			toggles[1].setState(music_enabled);
 		}
 		else if (selectedOption == SelectedOption::leaderboardReset) {
 			leaderBoard_ref.reset();
@@ -230,4 +248,29 @@ void Settings::manageInput(Keyboard::Key key)
 		}
 	}
 	options[selectedOptionIndex].setFillColor(getSelectedTextColor());
+}
+
+void Settings::load(){
+    ifstream f;
+    f.open(fileName, ios::in);
+    f >>  soundEffects_enabled >> soundEffectVolume >> music_enabled >> musicVolume;
+
+    soundManager_ref.setVolumeMusics(musicVolume);
+    soundManager_ref.setVolumeSoundEffects(soundEffectVolume);
+
+
+    if(!music_enabled){
+        soundManager_ref.setVolumeMusics(0);
+    }
+    if(!soundEffects_enabled){
+        soundManager_ref.setVolumeSoundEffects(0);
+    }
+    f.close();
+}
+
+void Settings::save(){
+    ofstream f;
+    f.open(fileName, ios::out);
+    f << soundEffects_enabled << '\n' << soundEffectVolume << '\n' <<music_enabled << '\n' <<musicVolume << '\n';
+    f.close();
 }

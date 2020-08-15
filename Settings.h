@@ -37,6 +37,10 @@ private:
 	void drawBack();
 	void drawModifiers();
 
+    void load();
+    void save();
+    string fileName="settings.dat";
+
 	void setSelectedOption(SelectedOption selectedOption);
 	void setSelectedOption(short int selectedOptionIndex);
 	virtual void manageInput(Keyboard::Key);
@@ -45,8 +49,6 @@ public:
 	SelectedOption getSelectedOption() { return this->selectedOption; }
 
 	virtual void update();
-	//void loadSettings();
-	//void SaveSettings();
 
 	Settings(RenderWindow& window, ManagerManager& manager_ref ,SoundManager & _soundManager_ref,Leaderboard & _leaderBoard_ref);
 
