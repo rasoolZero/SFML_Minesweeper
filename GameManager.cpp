@@ -80,6 +80,8 @@ void GameManager::manageInput(Keyboard::Key key)
 		difficulty = Difficulty::easy;
 		options[selectedOptionIndex].setCharacterSize(getNormalFontSize());
 		selectedOptionIndex = 0;
+
+		setState(State::difficultySelection);
 		getManager_ref().setState();
 	}
 	else if (key == Keyboard::Enter || key == Keyboard::Space) {
