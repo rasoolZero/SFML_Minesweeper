@@ -22,6 +22,7 @@ private:
 	void drawSettings();
 	void drawLeaderBoard();
 	void drawExit();
+	void drawTitle();
 
 	void setSelectedOption(SelectedOption selectedOption);
 	void setSelectedOption(short int selectedOptionIndex);

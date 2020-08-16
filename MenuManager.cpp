@@ -1,5 +1,6 @@
 #include "MenuManager.h"
 #include "ManagerManager.h"
+using namespace sf;
 
 void MenuManager::draw()
 {
@@ -21,11 +22,12 @@ void MenuManager::draw()
 	drawLeaderBoard();
 	drawSettings();
 	drawExit();
+	drawTitle();
 }
 
 void MenuManager::drawPlay()
 {
-	
+
 	this->getWindow_ref().draw(options[0]);
 }
 
@@ -42,6 +44,12 @@ void MenuManager::drawLeaderBoard()
 void MenuManager::drawExit()
 {
 	this->getWindow_ref().draw(options[3]);
+}
+void MenuManager::drawTitle(){
+    Text text("SFML\nMinesweeper",getFont(),60);
+    text.setPosition(50,20);
+    text.setColor(Color(20,20,40));
+    getWindow_ref().draw(text);
 }
 
 void MenuManager::setSelectedOption(SelectedOption selectedOption)
@@ -89,7 +97,7 @@ void MenuManager::update()
 MenuManager::MenuManager(RenderWindow& window, ManagerManager& manager_ref)
 	:Screen(window, manager_ref, "fonts\\arial.ttf", 40)
 {
-	
+
 	options[0].setString("Play");
 	options[1].setString("Settings");
 	options[2].setString("Leaderboard");
