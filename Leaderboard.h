@@ -44,7 +44,7 @@ class Leaderboard : public Screen
         void load();
         void save();
 
-        virtual void manageInput(Keyboard::Key); //from Screen
+        virtual void manageInput(Keyboard::Key key); //from Screen
         void draw();
         void drawScores();
         void drawOptions();

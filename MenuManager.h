@@ -25,7 +25,7 @@ private:
 
 	void setSelectedOption(SelectedOption selectedOption);
 	void setSelectedOption(short int selectedOptionIndex);
-	virtual void manageInput(Keyboard::Key); //from Screen
+	virtual void manageInput(Keyboard::Key key); //from Screen
 public:
 	SelectedOption getSelectedOption() { return this->selectedOption; }
 

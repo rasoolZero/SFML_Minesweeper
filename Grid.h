@@ -11,11 +11,12 @@ class Grid
 {
     public:
         Grid(RenderWindow & w_ref,SoundManager & _soundManager ,int width,int height,int bombNumber=10);
-        enum GridState{Playing,Won,Lost,Paused};
+        Grid(RenderWindow& window_ref, SoundManager& soundManager);
+        enum GridState{Playing, Won, Lost};
         void setState(GridState _state){state=_state;}
         GridState getState(){return state;}
         void update();
-
+        void setupGrid(int width, int height, int bombNumber = 10);
     protected:
 
     private:
