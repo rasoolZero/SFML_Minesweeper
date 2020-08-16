@@ -203,12 +203,12 @@ int Grid::indexConverter(int x,int y){
 }
 void Grid::firstClickCheck(int index){
     if(cells[index].getValue()==-1){
-        cells[index].setValue(0);
-        if(!cells[0].getValue()){
-            cells[0].setValue(-1);
-        }
-        else{
-            cells[width-1].setValue(-1);
+        for(int i=0;i<width*height;i++){
+            if(cells[i].getValue()!=-1){
+                cells[i].setValue(-1);
+                cells[index].setValue(0);
+                break;
+            }
         }
     }
     calculateValue();
