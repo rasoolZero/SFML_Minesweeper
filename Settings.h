@@ -43,7 +43,7 @@ private:
 
 	void setSelectedOption(SelectedOption selectedOption);
 	void setSelectedOption(short int selectedOptionIndex);
-	virtual void manageInput(Keyboard::Key);
+	virtual void manageInput(Keyboard::Key key);
 public:
 
 	SelectedOption getSelectedOption() { return this->selectedOption; }

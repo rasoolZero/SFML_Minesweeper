@@ -1,4 +1,5 @@
 #include "Grid.h"
+#include <ctime>
 #include <random>
 using namespace std;
 using namespace sf;
@@ -6,6 +7,7 @@ using namespace sf;
 Grid::Grid(RenderWindow & w_ref,SoundManager & _soundManager,int width,int height,int bombNumber)
 : window_ref(w_ref) , soundManager(_soundManager)
 {
+    srand(time(nullptr));
     state=GridState::Playing;
     firstClick=true;
     topMargin=48;
@@ -34,11 +36,48 @@ Grid::Grid(RenderWindow & w_ref,SoundManager & _soundManager,int width,int heigh
     }
 }
 
+Grid::Grid(RenderWindow& window_ref, SoundManager& soundManager)
+    :window_ref(window_ref)
+    ,soundManager(soundManager)
+{
+}
+
 void Grid::update(){
     window_ref.clear(Color(200,200,200));
     checkInput();
     drawTop();
     draw();
+}
+
+void Grid::setupGrid(int width, int height, int bombNumber)
+{
+    srand(time(nullptr));
+    state = GridState::Playing;
+    firstClick = true;
+    topMargin = 48;
+    float widthRatio = window_ref.getSize().x / (float)width;
+    float heightRatio = (window_ref.getSize().y - topMargin) / (float)(height);
+    maxSize = widthRatio < heightRatio ? widthRatio : heightRatio;
+    topLeftCorner.x = (window_ref.getSize().x - maxSize * width) / 2;
+    topLeftCorner.y = (window_ref.getSize().y - topMargin - maxSize * height) / 2 + topMargin;
+    this->width = width;
+    this->height = height;
+    cells = vector<Cell>();
+
+
+    // bomb based on a fixed amount of bombs and a random index
+    for (int j = 0; j < height; j++)
+        for (int i = 0; i < width; i++)
+            cells.push_back(Cell(i, j, maxSize, topLeftCorner));
+
+    int bombsPlaced = 0;
+    while (bombsPlaced != bombNumber) {
+        int index = indexConverter({ rand() % width,rand() % height });
+        if (!cells[index].getValue()) {
+            cells[index].setValue(-1);
+            bombsPlaced++;
+        }
+    }
 }
 
 void Grid::draw(){

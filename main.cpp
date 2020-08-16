@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include "ManagerManager.h"
+#include "GameManager.h"
 #include "MenuManager.h"
 #include "Settings.h"
 using namespace sf;
@@ -12,15 +13,15 @@ using namespace sf;
 
 int main() {
     RenderWindow window(VideoMode::getDesktopMode(), "SFML_Minesweeper", Style::Fullscreen);
-    SoundManager soundManager;
     window.setVerticalSyncEnabled(true);
+    SoundManager soundManager;
     ManagerManager manager(&window);
+    GameManager gameManager(window, manager, soundManager);
     MenuManager menu(window, manager);
     Leaderboard leaderboard(window, manager);
     Settings settings(window, manager,soundManager,leaderboard);
-    manager.setPointers(&settings, &leaderboard, &menu);
+    manager.setPointers(&gameManager, &settings, &leaderboard, &menu);
     soundManager.play(SoundManager::MenuMusic);
-
     manager.manage();
 	return 0;
 }
