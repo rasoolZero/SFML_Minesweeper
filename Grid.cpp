@@ -28,7 +28,7 @@ Grid::Grid(RenderWindow & w_ref,SoundManager & _soundManager,int width,int heigh
 
     int bombsPlaced=0;
     while(bombsPlaced!=bombNumber){
-        int index=indexConverter({rand()%width,rand()%height});
+        int index=indexConverter(rand()%width,rand()%height);
         if( !cells[index].getValue() ){
             cells[index].setValue(-1);
             bombsPlaced++;
@@ -72,7 +72,7 @@ void Grid::setupGrid(int width, int height, int bombNumber)
 
     int bombsPlaced = 0;
     while (bombsPlaced != bombNumber) {
-        int index = indexConverter({ rand() % width,rand() % height });
+        int index = indexConverter( rand() % width,rand() % height );
         if (!cells[index].getValue()) {
             cells[index].setValue(-1);
             bombsPlaced++;
@@ -96,6 +96,7 @@ void Grid::checkInput(){
         return;
     static bool prevRightButtonStatus = false;
     static bool prevLeftButtonStatus = false;
+    static bool prevMiddleButtonStatus = false;
 
     if(Mouse::isButtonPressed(Mouse::Right) && !prevRightButtonStatus){
         //flag cells
@@ -137,10 +138,23 @@ void Grid::checkInput(){
             }
         }
     }
+    else if(Mouse::isButtonPressed(Mouse::Middle) && !prevMiddleButtonStatus){
+
+        Vector2i pos=mousePos();
+        if(isMouseOnGrid(pos)){
+            Vector2i index2D=mousePosToIndex(pos);
+            if(middleClickCheck(index2D)){
+                soundManager.play(SoundManager::Reveal);
+                revealMiddleClick(index2D);
+            }
+            checkGame();
+        }
+    }
 
 
     prevRightButtonStatus=Mouse::isButtonPressed(Mouse::Right);
     prevLeftButtonStatus=Mouse::isButtonPressed(Mouse::Left);
+    prevMiddleButtonStatus=Mouse::isButtonPressed(Mouse::Middle);
 }
 Vector2i Grid::mousePos(){
     return Mouse::getPosition(window_ref);
@@ -162,7 +176,7 @@ Vector2i Grid::mousePosToIndex(Vector2i & pos){
 void Grid::calculateValue(){
     for(int j=0;j<height;j++){
         for(int i=0;i<width;i++){
-            int index=indexConverter({i,j});
+            int index=indexConverter(i,j);
             if(cells[index].getValue()==-1)
                 continue;
 
@@ -170,7 +184,7 @@ void Grid::calculateValue(){
             for(int x=j-1;x<=j+1;x++){
                 for(int k=i-1;k<=i+1;k++){
                     if( !(k==i && x==j) && x>=0 && x < height && k>=0 && k < width){
-                        int index2=indexConverter({k,x});
+                        int index2=indexConverter(k,x);
                         if(cells[index2].getValue()==-1)
                             neighborBombs++;
                     }
@@ -183,6 +197,9 @@ void Grid::calculateValue(){
 
 int Grid::indexConverter(Vector2i index){
     return width*index.y+index.x;
+}
+int Grid::indexConverter(int x,int y){
+    return width*y+x;
 }
 void Grid::firstClickCheck(int index){
     if(cells[index].getValue()==-1){
@@ -203,7 +220,7 @@ void Grid::revealNeighbors(Vector2i pos){
     for(int x=j-1;x<=j+1;x++){
         for(int k=i-1;k<=i+1;k++){
             if( !(k==i && x==j) && x>=0 && x < height && k>=0 && k < width){
-                int index=indexConverter({k,x});
+                int index=indexConverter(k,x);
                 if(cells[index].getState() == Cell::CellState::Hidden || cells[index].getState() == Cell::CellState::Flagged){
                     cells[index].setState(Cell::Hidden);
                     cells[index].reveal();
@@ -214,6 +231,51 @@ void Grid::revealNeighbors(Vector2i pos){
             }
         }
     }
+}
+void Grid::revealMiddleClick(Vector2i pos){
+    int j=pos.y;
+    int i=pos.x;
+    bool bomb=false;
+    for(int x=j-1;x<=j+1;x++){
+        for(int k=i-1;k<=i+1;k++){
+            if( !(k==i && x==j) && x>=0 && x < height && k>=0 && k < width){
+                int index=indexConverter(k,x);
+                if(cells[index].getValue()==-1 && cells[index].getState() == Cell::Hidden ){
+                    bomb=true;
+                }
+                if(cells[index].getState() == Cell::CellState::Hidden && cells[index].getValue() != -1){
+                    cells[index].setState(Cell::Hidden);
+                    cells[index].reveal();
+                    if(cells[index].getValue()==0){
+                        revealNeighbors({k,x});
+                    }
+                }
+            }
+        }
+    }
+    if(bomb)
+        gameover();
+}
+bool Grid::middleClickCheck(Vector2i pos){
+    int indexCell=indexConverter(pos);
+    if(cells[indexCell].getState() != Cell::Revealed || cells[indexCell].getValue() == 0)
+        return false;
+    int j=pos.y;
+    int i=pos.x;
+    int bombs=cells[indexCell].getValue();
+    for(int x=j-1;x<=j+1;x++){
+        for(int k=i-1;k<=i+1;k++){
+            if( !(k==i && x==j) && x>=0 && x < height && k>=0 && k < width){
+                int index=indexConverter(k,x);
+                if(cells[index].getState() == Cell::CellState::Flagged){
+                    bombs--;
+                }
+            }
+        }
+    }
+    if(!bombs)
+        return true;
+    return false;
 }
 void Grid::checkGame(){
     bool won=true;
@@ -236,7 +298,7 @@ void Grid::gameover(){
     soundManager.play(SoundManager::Explosion);
     for(int i=0;i<cells.size();i++){
         if(cells[i].getValue()==-1){
-            cells[i].reveal();
+            cells[i].setState(Cell::Revealed);
         }
     }
 }
