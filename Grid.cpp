@@ -204,7 +204,8 @@ void Grid::revealNeighbors(Vector2i pos){
         for(int k=i-1;k<=i+1;k++){
             if( !(k==i && x==j) && x>=0 && x < height && k>=0 && k < width){
                 int index=indexConverter({k,x});
-                if(cells[index].getState() == Cell::CellState::Hidden){
+                if(cells[index].getState() == Cell::CellState::Hidden || cells[index].getState() == Cell::CellState::Flagged){
+                    cells[index].setState(Cell::Hidden);
                     cells[index].reveal();
                     if(cells[index].getValue()==0){
                         revealNeighbors({k,x});
