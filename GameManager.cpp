@@ -97,6 +97,8 @@ void GameManager::manageInput(Keyboard::Key key)
 		else { //custom
 			return; //temporary until cutom is added
 		}
+		soundManager_ref.stopAll();
+		soundManager_ref.play(SoundManager::GameMusic);
 		setState(State::playing);
 	}
 	options[selectedOptionIndex].setFillColor(getSelectedTextColor());
