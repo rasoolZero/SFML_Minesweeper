@@ -77,3 +77,6 @@ float SoundManager::getSoundEffectVolume(){
 float SoundManager::getMusicVolume(){
     return sounds[sounds.size()-1].getVolume();
 }
+bool SoundManager::isPlaying(Sounds sound){
+    return sounds[static_cast<int>(sound)].getStatus()==Sound::Playing;
+}

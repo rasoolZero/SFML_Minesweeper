@@ -38,7 +38,7 @@ void GameManager::update()
 			customOptions.draw();
 		}
 	}
-	
+
 }
 
 void GameManager::drawDifficulty()
@@ -83,7 +83,7 @@ void GameManager::manageInput(Keyboard::Key key)
 	else {
 		int selectedOptionIndex = static_cast<int>(this->difficulty);
 		if (options[selectedOptionIndex].getCharacterSize() == selectedFontSize) {
-	
+
 			if (key == Keyboard::Up) {
 				options[selectedOptionIndex].setFillColor(getNormalTextColor());
 				setDifficulty((selectedOptionIndex += 4) %= 5); // goes to previous state in the cycle
@@ -125,7 +125,9 @@ void GameManager::manageInput(Keyboard::Key key)
 		options[selectedOptionIndex].setFillColor(getSelectedTextColor());
 	}
 	if (state == State::playing) {
-		soundManager_ref.stopAll();
-		soundManager_ref.play(SoundManager::GameMusic);
+        if(!soundManager_ref.isPlaying(SoundManager::GameMusic)){
+            soundManager_ref.stopAll();
+            soundManager_ref.play(SoundManager::GameMusic);
+        }
 	}
 }

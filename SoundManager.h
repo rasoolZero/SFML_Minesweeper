@@ -18,6 +18,7 @@ class SoundManager
         void setVolumeMusics(float value);
         float getSoundEffectVolume();
         float getMusicVolume();
+        bool isPlaying(Sounds sound);
 
     protected:
 
