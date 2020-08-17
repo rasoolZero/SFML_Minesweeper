@@ -32,7 +32,7 @@ CustomOptions::CustomOptions(RenderWindow& window_ref, Font& font)
 	limits_amount[4] = 1;
 	limits_amount[1] = windowSize.x / 30;
 	limits_amount[3] = windowSize.y / 30;
-	limits_amount[5] = windowSize.x * windowSize.y / 900 - 1; // max : number of cells - 1
+	limits_amount[5] = customAmounts[0] * customAmounts[1] - 1; // max : number of cells - 1
 
 	for (int i = 0; i < 6; i++) {
 		if (i % 2) {
@@ -122,12 +122,38 @@ void CustomOptions::manageInput(Keyboard::Key key)
 	if (key == Keyboard::Right) {
 		if (customAmounts[selectedOptionIndex] < limits_amount[selectedOptionIndex * 2 + 1]) {
 			customTexts[selectedOptionIndex].setString(std::to_string(++customAmounts[selectedOptionIndex]));
+			if (selectedOptionIndex != 2) {
+				limits_amount[5] += customAmounts[!selectedOptionIndex];
+				limits[5].setString("< " + std::to_string(limits_amount[5]));
+			}
 		}
 	}
 	else if (key == Keyboard::Left) {
 		if (customAmounts[selectedOptionIndex] > limits_amount[selectedOptionIndex * 2]) {
 			customTexts[selectedOptionIndex].setString(std::to_string(--customAmounts[selectedOptionIndex]));
+			if (selectedOptionIndex != 2) {
+				limits_amount[5] -= customAmounts[!selectedOptionIndex];
+				limits[5].setString("< " + std::to_string(limits_amount[5]));
+				if (customAmounts[2] > limits_amount[5]) {
+					customAmounts[2] = limits_amount[5];
+					customTexts[2].setString(std::to_string(customAmounts[2]));
+				}
+			}
 		}
 	}
 	customTexts[selectedOptionIndex].setString(std::to_string(customAmounts[selectedOptionIndex]));
+}
+
+void CustomOptions::reset()
+{
+	setSelectedOption(0);
+	customAmounts[0] = 16;
+	customAmounts[1] = 16;
+	customAmounts[2] = 40;
+	limits_amount[5] = 255;
+	limits[5].setString("< " + std::to_string(limits_amount[5]));
+	for (int i = 0; i < 3; i++)
+	{
+		customTexts[i].setString(std::to_string(customAmounts[i]));
+	}
 }

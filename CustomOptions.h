@@ -12,6 +12,7 @@ public:
 	void draw();
 	void setSelectedOption(short int selectedOptionIndex);
 	void manageInput(Keyboard::Key key);
+	void reset();
 
 	short int getWidth() { return this->customAmounts[0]; }
 	short int getHeight() { return this->customAmounts[1]; }

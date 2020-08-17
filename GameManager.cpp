@@ -70,15 +70,18 @@ void GameManager::manageInput(Keyboard::Key key)
 {
 	int selectedOptionIndex = static_cast<int>(this->difficulty);
 	if (state == State::playing) {
-		options[selectedOptionIndex].setFillColor(getNormalTextColor());
-		difficulty = Difficulty::easy;
-		options[selectedOptionIndex].setCharacterSize(getNormalFontSize());
-		selectedOptionIndex = 0;
+		if (key == Keyboard::Escape) {
+			options[selectedOptionIndex].setFillColor(getNormalTextColor());
+			difficulty = Difficulty::easy;
+			options[selectedOptionIndex].setCharacterSize(getNormalFontSize());
+			selectedOptionIndex = 0;
 
-		setState(State::difficultySelection);
-		soundManager_ref.stopAll();
-		soundManager_ref.play(SoundManager::MenuMusic);
-		getManager_ref().setState();
+			setState(State::difficultySelection);
+			soundManager_ref.stopAll();
+			soundManager_ref.play(SoundManager::MenuMusic);
+			customOptions.reset();
+			getManager_ref().setState();
+		}
 	}
 	else if (state == State::customSelection) {
 		if (key == Keyboard::Escape) {
@@ -116,6 +119,7 @@ void GameManager::manageInput(Keyboard::Key key)
 				soundManager_ref.stopAll();
 				soundManager_ref.play(SoundManager::MenuMusic);
 			}
+			customOptions.reset();
 			getManager_ref().setState();
 		}
 		else if (key == Keyboard::Enter || key == Keyboard::Space) {
