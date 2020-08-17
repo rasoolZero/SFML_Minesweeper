@@ -39,6 +39,7 @@ private:
     void drawRestart();
 
 	virtual void manageInput(Keyboard::Key key); //from Screen
+	void checkClick();
 
 	Clock timer;
 	bool timerStarted;

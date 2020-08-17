@@ -40,6 +40,7 @@ void GameManager::update()
 {
 	if (state == State::playing) {
 		drawGame();
+		checkClick();
 	}
 	else {
 		drawDifficulty();
@@ -177,4 +178,24 @@ void GameManager::drawBombCount(){
 }
 void GameManager::drawRestart(){
     getWindow_ref().draw(arrow);
+}
+
+void GameManager::checkClick(){
+    if(state!=State::playing)
+        return;
+    static bool prevLeftButtonStatus = false;
+    if(Mouse::isButtonPressed(Mouse::Left) && !prevLeftButtonStatus){
+
+        Vector2i mousePosition=Mouse::getPosition(getWindow_ref());
+        if(mousePosition.x >= arrow.getGlobalBounds().left &&
+            mousePosition.x <= arrow.getGlobalBounds().left + arrow.getSize().x &&
+            mousePosition.y >= arrow.getGlobalBounds().top &&
+            mousePosition.y <= arrow.getGlobalBounds().top + arrow.getSize().y){
+            grid.setupGrid(grid.getWidth(),grid.getHeight(),grid.getBombCount());
+            timer.restart();
+            soundManager_ref.play(SoundManager::Reveal);
+        }
+    }
+
+    prevLeftButtonStatus = Mouse::isButtonPressed(Mouse::Left);
 }

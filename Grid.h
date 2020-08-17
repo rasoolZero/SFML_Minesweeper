@@ -21,6 +21,8 @@ class Grid
         void setupGrid(int width, int height, int bombNumber = 10);
         int getBombCount();
         int getFlagCount();
+        int getWidth(){return width;}
+        int getHeight(){return height;}
     protected:
 
     private:
