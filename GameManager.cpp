@@ -68,7 +68,19 @@ void GameManager::drawGame()
 
 void GameManager::manageInput(Keyboard::Key key)
 {
-	if (state == State::customSelection) {
+	int selectedOptionIndex = static_cast<int>(this->difficulty);
+	if (state == State::playing) {
+		options[selectedOptionIndex].setFillColor(getNormalTextColor());
+		difficulty = Difficulty::easy;
+		options[selectedOptionIndex].setCharacterSize(getNormalFontSize());
+		selectedOptionIndex = 0;
+
+		setState(State::difficultySelection);
+		soundManager_ref.stopAll();
+		soundManager_ref.play(SoundManager::MenuMusic);
+		getManager_ref().setState();
+	}
+	else if (state == State::customSelection) {
 		if (key == Keyboard::Escape) {
 			state = State::difficultySelection;
 		}
@@ -81,7 +93,6 @@ void GameManager::manageInput(Keyboard::Key key)
 		}
 	}
 	else {
-		int selectedOptionIndex = static_cast<int>(this->difficulty);
 		if (options[selectedOptionIndex].getCharacterSize() == selectedFontSize) {
 
 			if (key == Keyboard::Up) {
@@ -101,8 +112,10 @@ void GameManager::manageInput(Keyboard::Key key)
 			selectedOptionIndex = 0;
 
 			setState(State::difficultySelection);
-			soundManager_ref.stopAll();
-			soundManager_ref.play(SoundManager::MenuMusic);
+			if (soundManager_ref.isPlaying(SoundManager::GameMusic)) {
+				soundManager_ref.stopAll();
+				soundManager_ref.play(SoundManager::MenuMusic);
+			}
 			getManager_ref().setState();
 		}
 		else if (key == Keyboard::Enter || key == Keyboard::Space) {
@@ -122,8 +135,8 @@ void GameManager::manageInput(Keyboard::Key key)
 				setState(State::playing);
 			}
 		}
-		options[selectedOptionIndex].setFillColor(getSelectedTextColor());
 	}
+	options[selectedOptionIndex].setFillColor(getSelectedTextColor());
 	if (state == State::playing) {
         if(!soundManager_ref.isPlaying(SoundManager::GameMusic)){
             soundManager_ref.stopAll();
