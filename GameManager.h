@@ -17,6 +17,7 @@ public:
 	enum State {difficultySelection,customSelection, playing};
 	void setState(State state) { this->state = state; }
 	virtual void update(); // from Screen
+	void startTimer();
 
 private:
 	State state = State::difficultySelection;
@@ -32,10 +33,19 @@ private:
 	void drawDifficulty();
 
 	void drawGame();
-	
+
+    void drawTimer();
+    void drawBombCount();
+    void drawRestart();
+
 	virtual void manageInput(Keyboard::Key key); //from Screen
+	void checkClick();
 
 	Clock timer;
+	bool timerStarted;
+
+    sf::RectangleShape arrow;
+    sf::Texture arrowTexture;
 
 	CustomOptions customOptions;
 
