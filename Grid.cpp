@@ -1,12 +1,14 @@
 #include "Grid.h"
+#include "GameManager.h"
 #include <ctime>
 #include <random>
 using namespace std;
 using namespace sf;
 
-Grid::Grid(RenderWindow & w_ref,SoundManager & _soundManager,int width,int height,int bombNumber)
-: window_ref(w_ref) , soundManager(_soundManager)
+Grid::Grid(RenderWindow & w_ref,SoundManager & _soundManager,GameManager & _gameManager_ref,int width,int height,int bombNumber)
+: window_ref(w_ref) , soundManager(_soundManager),gameManager_ref(_gameManager_ref)
 {
+    bombs=bombNumber;
     srand(time(nullptr));
     state=GridState::Playing;
     firstClick=true;
@@ -36,9 +38,10 @@ Grid::Grid(RenderWindow & w_ref,SoundManager & _soundManager,int width,int heigh
     }
 }
 
-Grid::Grid(RenderWindow& window_ref, SoundManager& soundManager)
+Grid::Grid(RenderWindow& window_ref, SoundManager& soundManager,GameManager & _gameManager_ref)
     :window_ref(window_ref)
     ,soundManager(soundManager)
+    ,gameManager_ref(_gameManager_ref)
 {
 }
 
@@ -51,6 +54,7 @@ void Grid::update(){
 
 void Grid::setupGrid(int width, int height, int bombNumber)
 {
+    bombs=bombNumber;
     srand(time(nullptr));
     state = GridState::Playing;
     firstClick = true;
@@ -121,6 +125,7 @@ void Grid::checkInput(){
 
             if(firstClick){
                 firstClickCheck(index);
+                gameManager_ref.startTimer();
                 firstClick=false;
             }
 
@@ -301,4 +306,15 @@ void Grid::gameover(){
             cells[i].setState(Cell::Revealed);
         }
     }
+}
+int Grid::getBombCount(){
+    return bombs;
+}
+int Grid::getFlagCount(){
+    int result=0;
+    for(Cell cell : cells){
+        if(cell.getState()==Cell::Flagged)
+            result++;
+    }
+    return result;
 }

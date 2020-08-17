@@ -1,9 +1,12 @@
 #include "GameManager.h"
 #include "ManagerManager.h"
+#include <string>
+using namespace std;
+using namespace sf;
 GameManager::GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, SoundManager& soundManager_ref)
 	:Screen(window_ref, manager_ref, "fonts\\arial.ttf")
 	,soundManager_ref(soundManager_ref)
-	,grid{getWindow_ref(), soundManager_ref }
+	,grid{getWindow_ref(), soundManager_ref,*this}
 	, customOptions{ getWindow_ref(), getFont() }
 {
 	options[0].setString("easy");
@@ -25,18 +28,26 @@ GameManager::GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, 
 	options[0].setFillColor(getSelectedTextColor());
 	options[4].setPosition(50, getWindow_ref().getSize().y - 90);
 	customOptions.setGroupPosition(options[3].getPosition() + Vector2f(0, 10));
+
+	if(!arrowTexture.loadFromFile("images/Arrow.png"))
+        throw std::runtime_error("could not load arrow image");
+    arrow=RectangleShape(Vector2f(40,40));
+    arrow.setTexture(&arrowTexture);
+    arrow.setPosition(getWindow_ref().getSize().x - arrow.getSize().x -50,6);
 }
 
 void GameManager::update()
 {
 	if (state == State::playing) {
 		drawGame();
+		checkClick();
 	}
 	else {
 		drawDifficulty();
 		if (state == State::customSelection) {
 			customOptions.draw();
 		}
+		timerStarted=false;
 	}
 
 }
@@ -64,6 +75,9 @@ void GameManager::drawDifficulty()
 void GameManager::drawGame()
 {
 	grid.update();
+	drawTimer();
+	drawBombCount();
+	drawRestart();
 }
 
 void GameManager::manageInput(Keyboard::Key key)
@@ -147,4 +161,58 @@ void GameManager::manageInput(Keyboard::Key key)
             soundManager_ref.play(SoundManager::GameMusic);
         }
 	}
+}
+void GameManager::startTimer(){
+    this->timer.restart();
+    timerStarted=true;
+}
+void GameManager::drawTimer(){
+    string time;
+    if(timerStarted){
+        Time t=timer.getElapsedTime();
+        int sec=t.asSeconds();
+        int min=sec/60;
+        sec%=60;
+        time=to_string(min)+":"+ (sec<10?"0":"") +to_string(sec);
+    }
+    else{
+        time="0:00";
+    }
+    Text text(time,getFont(),30);
+    text.setFillColor(Color::Black);
+    text.setPosition(getWindow_ref().getSize().x/2 - text.getGlobalBounds().width/2,6);
+    getWindow_ref().draw(text);
+}
+
+
+void GameManager::drawBombCount(){
+    string bombs=to_string(grid.getBombCount()-grid.getFlagCount());
+
+    Text text(bombs,getFont(),30);
+    text.setFillColor(Color::Black);
+    text.setPosition(30,6);
+    getWindow_ref().draw(text);
+}
+void GameManager::drawRestart(){
+    getWindow_ref().draw(arrow);
+}
+
+void GameManager::checkClick(){
+    if(state!=State::playing)
+        return;
+    static bool prevLeftButtonStatus = false;
+    if(Mouse::isButtonPressed(Mouse::Left) && !prevLeftButtonStatus){
+
+        Vector2i mousePosition=Mouse::getPosition(getWindow_ref());
+        if(mousePosition.x >= arrow.getGlobalBounds().left &&
+            mousePosition.x <= arrow.getGlobalBounds().left + arrow.getSize().x &&
+            mousePosition.y >= arrow.getGlobalBounds().top &&
+            mousePosition.y <= arrow.getGlobalBounds().top + arrow.getSize().y){
+            grid.setupGrid(grid.getWidth(),grid.getHeight(),grid.getBombCount());
+            timer.restart();
+            soundManager_ref.play(SoundManager::Reveal);
+        }
+    }
+
+    prevLeftButtonStatus = Mouse::isButtonPressed(Mouse::Left);
 }
