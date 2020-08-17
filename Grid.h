@@ -34,11 +34,14 @@ class Grid
         bool isMouseOnGrid(Vector2i & pos);
         Vector2i mousePosToIndex(Vector2i & pos);
         int indexConverter(Vector2i index);
+        int indexConverter(int x,int y);
         bool firstClick;
         void calculateValue();
         void firstClickCheck(int index);
         void revealNeighbors(Vector2i pos);
+        void revealMiddleClick(Vector2i pos);
         void checkGame();
+        bool middleClickCheck(Vector2i pos);
         void gameover();
         GridState state;
         SoundManager & soundManager;

@@ -81,45 +81,51 @@ void GameManager::manageInput(Keyboard::Key key)
 		}
 	}
 	else {
-	int selectedOptionIndex = static_cast<int>(this->difficulty);
-	if (options[selectedOptionIndex].getCharacterSize() == selectedFontSize) {
-
-		if (key == Keyboard::Up) {
+		int selectedOptionIndex = static_cast<int>(this->difficulty);
+		if (options[selectedOptionIndex].getCharacterSize() == selectedFontSize) {
+	
+			if (key == Keyboard::Up) {
+				options[selectedOptionIndex].setFillColor(getNormalTextColor());
+				setDifficulty((selectedOptionIndex += 4) %= 5); // goes to previous state in the cycle
+			}
+			else if (key == Keyboard::Down)
+			{
+				options[selectedOptionIndex].setFillColor(getNormalTextColor());
+				setDifficulty((selectedOptionIndex += 1) %= 5); // goes to next state in the cycle
+			}
+		}
+		if (key == Keyboard::Escape || ( (key == Keyboard::Enter || key == Keyboard::Space) && selectedOptionIndex == 4)) { //back
 			options[selectedOptionIndex].setFillColor(getNormalTextColor());
-			setDifficulty((selectedOptionIndex += 4) %= 5); // goes to previous state in the cycle
-		}
-		else if (key == Keyboard::Down)
-		{
-			options[selectedOptionIndex].setFillColor(getNormalTextColor());
-			setDifficulty((selectedOptionIndex += 1) %= 5); // goes to next state in the cycle
-		}
-	}
-	if (key == Keyboard::Escape || ( (key == Keyboard::Enter || key == Keyboard::Space) && selectedOptionIndex == 4)) { //back
-		options[selectedOptionIndex].setFillColor(getNormalTextColor());
-		difficulty = Difficulty::easy;
-		options[selectedOptionIndex].setCharacterSize(getNormalFontSize());
-		selectedOptionIndex = 0;
+			difficulty = Difficulty::easy;
+			options[selectedOptionIndex].setCharacterSize(getNormalFontSize());
+			selectedOptionIndex = 0;
 
-		setState(State::difficultySelection);
-		getManager_ref().setState();
+			setState(State::difficultySelection);
+			soundManager_ref.stopAll();
+			soundManager_ref.play(SoundManager::MenuMusic);
+			getManager_ref().setState();
+		}
+		else if (key == Keyboard::Enter || key == Keyboard::Space) {
+			if (difficulty == Difficulty::easy) {
+				grid.setupGrid(9, 9);
+			}
+			else if (difficulty == Difficulty::medium) {
+				grid.setupGrid(16, 16, 40);
+			}
+			else if (difficulty == Difficulty::hard) {
+				grid.setupGrid(30, 16, 99);
+			}
+			else { //custom
+				state = State::customSelection;
+			}
+			if (state != State::customSelection) {
+				setState(State::playing);
+			}
+		}
+		options[selectedOptionIndex].setFillColor(getSelectedTextColor());
 	}
-	else if (key == Keyboard::Enter || key == Keyboard::Space) {
-		if (difficulty == Difficulty::easy) {
-			grid.setupGrid(9, 9);
-		}
-		else if (difficulty == Difficulty::medium) {
-			grid.setupGrid(16, 16, 40);
-		}
-		else if (difficulty == Difficulty::hard) {
-			grid.setupGrid(30, 16, 99);
-		}
-		else { //custom
-			state = State::customSelection;
-		}
-		if (state == State::difficultySelection) {
-		setState(State::playing);
-		}
-	}
-	options[selectedOptionIndex].setFillColor(getSelectedTextColor());
+	if (state == State::playing) {
+		soundManager_ref.stopAll();
+		soundManager_ref.play(SoundManager::GameMusic);
 	}
 }
