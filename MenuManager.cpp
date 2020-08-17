@@ -102,13 +102,14 @@ MenuManager::MenuManager(RenderWindow& window, ManagerManager& manager_ref)
 	options[1].setString("Settings");
 	options[2].setString("Leaderboard");
 	options[3].setString("Exit");
+	short int startingPoint = getWindow_ref().getSize().y / 2;
 	for (int i = 0; i < 4; i++) {
 		options[i].setFont(getFont());
 		if (i) {
 			options[i].setFillColor(getNormalTextColor());
 		}
 		options[i].setCharacterSize(getNormalFontSize());
-		options[i].setPosition(50, getWindow_ref().getSize().y / 2 + i * 65);
+		options[i].setPosition(50, startingPoint + i * 65);
 	}
 	options[0].setFillColor(getSelectedTextColor());
 }

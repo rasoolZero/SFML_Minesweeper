@@ -5,6 +5,7 @@
 #include "Grid.h"
 #include "Leaderboard.h"
 #include "SoundManager.h"
+#include "CustomOptions.h"
 
 class ManagerManager;
 
@@ -13,7 +14,7 @@ class GameManager : public Screen
 public:
 	GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, SoundManager& soundManager_ref);
 
-	enum State {difficultySelection, playing};
+	enum State {difficultySelection,customSelection, playing};
 	void setState(State state) { this->state = state; }
 	virtual void update(); // from Screen
 
@@ -35,6 +36,8 @@ private:
 	virtual void manageInput(Keyboard::Key key); //from Screen
 
 	Clock timer;
+
+	CustomOptions customOptions;
 
 	Grid grid;
 	void setGrid();

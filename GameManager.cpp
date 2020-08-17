@@ -1,16 +1,17 @@
 #include "GameManager.h"
 #include "ManagerManager.h"
-
 GameManager::GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, SoundManager& soundManager_ref)
 	:Screen(window_ref, manager_ref, "fonts\\arial.ttf")
 	,soundManager_ref(soundManager_ref)
 	,grid{getWindow_ref(), soundManager_ref }
+	, customOptions{ getWindow_ref(), getFont() }
 {
 	options[0].setString("easy");
 	options[1].setString("medium");
 	options[2].setString("hard");
 	options[3].setString("custom");
 	options[4].setString("back");
+	short int startingPoint = getWindow_ref().getSize().y / 2 - 150;
 	for (int i = 0; i < 5; i++) {
 		options[i].setFont(getFont());
 		if (i) {
@@ -18,21 +19,26 @@ GameManager::GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, 
 		}
 		options[i].setCharacterSize(getNormalFontSize());
 		if (i != 4) {
-			options[i].setPosition(70, getWindow_ref().getSize().y / 2 + i * 65);
+			options[i].setPosition(70, startingPoint + i * 65);
 		}
 	}
 	options[0].setFillColor(getSelectedTextColor());
 	options[4].setPosition(50, getWindow_ref().getSize().y - 90);
+	customOptions.setGroupPosition(options[3].getPosition() + Vector2f(0, 10));
 }
 
 void GameManager::update()
 {
-	if (state == State::difficultySelection) {
-		drawDifficulty();
-	}
-	else { //state : playing
+	if (state == State::playing) {
 		drawGame();
 	}
+	else {
+		drawDifficulty();
+		if (state == State::customSelection) {
+			customOptions.draw();
+		}
+	}
+	
 }
 
 void GameManager::drawDifficulty()
@@ -62,6 +68,19 @@ void GameManager::drawGame()
 
 void GameManager::manageInput(Keyboard::Key key)
 {
+	if (state == State::customSelection) {
+		if (key == Keyboard::Escape) {
+			state = State::difficultySelection;
+		}
+		else if (key == Keyboard::Enter || key == Keyboard::Space) {
+			grid.setupGrid(customOptions.getWidth(), customOptions.getHeight(), customOptions.getBombCount());
+			setState(State::playing);
+		}
+		else {
+			customOptions.manageInput(key);
+		}
+	}
+	else {
 	int selectedOptionIndex = static_cast<int>(this->difficulty);
 	if (options[selectedOptionIndex].getCharacterSize() == selectedFontSize) {
 
@@ -75,7 +94,7 @@ void GameManager::manageInput(Keyboard::Key key)
 			setDifficulty((selectedOptionIndex += 1) %= 5); // goes to next state in the cycle
 		}
 	}
-	 if (key == Keyboard::Escape || ( (key == Keyboard::Enter || key == Keyboard::Space) && selectedOptionIndex == 4)) { //back
+	if (key == Keyboard::Escape || ( (key == Keyboard::Enter || key == Keyboard::Space) && selectedOptionIndex == 4)) { //back
 		options[selectedOptionIndex].setFillColor(getNormalTextColor());
 		difficulty = Difficulty::easy;
 		options[selectedOptionIndex].setCharacterSize(getNormalFontSize());
@@ -95,9 +114,12 @@ void GameManager::manageInput(Keyboard::Key key)
 			grid.setupGrid(30, 16, 99);
 		}
 		else { //custom
-			return; //temporary until cutom is added
+			state = State::customSelection;
 		}
+		if (state == State::difficultySelection) {
 		setState(State::playing);
+		}
 	}
 	options[selectedOptionIndex].setFillColor(getSelectedTextColor());
+	}
 }
