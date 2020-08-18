@@ -294,11 +294,13 @@ void Grid::checkGame(){
     if(won){
         state=GridState::Won;
         soundManager.play(SoundManager::Victory);
+        gameManager_ref.stopTimer();
         //you won =D
     }
 }
 void Grid::gameover(){
     //you lost =(
+    gameManager_ref.stopTimer();
     state=GridState::Lost;
     soundManager.play(SoundManager::Explosion);
     for(int i=0;i<cells.size();i++){

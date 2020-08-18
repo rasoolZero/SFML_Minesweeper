@@ -48,6 +48,7 @@ void GameManager::update()
 			customOptions.draw();
 		}
 		timerStarted=false;
+		gameOver=false;
 	}
 
 }
@@ -168,15 +169,22 @@ void GameManager::startTimer(){
 }
 void GameManager::drawTimer(){
     string time;
-    if(timerStarted){
-        Time t=timer.getElapsedTime();
-        int sec=t.asSeconds();
+    if(!gameOver)
+        if(timerStarted){
+            Time t=timer.getElapsedTime();
+            int sec=t.asSeconds();
+            int min=sec/60;
+            sec%=60;
+            time=to_string(min)+":"+ (sec<10?"0":"") +to_string(sec);
+        }
+        else{
+            time="0:00";
+        }
+    else{
+        int sec=score.asSeconds();
         int min=sec/60;
         sec%=60;
         time=to_string(min)+":"+ (sec<10?"0":"") +to_string(sec);
-    }
-    else{
-        time="0:00";
     }
     Text text(time,getFont(),30);
     text.setFillColor(Color::Black);
@@ -186,7 +194,7 @@ void GameManager::drawTimer(){
 
 
 void GameManager::drawBombCount(){
-    string bombs=to_string(grid.getBombCount()-grid.getFlagCount());
+    string bombs="Bombs: "+to_string(grid.getBombCount()-grid.getFlagCount());
 
     Text text(bombs,getFont(),30);
     text.setFillColor(Color::Black);
@@ -216,4 +224,9 @@ void GameManager::checkClick(){
     }
 
     prevLeftButtonStatus = Mouse::isButtonPressed(Mouse::Left);
+}
+
+void GameManager::stopTimer(){
+    gameOver=true;
+    score=timer.getElapsedTime();
 }

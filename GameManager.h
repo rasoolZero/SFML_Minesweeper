@@ -18,6 +18,7 @@ public:
 	void setState(State state) { this->state = state; }
 	virtual void update(); // from Screen
 	void startTimer();
+	void stopTimer();
 
 private:
 	State state = State::difficultySelection;
@@ -42,6 +43,8 @@ private:
 	void checkClick();
 
 	Clock timer;
+	Time score;
+	bool gameOver;
 	bool timerStarted;
 
     sf::RectangleShape arrow;
