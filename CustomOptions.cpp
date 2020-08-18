@@ -126,6 +126,7 @@ void CustomOptions::manageInput(Keyboard::Key key)
 				limits_amount[5] += customAmounts[!selectedOptionIndex];
 				limits[5].setString("< " + std::to_string(limits_amount[5]));
 			}
+			customTexts[selectedOptionIndex].setOrigin(customTexts[selectedOptionIndex].getLocalBounds().width / 2, 0);
 		}
 	}
 	else if (key == Keyboard::Left) {
@@ -139,6 +140,7 @@ void CustomOptions::manageInput(Keyboard::Key key)
 					customTexts[2].setString(std::to_string(customAmounts[2]));
 				}
 			}
+			customTexts[selectedOptionIndex].setOrigin(customTexts[selectedOptionIndex].getLocalBounds().width / 2, 0);
 		}
 	}
 	customTexts[selectedOptionIndex].setString(std::to_string(customAmounts[selectedOptionIndex]));
