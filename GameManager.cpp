@@ -209,6 +209,7 @@ void GameManager::checkClick(){
             mousePosition.y >= arrow.getGlobalBounds().top &&
             mousePosition.y <= arrow.getGlobalBounds().top + arrow.getSize().y){
             grid.setupGrid(grid.getWidth(),grid.getHeight(),grid.getBombCount());
+            timerStarted=false;
             timer.restart();
             soundManager_ref.play(SoundManager::Reveal);
         }
