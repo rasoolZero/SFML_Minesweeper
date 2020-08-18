@@ -3,11 +3,12 @@
 #include <string>
 using namespace std;
 using namespace sf;
-GameManager::GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, SoundManager& soundManager_ref)
+GameManager::GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, SoundManager& soundManager_ref, Leaderboard& _leaderboard_ref)
 	:Screen(window_ref, manager_ref, "fonts\\arial.ttf")
 	,soundManager_ref(soundManager_ref)
 	,grid{getWindow_ref(), soundManager_ref,*this}
-	, customOptions{ getWindow_ref(), getFont() }
+	, customOptions{ getWindow_ref(), getFont() },
+	leaderboard_ref(_leaderboard_ref)
 {
 	options[0].setString("easy");
 	options[1].setString("medium");
@@ -79,6 +80,9 @@ void GameManager::drawGame()
 	drawTimer();
 	drawBombCount();
 	drawRestart();
+	if(gameOver){
+        drawGameOver();
+	}
 }
 
 void GameManager::manageInput(Keyboard::Key key)
@@ -168,7 +172,7 @@ void GameManager::startTimer(){
     timerStarted=true;
 }
 void GameManager::drawTimer(){
-    string time;
+    string time="";
     if(!gameOver)
         if(timerStarted){
             Time t=timer.getElapsedTime();
@@ -181,10 +185,7 @@ void GameManager::drawTimer(){
             time="0:00";
         }
     else{
-        int sec=score.asSeconds();
-        int min=sec/60;
-        sec%=60;
-        time=to_string(min)+":"+ (sec<10?"0":"") +to_string(sec);
+        time=timeToString(score);
     }
     Text text(time,getFont(),30);
     text.setFillColor(Color::Black);
@@ -230,4 +231,86 @@ void GameManager::checkClick(){
 void GameManager::stopTimer(){
     gameOver=true;
     score=timer.getElapsedTime();
+    if(grid.getState() == Grid::Won){
+        won=true;
+    }
+    else{
+        won=false;
+    }
+    if(won && difficulty!=Difficulty::custom){
+        hasHighScore=leaderboard_ref.isHighscore(score, static_cast<Leaderboard::Difficulties>(static_cast<int>(difficulty) ) );
+    }
+    else
+        hasHighScore=false;
+}
+
+void GameManager::drawGameOver(){
+    if(won){
+        if(hasHighScore)
+            drawHighScore();
+        else
+            drawWon();
+    }
+    else
+        drawLost();
+}
+void GameManager::drawHighScore(){
+    string message = "YOU WON!\nTime: "+timeToString(score)+"\nHIGHSCORE! enter your name:\n";
+    Text text(message,getFont());
+    text.setFillColor(Color::Black);
+
+    FloatRect textRect = text.getLocalBounds();
+    text.setOrigin(textRect.left + textRect.width/2.0f,
+        textRect.top  + textRect.height/2.0f);
+    text.setPosition(sf::Vector2f(getWindow_ref().getSize().x/2.0f,getWindow_ref().getSize().y/2.0f));
+
+    RectangleShape background(Vector2f(text.getLocalBounds().width+20,text.getLocalBounds().height+25));
+    background.setFillColor(Color(0, 199, 13,200));
+    background.setOutlineColor(Color(0,0,0,200));
+    background.setOutlineThickness(3);
+    background.setPosition( (getWindow_ref().getSize().x/2.0 - background.getSize().x/2.0 )  , (getWindow_ref().getSize().y/2.0  - background.getSize().y/2.0 )  );
+    getWindow_ref().draw(background);
+    getWindow_ref().draw(text);
+}
+void GameManager::drawWon(){
+    string message = "YOU WON!\nTime: "+timeToString(score);
+    Text text(message,getFont());
+    text.setFillColor(Color::Black);
+    FloatRect textRect = text.getLocalBounds();
+    text.setOrigin(textRect.left + textRect.width/2.0f,
+        textRect.top  + textRect.height/2.0f);
+    text.setPosition(sf::Vector2f(getWindow_ref().getSize().x/2.0f,getWindow_ref().getSize().y/2.0f));
+
+    RectangleShape background(Vector2f(text.getLocalBounds().width+20,text.getLocalBounds().height+25));
+    background.setFillColor(Color(0, 199, 13,200));
+    background.setOutlineColor(Color(0,0,0,200));
+    background.setOutlineThickness(3);
+    background.setPosition( (getWindow_ref().getSize().x/2.0 - background.getSize().x/2.0 )  , (getWindow_ref().getSize().y/2.0  - background.getSize().y/2.0 )  );
+    getWindow_ref().draw(background);
+    getWindow_ref().draw(text);
+}
+void GameManager::drawLost(){
+    string message = "YOU DIED!\nTime: "+timeToString(score);
+    Text text(message,getFont());
+    text.setFillColor(Color::Black);
+    FloatRect textRect = text.getLocalBounds();
+    text.setOrigin(textRect.left + textRect.width/2.0f,
+        textRect.top  + textRect.height/2.0f);
+    text.setPosition(sf::Vector2f(getWindow_ref().getSize().x/2.0f,getWindow_ref().getSize().y/2.0f));
+
+    RectangleShape background(Vector2f(text.getLocalBounds().width+20,text.getLocalBounds().height+25));
+    background.setFillColor(Color(199, 0, 0,200));
+    background.setOutlineColor(Color(0,0,0,200));
+    background.setOutlineThickness(3);
+    background.setPosition( (getWindow_ref().getSize().x/2.0 - background.getSize().x/2.0 )  , (getWindow_ref().getSize().y/2.0  - background.getSize().y/2.0 )  );
+    getWindow_ref().draw(background);
+    getWindow_ref().draw(text);
+}
+
+string GameManager::timeToString(Time t){
+    int sec=t.asSeconds();
+    int min=sec/60;
+    sec%=60;
+    string time=to_string(min)+":"+ (sec<10?"0":"") +to_string(sec);
+    return time;
 }

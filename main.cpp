@@ -16,9 +16,9 @@ int main() {
     window.setVerticalSyncEnabled(true);
     SoundManager soundManager;
     ManagerManager manager(&window);
-    GameManager gameManager(window, manager, soundManager);
-    MenuManager menu(window, manager);
     Leaderboard leaderboard(window, manager);
+    GameManager gameManager(window, manager, soundManager,leaderboard);
+    MenuManager menu(window, manager);
     Settings settings(window, manager,soundManager,leaderboard);
     manager.setPointers(&gameManager, &settings, &leaderboard, &menu);
     soundManager.play(SoundManager::MenuMusic);

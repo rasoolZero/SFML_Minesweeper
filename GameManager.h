@@ -12,7 +12,7 @@ class ManagerManager;
 class GameManager : public Screen
 {
 public:
-	GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, SoundManager& soundManager_ref);
+	GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, SoundManager& soundManager_ref,Leaderboard & _leaderboard_ref);
 
 	enum State {difficultySelection,customSelection, playing};
 	void setState(State state) { this->state = state; }
@@ -24,6 +24,7 @@ private:
 	State state = State::difficultySelection;
 
 	SoundManager& soundManager_ref;
+	Leaderboard& leaderboard_ref;
 	Text options[5];
 	short int selectedFontSize = 48;
 
@@ -38,6 +39,12 @@ private:
     void drawTimer();
     void drawBombCount();
     void drawRestart();
+    void drawGameOver();
+    void drawHighScore();
+    void drawWon();
+    void drawLost();
+
+    string timeToString(Time t);
 
 	virtual void manageInput(Keyboard::Key key); //from Screen
 	void checkClick();
@@ -45,6 +52,8 @@ private:
 	Clock timer;
 	Time score;
 	bool gameOver;
+	bool won;
+	bool hasHighScore;
 	bool timerStarted;
 
     sf::RectangleShape arrow;
