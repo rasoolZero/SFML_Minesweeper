@@ -37,15 +37,8 @@ Cell::Cell(int i,int j,float size,Vector2f _offset,int value)
     index.y=j;
     shape.setPosition(i*size+_offset.x,j*size+_offset.y);
     shape.setSize(Vector2f(size,size));
-    revealed.setPosition(i*size+_offset.x,j*size+_offset.y);
-    revealed.setSize(Vector2f(size,size));
     background.setPosition(i*size+_offset.x,j*size+_offset.y);
     background.setSize(Vector2f(size,size));
-    flagged.setPosition(i*size+_offset.x,j*size+_offset.y);
-    flagged.setSize(Vector2f(size,size));
-    revealed.setTexture(&revealedT);
-    background.setTexture(&cellBackground);
-    flagged.setTexture(&flagT);
 }
 
 void Cell::reveal(){
@@ -66,7 +59,10 @@ bool Cell::flag(){
 }
 
 void Cell::update(){
+    if(state==CellState::Flagged)
+        shape.setTexture(&flagT);
     if(state==CellState::Revealed){
+        background.setTexture(&revealedT);
         if(value==-1){
             shape.setTexture(&bombT);
         }
@@ -74,15 +70,15 @@ void Cell::update(){
             shape.setTexture(&numbers[value-1]);
         }
     }
+    else
+        background.setTexture(&cellBackground);
 }
 
-void Cell::draw(RenderTarget & target,RenderStates states) const{
-    if(state!=CellState::Revealed)
-        target.draw(background);
+void Cell::draw(RenderTarget & target,RenderStates states = RenderStates::Default) const{
+    target.draw(background);
     if(state==CellState::Flagged)
-        target.draw(flagged);
+        target.draw(shape);
     else if(state==CellState::Revealed){
-        target.draw(revealed);
         if(value==-1 || value>0)
         target.draw(shape);
     }

@@ -30,9 +30,7 @@ class Cell : public Drawable
         static Texture flagT;
         static Texture revealedT;
         RectangleShape shape;
-        RectangleShape revealed;
         RectangleShape background;
-        RectangleShape flagged;
         static std::vector<Texture> numbers;
         static bool loaded;
 
