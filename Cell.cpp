@@ -81,7 +81,7 @@ void Cell::draw(RenderTarget & target,RenderStates states) const{
         target.draw(background);
     if(state==CellState::Flagged)
         target.draw(flagged);
-    if(state==CellState::Revealed){
+    else if(state==CellState::Revealed){
         target.draw(revealed);
         if(value==-1 || value>0)
         target.draw(shape);
