@@ -4,7 +4,7 @@
 using namespace sf;
 
 
-class Cell : public Drawable, public Transformable
+class Cell : public Drawable
 {
 
     public:
@@ -14,21 +14,25 @@ class Cell : public Drawable, public Transformable
         int getValue(){return value;}
         void setState(CellState state){this->state=state;}
         CellState getState(){return state;}
-        virtual void draw(RenderTarget& target, RenderStates states) const;
         void reveal();
         bool flag();
+        void update();
+        virtual void draw(RenderTarget & target,RenderStates states) const;
 
     protected:
 
     private:
         int value;
         Vector2i index;
-        Vector2f offset;
         CellState state;
         static Texture bombT;
         static Texture cellBackground;
         static Texture flagT;
         static Texture revealedT;
+        RectangleShape shape;
+        RectangleShape revealed;
+        RectangleShape background;
+        RectangleShape flagged;
         static std::vector<Texture> numbers;
         static bool loaded;
 

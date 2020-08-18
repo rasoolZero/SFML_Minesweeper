@@ -86,7 +86,8 @@ void Grid::setupGrid(int width, int height, int bombNumber)
 
 void Grid::draw(){
     for(auto cell : cells){
-        cell.draw(window_ref,RenderStates());
+        cell.update();
+        window_ref.draw(cell);
     }
 }
 void Grid::drawTop(){

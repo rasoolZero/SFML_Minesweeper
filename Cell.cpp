@@ -9,7 +9,7 @@ Texture Cell::revealedT;
 std::vector<Texture> Cell::numbers;
 bool Cell::loaded;
 
-Cell::Cell(int i,int j,float size,Vector2f _offset,int value):offset(_offset)
+Cell::Cell(int i,int j,float size,Vector2f _offset,int value)
 {
     if(!loaded){
         if(!bombT.loadFromFile("images/bomb.png"))
@@ -35,8 +35,17 @@ Cell::Cell(int i,int j,float size,Vector2f _offset,int value):offset(_offset)
     this->state=CellState::Hidden;
     index.x=i;
     index.y=j;
-    setPosition(i*size+_offset.x,j*size+_offset.y);
-    setScale(size,size);
+    shape.setPosition(i*size+_offset.x,j*size+_offset.y);
+    shape.setSize(Vector2f(size,size));
+    revealed.setPosition(i*size+_offset.x,j*size+_offset.y);
+    revealed.setSize(Vector2f(size,size));
+    background.setPosition(i*size+_offset.x,j*size+_offset.y);
+    background.setSize(Vector2f(size,size));
+    flagged.setPosition(i*size+_offset.x,j*size+_offset.y);
+    flagged.setSize(Vector2f(size,size));
+    revealed.setTexture(&revealedT);
+    background.setTexture(&cellBackground);
+    flagged.setTexture(&flagT);
 }
 
 void Cell::reveal(){
@@ -56,42 +65,26 @@ bool Cell::flag(){
     return false;
 }
 
-
-void Cell::draw(RenderTarget& target, RenderStates states) const{
-    //drawing background
-    if(state!=CellState::Revealed)
-    {
-        RectangleShape square(getScale());
-        square.setPosition(getPosition());
-        square.setTexture(&cellBackground);
-        target.draw(square);
-    }
-
-
-    if(state==CellState::Flagged){
-        RectangleShape square(getScale());
-        square.setPosition(getPosition());
-        square.setTexture(&flagT);
-        target.draw(square);
-    }
+void Cell::update(){
     if(state==CellState::Revealed){
-        {
-            RectangleShape square(getScale());
-            square.setPosition(getPosition());
-            square.setTexture(&revealedT);
-            target.draw(square);
-        }
         if(value==-1){
-            RectangleShape square(getScale());
-            square.setPosition(getPosition());
-            square.setTexture(&bombT);
-            target.draw(square);
+            shape.setTexture(&bombT);
         }
         if(value>0){
-            RectangleShape square(getScale());
-            square.setPosition(getPosition());
-            square.setTexture(&numbers[value-1]);
-            target.draw(square);
+            shape.setTexture(&numbers[value-1]);
         }
     }
+}
+
+void Cell::draw(RenderTarget & target,RenderStates states) const{
+    if(state!=CellState::Revealed)
+        target.draw(background);
+    if(state==CellState::Flagged)
+        target.draw(flagged);
+    if(state==CellState::Revealed){
+        target.draw(revealed);
+        if(value==-1 || value>0)
+        target.draw(shape);
+    }
+
 }
