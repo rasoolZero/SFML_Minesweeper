@@ -83,7 +83,9 @@ void Leaderboard::addScore(Time time,const char name[16],Difficulties difficulty
         highScores[diffIndex][index]=newScore;
     }
     save();
+    options[static_cast<int>(selectedOption)].setFillColor(getNormalTextColor());
     setSelectedOption(difficulty);
+    options[static_cast<int>(selectedOption)].setFillColor(getSelectedTextColor());
 }
 
 void Leaderboard::update(){
