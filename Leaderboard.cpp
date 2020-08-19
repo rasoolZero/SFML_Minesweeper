@@ -64,7 +64,7 @@ bool Leaderboard::isHighscore(Time time,Difficulties difficulty){
     }
     return false;
 }
-void Leaderboard::addScore(Time time,char name[16],Difficulties difficulty){
+void Leaderboard::addScore(Time time,const char name[16],Difficulties difficulty){
     int diffIndex=static_cast<int>(difficulty);
     int index=-1;
     for(int i=0;i<10;i++){
@@ -83,6 +83,7 @@ void Leaderboard::addScore(Time time,char name[16],Difficulties difficulty){
         highScores[diffIndex][index]=newScore;
     }
     save();
+    setSelectedOption(difficulty);
 }
 
 void Leaderboard::update(){

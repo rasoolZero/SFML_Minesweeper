@@ -5,7 +5,7 @@ using namespace std;
 class TextBox : public RectangleShape
 {
 public:
-	TextBox(Vector2f position, short int  fontSize, Font& font, short int limit = 16);
+	TextBox(Vector2f position, short int  fontSize, Font& font, short int limit = 15);
 	string getContent() { return this->content; }
 	void manageInput(char key);
 	void draw(RenderTarget& target);
