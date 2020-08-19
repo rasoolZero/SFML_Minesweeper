@@ -2,7 +2,6 @@
 #include "ManagerManager.h"
 #include <fstream>
 #include <sstream>
-#include <iostream>
 using namespace sf;
 using namespace std;
 

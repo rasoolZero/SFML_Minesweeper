@@ -66,7 +66,6 @@ void ManagerManager::checkEvents()
 			update();
 			window_ptr->display();
 		}
-		sleep(milliseconds(5));
 	}
 }
 

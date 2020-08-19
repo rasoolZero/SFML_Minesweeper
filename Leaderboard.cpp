@@ -1,5 +1,4 @@
 #include "Leaderboard.h"
-#include <iostream>
 #include <fstream>
 #include <string>
 #include <cstring>
@@ -73,7 +72,6 @@ void Leaderboard::addScore(Time time,const char name[16],Difficulties difficulty
             break;
         }
     }
-    cout << index <<endl;
     if(index!=-1){
         for(int j=8;j>=index;j--){
             highScores[diffIndex][j+1]=highScores[diffIndex][j];
@@ -161,7 +159,7 @@ void Leaderboard::drawScores(){
         int seconds = highScores[diffIndex][i].score.asSeconds();
         int minutes = seconds/60;
         seconds%=60;
-        text.setString( to_string(minutes ) + ":"+to_string(seconds));
+        text.setString( to_string(minutes ) + ":"+ (seconds<10?"0":"") +to_string(seconds));
         text.setPosition(getWindow_ref().getSize().x/4*3 , 100 + ((getWindow_ref().getSize().y-100)/10*i));
         getWindow_ref().draw(text);
     }

@@ -42,9 +42,6 @@ private:
     void drawBombCount();
     void drawRestart();
     void drawGameOver();
-    void drawHighScore();
-    void drawWon();
-    void drawLost();
 
     string timeToString(Time t);
 

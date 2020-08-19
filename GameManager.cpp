@@ -16,7 +16,7 @@ GameManager::GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, 
 	options[2].setString("hard");
 	options[3].setString("custom");
 	options[4].setString("back");
-	short int startingPoint = getWindow_ref().getSize().y / 2 - 150;
+	short int startingPoint = getWindow_ref().getSize().y / 2 - 300;
 	for (int i = 0; i < 5; i++) {
 		options[i].setFont(getFont());
 		if (i) {
@@ -28,8 +28,8 @@ GameManager::GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, 
 		}
 	}
 	options[0].setFillColor(getSelectedTextColor());
-	options[4].setPosition(50, getWindow_ref().getSize().y - 90);
-	customOptions.setGroupPosition(options[3].getPosition() + Vector2f(0, 10));
+	options[4].setPosition(150, getWindow_ref().getSize().y - 90);
+	customOptions.setGroupPosition(options[3].getPosition() + Vector2f(50, 10));
 
 	if(!arrowTexture.loadFromFile("images/Arrow.png"))
         throw std::runtime_error("could not load arrow image");
@@ -343,58 +343,6 @@ void GameManager::drawGameOver(){
 		getWindow_ref().draw(highScoreMessage);
 		highScoreName.draw(getWindow_ref());
 	}
-}
-void GameManager::drawHighScore(){
-    string message = "YOU WON!\nTime: "+timeToString(score)+"\nHIGHSCORE! enter your name:\n";
-    Text text(message,getFont());
-    text.setFillColor(Color::Black);
-
-    FloatRect textRect = text.getLocalBounds();
-    text.setOrigin(textRect.left + textRect.width/2.0f,
-        textRect.top  + textRect.height/2.0f);
-    text.setPosition(sf::Vector2f(getWindow_ref().getSize().x/2.0f,getWindow_ref().getSize().y/2.0f));
-
-    RectangleShape background(Vector2f(text.getLocalBounds().width+20,text.getLocalBounds().height+25));
-    background.setFillColor(Color(0, 199, 13,200));
-    background.setOutlineColor(Color(0,0,0,200));
-    background.setOutlineThickness(3);
-    background.setPosition( (getWindow_ref().getSize().x/2.0 - background.getSize().x/2.0 )  , (getWindow_ref().getSize().y/2.0  - background.getSize().y/2.0 )  );
-    getWindow_ref().draw(background);
-    getWindow_ref().draw(text);
-}
-void GameManager::drawWon(){
-    string message = "YOU WON!\nTime: "+timeToString(score);
-    Text text(message,getFont());
-    text.setFillColor(Color::Black);
-    FloatRect textRect = text.getLocalBounds();
-    text.setOrigin(textRect.left + textRect.width/2.0f,
-        textRect.top  + textRect.height/2.0f);
-    text.setPosition(sf::Vector2f(getWindow_ref().getSize().x/2.0f,getWindow_ref().getSize().y/2.0f));
-
-    RectangleShape background(Vector2f(text.getLocalBounds().width+20,text.getLocalBounds().height+25));
-    background.setFillColor(Color(0, 199, 13,200));
-    background.setOutlineColor(Color(0,0,0,200));
-    background.setOutlineThickness(3);
-    background.setPosition( (getWindow_ref().getSize().x/2.0 - background.getSize().x/2.0 )  , (getWindow_ref().getSize().y/2.0  - background.getSize().y/2.0 )  );
-    getWindow_ref().draw(background);
-    getWindow_ref().draw(text);
-}
-void GameManager::drawLost(){
-    string message = "YOU DIED!\nTime: "+timeToString(score);
-    Text text(message,getFont());
-    text.setFillColor(Color::Black);
-    FloatRect textRect = text.getLocalBounds();
-    text.setOrigin(textRect.left + textRect.width/2.0f,
-        textRect.top  + textRect.height/2.0f);
-    text.setPosition(sf::Vector2f(getWindow_ref().getSize().x/2.0f,getWindow_ref().getSize().y/2.0f));
-
-    RectangleShape background(Vector2f(text.getLocalBounds().width+20,text.getLocalBounds().height+25));
-    background.setFillColor(Color(199, 0, 0,200));
-    background.setOutlineColor(Color(0,0,0,200));
-    background.setOutlineThickness(3);
-    background.setPosition( (getWindow_ref().getSize().x/2.0 - background.getSize().x/2.0 )  , (getWindow_ref().getSize().y/2.0  - background.getSize().y/2.0 )  );
-    getWindow_ref().draw(background);
-    getWindow_ref().draw(text);
 }
 
 string GameManager::timeToString(Time t){

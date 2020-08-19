@@ -11,7 +11,7 @@ CustomOptions::CustomOptions(RenderWindow& window_ref, Font& font)
 	customAmounts[2] = 40;
 	for (int i = 0; i < 3; i++)
 	{
-		descriptions[i].setFillColor(Color(150, 150, 150));
+		descriptions[i].setFillColor(Color(10, 10, 10));
 		descriptions[i].setCharacterSize(36);
 		descriptions[i].setFont(font);
 
@@ -43,7 +43,7 @@ CustomOptions::CustomOptions(RenderWindow& window_ref, Font& font)
 		}
 		limits[i].setCharacterSize(32);
 		limits[i].setFont(font);
-		limits[i].setFillColor(Color(150, 150, 150));
+		limits[i].setFillColor(Color(25, 25, 25));
 	}
 
 }
@@ -109,7 +109,7 @@ void CustomOptions::setSelectedOption(short int selectedOptionIndex)
 }
 
 void CustomOptions::manageInput(Keyboard::Key key)
-{	
+{
 	short int selectedOptionIndex = static_cast<short int>(selectedOption);
 	if (textBoxes[selectedOptionIndex].getOutlineColor() == selectedRectColor) {
 		if (key == Keyboard::Up) {
