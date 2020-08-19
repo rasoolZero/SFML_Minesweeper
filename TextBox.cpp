@@ -10,7 +10,7 @@ TextBox::TextBox(Vector2f position, short int  fontSize, Font& font, short int l
 	setSize(Vector2f(80, fontSize + 6));
 	setPosition(position);
 	setOutlineColor(Color::Black);
-	setOutlineThickness(3);
+	setOutlineThickness(1);
 	setFillColor(Color(200, 200, 200, 200));
 
 }
@@ -53,6 +53,7 @@ void TextBox::draw(RenderTarget& target)
 void TextBox::reset()
 {
 	setSize(Vector2f(80, fontSize + 6));
+	setOrigin(40, 0);
 	content = "";
 	text.setString(content);
 }

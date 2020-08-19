@@ -120,7 +120,17 @@ void GameManager::manageInput(Keyboard::Key key)
 			getManager_ref().setState();
 		}
 		if (state == State::finished) {
-
+			if (key == Keyboard::Space || key == Keyboard::Enter) {
+				if (hasHighScore) {
+					if (highScoreName.getContent() != "") {
+						leaderboard_ref.addScore(score, highScoreName.getContent().data(), static_cast<Leaderboard::Difficulties>(difficulty));
+					}
+					else {
+						leaderboard_ref.addScore(score, "[No name]" , static_cast<Leaderboard::Difficulties>(difficulty));
+					}
+					reset(1);
+				}
+			}
 		}
 	}
 	else if (state == State::customSelection) {
@@ -149,7 +159,8 @@ void GameManager::manageInput(Keyboard::Key key)
 			}
 		}
 		if (key == Keyboard::Escape || ( (key == Keyboard::Enter || key == Keyboard::Space) && selectedOptionIndex == 4)) { //back
-			options[selectedOptionIndex].setFillColor(getNormalTextColor());
+			reset();
+			/*options[selectedOptionIndex].setFillColor(getNormalTextColor());
 			difficulty = Difficulty::easy;
 			options[selectedOptionIndex].setCharacterSize(getNormalFontSize());
 			selectedOptionIndex = 0;
@@ -160,7 +171,7 @@ void GameManager::manageInput(Keyboard::Key key)
 				soundManager_ref.play(SoundManager::MenuMusic);
 			}
 			customOptions.reset();
-			getManager_ref().setState();
+			getManager_ref().setState();*/
 		}
 		else if (key == Keyboard::Enter || key == Keyboard::Space) {
 			if (difficulty == Difficulty::easy) {
@@ -248,6 +259,29 @@ void GameManager::checkClick(){
     }
 
     prevLeftButtonStatus = Mouse::isButtonPressed(Mouse::Left);
+}
+
+void GameManager::reset(bool isHighScore)
+{
+	int selectedOptionIndex = static_cast<int>(this->difficulty);
+	options[selectedOptionIndex].setFillColor(getNormalTextColor());
+	difficulty = Difficulty::easy;
+	options[selectedOptionIndex].setCharacterSize(getNormalFontSize());
+	selectedOptionIndex = 0;
+
+	setState(State::difficultySelection);
+	if (soundManager_ref.isPlaying(SoundManager::GameMusic)) {
+		soundManager_ref.stopAll();
+		soundManager_ref.play(SoundManager::MenuMusic);
+	}
+	customOptions.reset();
+	highScoreName.reset();
+	if (isHighScore) {
+		getManager_ref().setState(ManagerManager::State::leaderboard);
+	}
+	else {
+		getManager_ref().setState();
+	}
 }
 
 void GameManager::stopTimer(){

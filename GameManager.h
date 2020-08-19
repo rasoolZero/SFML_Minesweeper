@@ -50,6 +50,7 @@ private:
 
 	virtual void manageInput(Keyboard::Key key); //from Screen
 	void checkClick();
+	void reset(bool isHighScore = false);
 
 	Clock timer;
 	Time score;

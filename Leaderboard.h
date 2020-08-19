@@ -18,7 +18,7 @@ class Leaderboard : public Screen
         Leaderboard(RenderWindow & _window_ref, ManagerManager& manager_ref);
         enum Difficulties{Easy,Normal,Hard};
         bool isHighscore(Time time,Difficulties difficulty);
-        void addScore(Time time,char name[16],Difficulties difficulty);
+        void addScore(Time time,const char name[16],Difficulties difficulty);
 
         virtual void update(); //from Screen
 
