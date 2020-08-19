@@ -7,8 +7,9 @@ GameManager::GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, 
 	:Screen(window_ref, manager_ref, "fonts\\Roboto-Light.ttf")
 	,soundManager_ref(soundManager_ref)
 	,grid{getWindow_ref(), soundManager_ref,*this}
-	, customOptions{ getWindow_ref(), getFont() },
-	leaderboard_ref(_leaderboard_ref)
+	,customOptions{ getWindow_ref(), getFont() }
+	,leaderboard_ref(_leaderboard_ref)
+	,highScoreName{ Vector2f(getWindow_ref().getSize().x / 2, getWindow_ref().getSize().y / 2 + 80) , getNormalFontSize(), getFont()}
 {
 	options[0].setString("easy");
 	options[1].setString("medium");
@@ -35,11 +36,21 @@ GameManager::GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, 
     arrow=RectangleShape(Vector2f(40,40));
     arrow.setTexture(&arrowTexture);
     arrow.setPosition(getWindow_ref().getSize().x - arrow.getSize().x -50,6);
+
+	result.setFont(getFont());
+	result.setFillColor(Color::Black);
+	result.setPosition(getWindow_ref().getSize().x / 2, getWindow_ref().getSize().y / 2);
+	highScoreMessage.setFont(getFont());
+	highScoreMessage.setFillColor(Color::Black);
+	highScoreMessage.setPosition(getWindow_ref().getSize().x / 2, getWindow_ref().getSize().y / 2 + result.getCharacterSize());
+	resultFrame.setOutlineColor(Color(0, 0, 0, 200));
+	resultFrame.setOutlineThickness(3);
+	resultFrame.setPosition(getWindow_ref().getSize().x / 2, getWindow_ref().getSize().y / 2 - 10);
 }
 
 void GameManager::update()
 {
-	if (state == State::playing) {
+	if (state == State::playing || state == State::finished) {
 		drawGame();
 		checkClick();
 	}
@@ -49,9 +60,16 @@ void GameManager::update()
 			customOptions.draw();
 		}
 		timerStarted=false;
-		gameOver=false;
+		//gameOver=false;
 	}
 
+}
+
+void GameManager::pushChar(char input)
+{
+	if (hasHighScore) {
+		highScoreName.manageInput(input);
+	}
 }
 
 void GameManager::drawDifficulty()
@@ -80,7 +98,7 @@ void GameManager::drawGame()
 	drawTimer();
 	drawBombCount();
 	drawRestart();
-	if(gameOver){
+	if(state == State::finished){
         drawGameOver();
 	}
 }
@@ -88,7 +106,7 @@ void GameManager::drawGame()
 void GameManager::manageInput(Keyboard::Key key)
 {
 	int selectedOptionIndex = static_cast<int>(this->difficulty);
-	if (state == State::playing) {
+	if (state == State::playing || state == State::finished) {
 		if (key == Keyboard::Escape) {
 			options[selectedOptionIndex].setFillColor(getNormalTextColor());
 			difficulty = Difficulty::easy;
@@ -100,6 +118,9 @@ void GameManager::manageInput(Keyboard::Key key)
 			soundManager_ref.play(SoundManager::MenuMusic);
 			customOptions.reset();
 			getManager_ref().setState();
+		}
+		if (state == State::finished) {
+
 		}
 	}
 	else if (state == State::customSelection) {
@@ -173,7 +194,7 @@ void GameManager::startTimer(){
 }
 void GameManager::drawTimer(){
     string time="";
-    if(!gameOver)
+    if(state != State::finished)
         if(timerStarted){
             Time t=timer.getElapsedTime();
             int sec=t.asSeconds();
@@ -207,7 +228,7 @@ void GameManager::drawRestart(){
 }
 
 void GameManager::checkClick(){
-    if(state!=State::playing)
+    if(state!=State::playing && state != State::finished)
         return;
     static bool prevLeftButtonStatus = false;
     if(Mouse::isButtonPressed(Mouse::Left) && !prevLeftButtonStatus){
@@ -219,7 +240,8 @@ void GameManager::checkClick(){
             mousePosition.y <= arrow.getGlobalBounds().top + arrow.getSize().y){
             grid.setupGrid(grid.getWidth(),grid.getHeight(),grid.getBombCount());
             timerStarted=false;
-            gameOver=false;
+            //gameOver=false;
+			setState(State::playing);
             timer.restart();
             soundManager_ref.play(SoundManager::Reveal);
         }
@@ -229,7 +251,8 @@ void GameManager::checkClick(){
 }
 
 void GameManager::stopTimer(){
-    gameOver=true;
+    //gameOver=true;
+	setState(State::finished);
     score=timer.getElapsedTime();
     if(grid.getState() == Grid::Won){
         won=true;
@@ -242,17 +265,46 @@ void GameManager::stopTimer(){
     }
     else
         hasHighScore=false;
+
+	if (won) {
+		result.setString("YOU WON!\t\tTime: " + timeToString(score));
+		result.setOrigin(result.getLocalBounds().width / 2, 0);
+		if (hasHighScore) {
+			highScoreMessage.setString("HIGHSCORE! enter your name:");
+			highScoreMessage.setOrigin(highScoreMessage.getLocalBounds().width / 2, 0);
+		}
+		resultFrame.setFillColor(Color(0, 199, 13, 200));
+	}
+	else {
+		result.setString("Game Over!\t\tTime: " + timeToString(score));
+		result.setOrigin(result.getLocalBounds().width / 2, 0);
+		resultFrame.setFillColor(Color(199, 0, 0, 200));
+	}
+	short int width = result.getLocalBounds().width > highScoreMessage.getLocalBounds().width ? result.getLocalBounds().width : highScoreMessage.getLocalBounds().width;
+	if (hasHighScore) {
+		resultFrame.setSize(Vector2f(width + 40, result.getLocalBounds().height + highScoreMessage.getLocalBounds().height + highScoreName.getSize().y + 45));
+	}
+	else {
+		resultFrame.setSize(Vector2f(width + 40, result.getLocalBounds().height + 45));
+	}
+	resultFrame.setOrigin(resultFrame.getSize().x / 2, 0);
 }
 
 void GameManager::drawGameOver(){
-    if(won){
+    /*if(won){
         if(hasHighScore)
             drawHighScore();
         else
             drawWon();
     }
     else
-        drawLost();
+        drawLost();*/
+	getWindow_ref().draw(resultFrame);
+	getWindow_ref().draw(result);
+	if (hasHighScore) {
+		getWindow_ref().draw(highScoreMessage);
+		highScoreName.draw(getWindow_ref());
+	}
 }
 void GameManager::drawHighScore(){
     string message = "YOU WON!\nTime: "+timeToString(score)+"\nHIGHSCORE! enter your name:\n";

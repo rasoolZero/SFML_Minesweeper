@@ -6,6 +6,7 @@
 #include "Leaderboard.h"
 #include "SoundManager.h"
 #include "CustomOptions.h"
+#include "TextBox.h"
 
 class ManagerManager;
 
@@ -14,9 +15,10 @@ class GameManager : public Screen
 public:
 	GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, SoundManager& soundManager_ref,Leaderboard & _leaderboard_ref);
 
-	enum State {difficultySelection,customSelection, playing};
+	enum State {difficultySelection,customSelection, playing, finished};
 	void setState(State state) { this->state = state; }
 	virtual void update(); // from Screen
+	void pushChar(char input);
 	void startTimer();
 	void stopTimer();
 
@@ -51,11 +53,14 @@ private:
 
 	Clock timer;
 	Time score;
-	bool gameOver;
+	//bool gameOver;
 	bool won;
 	bool hasHighScore;
 	bool timerStarted;
-
+	Text result;
+	Text highScoreMessage;
+	RectangleShape resultFrame;
+	TextBox highScoreName;
     sf::RectangleShape arrow;
     sf::Texture arrowTexture;
 
