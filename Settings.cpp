@@ -73,6 +73,8 @@ Settings::Settings(RenderWindow& window, ManagerManager& manager_ref,SoundManage
 
 	bars[0] = AdjustBar( soundEffectVolume,options[1].getGlobalBounds() );
 	bars[1] = AdjustBar( musicVolume,options[3].getGlobalBounds());
+
+    setupPromptBox();
 }
 
 void Settings::draw()
@@ -84,6 +86,8 @@ void Settings::draw()
 	drawResetLeaderboard();
 	drawBack();
 	drawModifiers();
+	if(prompt)
+        drawPrompt();
 }
 
 void Settings::drawTitle()
@@ -162,6 +166,20 @@ void Settings::setSelectedOption(short int selectedOptionIndex)
 
 void Settings::manageInput(Keyboard::Key key)
 {
+    if(prompt){
+        if(key==Keyboard::Right || key==Keyboard::Left)
+            promptOption=!promptOption;
+        if(key==Keyboard::Space || key==Keyboard::Enter){
+            if(promptOption){
+                leaderBoard_ref.reset();
+                soundManager_ref.play(SoundManager::Reveal);
+
+            }
+            prompt=false;
+        }
+        return;
+    }
+
 	int selectedOptionIndex = static_cast<int>(this->selectedOption);
 
 	if (key == Keyboard::Up) {
@@ -235,9 +253,7 @@ void Settings::manageInput(Keyboard::Key key)
 			toggles[1].setState(music_enabled);
 		}
 		else if (selectedOption == SelectedOption::leaderboardReset) {
-			leaderBoard_ref.reset();
-			soundManager_ref.play(SoundManager::Reveal);
-			//sound feedback
+            prompt=true;
 		}
 		else { //back
 
@@ -273,4 +289,54 @@ void Settings::save(){
     f.open(fileName, ios::out);
     f << soundEffects_enabled << '\n' << soundEffectVolume << '\n' <<music_enabled << '\n' <<musicVolume << '\n';
     f.close();
+}
+
+void Settings::setupPromptBox(){
+    promptYes = Text("Yes",getFont(),24);
+    promptNo = Text("No",getFont(),24);
+    promptText = Text("Are You Sure?",getFont(),24);
+
+    FloatRect textRect = promptYes.getLocalBounds();
+    promptYes.setOrigin(promptYes.getOrigin().x,
+        textRect.top  + textRect.height/2.0f);
+
+    promptYes.setPosition(Vector2f(getWindow_ref().getSize().x/2.0f + 20,getWindow_ref().getSize().y/2.0f+ 15 ));
+
+
+    textRect = promptNo.getLocalBounds();
+    promptNo.setOrigin(promptNo.getOrigin().x,
+        textRect.top  + textRect.height/2.0f);
+
+    promptNo.setPosition(Vector2f(getWindow_ref().getSize().x/2.0f - promptNo.getGlobalBounds().width-20,getWindow_ref().getSize().y/2.0f + 15));
+
+
+    textRect = promptText.getLocalBounds();
+    promptText.setOrigin(textRect.left + textRect.width/2.0f,
+        textRect.top  + textRect.height/2.0f);
+
+    promptText.setPosition(Vector2f(getWindow_ref().getSize().x/2.0f , getWindow_ref().getSize().y/2.0f - 25));
+
+    promptText.setColor(Color::Black);
+
+
+    promptBox.setSize(Vector2f (promptText.getGlobalBounds().width+10, textRect.height + promptNo.getGlobalBounds().height+50));
+    promptBox.setFillColor(Color(250,250,250,100));
+    promptBox.setOutlineColor(Color::Black);
+    promptBox.setOutlineThickness(3);
+    promptBox.setPosition(Vector2f ( getWindow_ref().getSize().x/2.0f - promptBox.getSize().x/2.0f , getWindow_ref().getSize().y/2.0f - promptBox.getSize().y/2.0f ) );
+
+}
+void Settings::drawPrompt(){
+    if(promptOption){
+        promptYes.setColor(Color::Red);
+        promptNo.setColor(Color::Black);
+    }
+    else{
+        promptNo.setColor(Color::Red);
+        promptYes.setColor(Color::Black);
+    }
+    getWindow_ref().draw(promptBox);
+    getWindow_ref().draw(promptYes);
+    getWindow_ref().draw(promptNo);
+    getWindow_ref().draw(promptText);
 }

@@ -37,6 +37,15 @@ private:
 	void drawBack();
 	void drawModifiers();
 
+    void drawPrompt();
+    void setupPromptBox();
+    Text promptYes;
+    Text promptNo;
+    Text promptText;
+    RectangleShape promptBox;
+    bool prompt=false;
+    bool promptOption=false;
+
     void load();
     void save();
     string fileName="settings.dat";
