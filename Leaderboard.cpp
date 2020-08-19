@@ -8,7 +8,7 @@ using namespace std;
 using namespace sf;
 
 Leaderboard::Leaderboard(RenderWindow& _window_ref, ManagerManager& manager_ref)
-    : Screen(_window_ref, manager_ref, "fonts\\arial.ttf", 24)
+    : Screen(_window_ref, manager_ref, "fonts\\Roboto-Light.ttf", 24)
 {
 
     ifstream f(fileName);
@@ -18,7 +18,7 @@ Leaderboard::Leaderboard(RenderWindow& _window_ref, ManagerManager& manager_ref)
         load();
 
 
-	if (!font.loadFromFile("fonts\\arial.ttf")) {
+	if (!font.loadFromFile("fonts\\Roboto-Light.ttf")) {
 		throw std::runtime_error("menu font could not be loaded\n");
 	}
 	options[0].setString("Easy highscores");

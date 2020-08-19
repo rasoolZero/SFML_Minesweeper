@@ -97,7 +97,7 @@ void MenuManager::update()
 }
 
 MenuManager::MenuManager(RenderWindow& window, ManagerManager& manager_ref)
-	:Screen(window, manager_ref, "fonts\\arial.ttf", 40)
+	:Screen(window, manager_ref, "fonts\\Roboto-Light.ttf", 40)
 {
 
 	options[0].setString("Play");

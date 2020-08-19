@@ -16,7 +16,7 @@ void Settings::update()
 }
 
 Settings::Settings(RenderWindow& window, ManagerManager& manager_ref,SoundManager & _soundManager_ref,Leaderboard & _leaderBoard_ref)
-	:Screen(window, manager_ref, "fonts\\arial.ttf"),soundManager_ref(_soundManager_ref),leaderBoard_ref(_leaderBoard_ref)
+	:Screen(window, manager_ref, "fonts\\Roboto-Light.ttf"),soundManager_ref(_soundManager_ref),leaderBoard_ref(_leaderBoard_ref)
 	,bars {  {100,FloatRect()},{100,FloatRect()} }
 {
 

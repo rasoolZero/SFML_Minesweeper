@@ -4,7 +4,7 @@
 using namespace std;
 using namespace sf;
 GameManager::GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, SoundManager& soundManager_ref, Leaderboard& _leaderboard_ref)
-	:Screen(window_ref, manager_ref, "fonts\\arial.ttf")
+	:Screen(window_ref, manager_ref, "fonts\\Roboto-Light.ttf")
 	,soundManager_ref(soundManager_ref)
 	,grid{getWindow_ref(), soundManager_ref,*this}
 	, customOptions{ getWindow_ref(), getFont() },
