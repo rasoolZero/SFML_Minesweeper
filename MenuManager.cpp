@@ -96,10 +96,6 @@ void MenuManager::manageInput(Keyboard::Key key)
                 prompt=true;
 			getManager_ref().setState(static_cast<ManagerManager::State>(this->selectedOption));
 		}
-		else if (key == Keyboard::Escape) {
-			getWindow_ref().close();
-			return;
-		}
 		options[selectedOptionIndex].setFillColor(getSelectedTextColor());
 	}
 }
