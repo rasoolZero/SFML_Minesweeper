@@ -76,6 +76,8 @@ void MenuManager::manageInput(Keyboard::Key key)
             else
                 prompting=false;
         }
+        if(key==Keyboard::Escape)
+            prompting=false;
         return;
     }
 
@@ -96,6 +98,8 @@ void MenuManager::manageInput(Keyboard::Key key)
                 prompting=true;
 			getManager_ref().setState(static_cast<ManagerManager::State>(this->selectedOption));
 		}
+		else if(key == Keyboard::Escape)
+            prompting=true;
 		options[selectedOptionIndex].setFillColor(getSelectedTextColor());
 	}
 }

@@ -177,6 +177,9 @@ void Settings::manageInput(Keyboard::Key key)
             }
             prompting=false;
         }
+        if(key==Keyboard::Escape)
+            prompting=false;
+
         return;
     }
 
