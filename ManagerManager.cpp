@@ -54,8 +54,8 @@ void ManagerManager::checkEvents()
 				screen_ptr[State_to_int()]->manageInput(event.key.code);
 			}
 			else if (event.type == Event::TextEntered) {
-				if (event.text.unicode < 128) { //ASCII only
-					screen_ptr[State_to_int()]->manageInput(static_cast<Keyboard::Key>(event.text.unicode));
+				if (event.text.unicode < 128 && State_to_int() == 0) { //ASCII only, gameManager only
+					static_cast<GameManager*>(screen_ptr[State_to_int()])->pushChar(static_cast<char>(event.text.unicode));
 				}
 			}
 		}

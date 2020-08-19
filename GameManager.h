@@ -18,6 +18,7 @@ public:
 	enum State {difficultySelection,customSelection, playing, finished};
 	void setState(State state) { this->state = state; }
 	virtual void update(); // from Screen
+	void pushChar(char input);
 	void startTimer();
 	void stopTimer();
 

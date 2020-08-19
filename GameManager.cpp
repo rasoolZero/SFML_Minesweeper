@@ -9,7 +9,7 @@ GameManager::GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, 
 	,grid{getWindow_ref(), soundManager_ref,*this}
 	,customOptions{ getWindow_ref(), getFont() }
 	,leaderboard_ref(_leaderboard_ref)
-	,highScoreName{ Vector2f(getWindow_ref().getSize().x / 2, getWindow_ref().getSize().y / 2 + 80) , getNormalFontSize()}
+	,highScoreName{ Vector2f(getWindow_ref().getSize().x / 2, getWindow_ref().getSize().y / 2 + 80) , getNormalFontSize(), getFont()}
 {
 	options[0].setString("easy");
 	options[1].setString("medium");
@@ -63,6 +63,13 @@ void GameManager::update()
 		//gameOver=false;
 	}
 
+}
+
+void GameManager::pushChar(char input)
+{
+	if (hasHighScore) {
+		highScoreName.manageInput(input);
+	}
 }
 
 void GameManager::drawDifficulty()
@@ -296,7 +303,7 @@ void GameManager::drawGameOver(){
 	getWindow_ref().draw(result);
 	if (hasHighScore) {
 		getWindow_ref().draw(highScoreMessage);
-		getWindow_ref().draw(highScoreName);
+		highScoreName.draw(getWindow_ref());
 	}
 }
 void GameManager::drawHighScore(){
