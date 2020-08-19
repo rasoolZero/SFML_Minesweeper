@@ -53,6 +53,11 @@ void ManagerManager::checkEvents()
 			else if (event.type == Event::KeyPressed) {
 				screen_ptr[State_to_int()]->manageInput(event.key.code);
 			}
+			else if (event.type == Event::TextEntered) {
+				if (event.text.unicode < 128) { //ASCII only
+					screen_ptr[State_to_int()]->manageInput(static_cast<Keyboard::Key>(event.text.unicode));
+				}
+			}
 		}
 
 
