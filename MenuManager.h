@@ -23,6 +23,14 @@ private:
 	void drawLeaderBoard();
 	void drawExit();
 	void drawTitle();
+    void drawPrompt();
+    void setupPromptBox();
+    Text promptYes;
+    Text promptNo;
+    Text promptText;
+    RectangleShape promptBox;
+    bool prompt=false;
+    bool promptOption=false;
 
 	void setSelectedOption(SelectedOption selectedOption);
 	void setSelectedOption(short int selectedOptionIndex);
