@@ -4,6 +4,7 @@
 #include "CheckBox.h"
 #include "AdjustBar.h"
 #include "Screen.h"
+#include "Prompt.h"
 #include "SoundManager.h"
 #include "Leaderboard.h"
 
@@ -37,14 +38,8 @@ private:
 	void drawBack();
 	void drawModifiers();
 
-    void drawPrompt();
-    void setupPromptBox();
-    Text promptYes;
-    Text promptNo;
-    Text promptText;
-    RectangleShape promptBox;
-    bool prompt=false;
-    bool promptOption=false;
+	Prompt prompt;
+    bool prompting=false;
 
     void load();
     void save();

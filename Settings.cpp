@@ -18,6 +18,7 @@ void Settings::update()
 Settings::Settings(RenderWindow& window, ManagerManager& manager_ref,SoundManager & _soundManager_ref,Leaderboard & _leaderBoard_ref)
 	:Screen(window, manager_ref, "fonts\\Roboto-Light.ttf"),soundManager_ref(_soundManager_ref),leaderBoard_ref(_leaderBoard_ref)
 	,bars {  {100,FloatRect()},{100,FloatRect()} }
+	,prompt(window,getFont())
 {
 
 	if (!textures[0].loadFromFile("images\\unchecked.png")) {
@@ -74,7 +75,6 @@ Settings::Settings(RenderWindow& window, ManagerManager& manager_ref,SoundManage
 	bars[0] = AdjustBar( soundEffectVolume,options[1].getGlobalBounds() );
 	bars[1] = AdjustBar( musicVolume,options[3].getGlobalBounds());
 
-    setupPromptBox();
 }
 
 void Settings::draw()
@@ -86,8 +86,8 @@ void Settings::draw()
 	drawResetLeaderboard();
 	drawBack();
 	drawModifiers();
-	if(prompt)
-        drawPrompt();
+	if(prompting)
+        getWindow_ref().draw(prompt);
 }
 
 void Settings::drawTitle()
@@ -166,16 +166,16 @@ void Settings::setSelectedOption(short int selectedOptionIndex)
 
 void Settings::manageInput(Keyboard::Key key)
 {
-    if(prompt){
+    if(prompting){
         if(key==Keyboard::Right || key==Keyboard::Left)
-            promptOption=!promptOption;
+            prompt.changeOption();
         if(key==Keyboard::Space || key==Keyboard::Enter){
-            if(promptOption){
+            if(prompt.getState()){
                 leaderBoard_ref.reset();
                 soundManager_ref.play(SoundManager::Reveal);
 
             }
-            prompt=false;
+            prompting=false;
         }
         return;
     }
@@ -253,7 +253,7 @@ void Settings::manageInput(Keyboard::Key key)
 			toggles[1].setState(music_enabled);
 		}
 		else if (selectedOption == SelectedOption::leaderboardReset) {
-            prompt=true;
+            prompting=true;
 		}
 		else { //back
 
@@ -289,54 +289,4 @@ void Settings::save(){
     f.open(fileName, ios::out);
     f << soundEffects_enabled << '\n' << soundEffectVolume << '\n' <<music_enabled << '\n' <<musicVolume << '\n';
     f.close();
-}
-
-void Settings::setupPromptBox(){
-    promptYes = Text("Yes",getFont(),24);
-    promptNo = Text("No",getFont(),24);
-    promptText = Text("Are You Sure?",getFont(),24);
-
-    FloatRect textRect = promptYes.getLocalBounds();
-    promptYes.setOrigin(promptYes.getOrigin().x,
-        textRect.top  + textRect.height/2.0f);
-
-    promptYes.setPosition(Vector2f(getWindow_ref().getSize().x/2.0f + 20,getWindow_ref().getSize().y/2.0f+ 15 ));
-
-
-    textRect = promptNo.getLocalBounds();
-    promptNo.setOrigin(promptNo.getOrigin().x,
-        textRect.top  + textRect.height/2.0f);
-
-    promptNo.setPosition(Vector2f(getWindow_ref().getSize().x/2.0f - promptNo.getGlobalBounds().width-20,getWindow_ref().getSize().y/2.0f + 15));
-
-
-    textRect = promptText.getLocalBounds();
-    promptText.setOrigin(textRect.left + textRect.width/2.0f,
-        textRect.top  + textRect.height/2.0f);
-
-    promptText.setPosition(Vector2f(getWindow_ref().getSize().x/2.0f , getWindow_ref().getSize().y/2.0f - 25));
-
-    promptText.setColor(Color::Black);
-
-
-    promptBox.setSize(Vector2f (promptText.getGlobalBounds().width+10, textRect.height + promptNo.getGlobalBounds().height+50));
-    promptBox.setFillColor(Color(250,250,250,100));
-    promptBox.setOutlineColor(Color::Black);
-    promptBox.setOutlineThickness(3);
-    promptBox.setPosition(Vector2f ( getWindow_ref().getSize().x/2.0f - promptBox.getSize().x/2.0f , getWindow_ref().getSize().y/2.0f - promptBox.getSize().y/2.0f ) );
-
-}
-void Settings::drawPrompt(){
-    if(promptOption){
-        promptYes.setColor(Color::Red);
-        promptNo.setColor(Color::Black);
-    }
-    else{
-        promptNo.setColor(Color::Red);
-        promptYes.setColor(Color::Black);
-    }
-    getWindow_ref().draw(promptBox);
-    getWindow_ref().draw(promptYes);
-    getWindow_ref().draw(promptNo);
-    getWindow_ref().draw(promptText);
 }

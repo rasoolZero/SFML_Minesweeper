@@ -1,6 +1,7 @@
 #ifndef MenuManager_h
 #define MenuManager_h
 #include "Screen.h"
+#include "Prompt.h"
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -23,14 +24,10 @@ private:
 	void drawLeaderBoard();
 	void drawExit();
 	void drawTitle();
-    void drawPrompt();
-    void setupPromptBox();
-    Text promptYes;
-    Text promptNo;
-    Text promptText;
-    RectangleShape promptBox;
-    bool prompt=false;
-    bool promptOption=false;
+
+    bool prompting=false;
+
+    Prompt prompt;
 
 	void setSelectedOption(SelectedOption selectedOption);
 	void setSelectedOption(short int selectedOptionIndex);

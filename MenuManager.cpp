@@ -23,8 +23,8 @@ void MenuManager::draw()
 	drawSettings();
 	drawExit();
 	drawTitle();
-	if(prompt)
-        drawPrompt();
+	if(prompting)
+        getWindow_ref().draw(prompt);
 }
 
 void MenuManager::drawPlay()
@@ -67,14 +67,14 @@ void MenuManager::setSelectedOption(short int selectedOptionIndex)
 
 void MenuManager::manageInput(Keyboard::Key key)
 {
-    if(prompt){
+    if(prompting){
         if(key==Keyboard::Right || key==Keyboard::Left)
-            promptOption=!promptOption;
+            prompt.changeOption();
         if(key==Keyboard::Space || key==Keyboard::Enter){
-            if(promptOption)
+            if(prompt.getState())
                 getWindow_ref().close();
             else
-                prompt=false;
+                prompting=false;
         }
         return;
     }
@@ -93,7 +93,7 @@ void MenuManager::manageInput(Keyboard::Key key)
 		}
 		else if (key == Keyboard::Enter || key == Keyboard::Space) {
             if(selectedOption == SelectedOption::exit)
-                prompt=true;
+                prompting=true;
 			getManager_ref().setState(static_cast<ManagerManager::State>(this->selectedOption));
 		}
 		options[selectedOptionIndex].setFillColor(getSelectedTextColor());
@@ -107,7 +107,8 @@ void MenuManager::update()
 }
 
 MenuManager::MenuManager(RenderWindow& window, ManagerManager& manager_ref)
-	:Screen(window, manager_ref, "fonts\\Roboto-Light.ttf", 40)
+	:Screen(window, manager_ref, "fonts\\Roboto-Light.ttf", 40),
+	prompt(window,getFont())
 {
 
 	options[0].setString("Play");
@@ -124,55 +125,4 @@ MenuManager::MenuManager(RenderWindow& window, ManagerManager& manager_ref)
 		options[i].setPosition(50, startingPoint + i * 65);
 	}
 	options[0].setFillColor(getSelectedTextColor());
-	setupPromptBox();
-}
-
-void MenuManager::setupPromptBox(){
-    promptYes = Text("Yes",getFont(),24);
-    promptNo = Text("No",getFont(),24);
-    promptText = Text("Are You Sure?",getFont(),24);
-
-    FloatRect textRect = promptYes.getLocalBounds();
-    promptYes.setOrigin(promptYes.getOrigin().x,
-        textRect.top  + textRect.height/2.0f);
-
-    promptYes.setPosition(Vector2f(getWindow_ref().getSize().x/2.0f + 20,getWindow_ref().getSize().y/2.0f+ 15 ));
-
-
-    textRect = promptNo.getLocalBounds();
-    promptNo.setOrigin(promptNo.getOrigin().x,
-        textRect.top  + textRect.height/2.0f);
-
-    promptNo.setPosition(Vector2f(getWindow_ref().getSize().x/2.0f - promptNo.getGlobalBounds().width-20,getWindow_ref().getSize().y/2.0f + 15));
-
-
-    textRect = promptText.getLocalBounds();
-    promptText.setOrigin(textRect.left + textRect.width/2.0f,
-        textRect.top  + textRect.height/2.0f);
-
-    promptText.setPosition(Vector2f(getWindow_ref().getSize().x/2.0f , getWindow_ref().getSize().y/2.0f - 25));
-
-    promptText.setColor(Color::Black);
-
-
-    promptBox.setSize(Vector2f (promptText.getGlobalBounds().width+10, textRect.height + promptNo.getGlobalBounds().height+50));
-    promptBox.setFillColor(Color(250,250,250,100));
-    promptBox.setOutlineColor(Color::Black);
-    promptBox.setOutlineThickness(3);
-    promptBox.setPosition(Vector2f ( getWindow_ref().getSize().x/2.0f - promptBox.getSize().x/2.0f , getWindow_ref().getSize().y/2.0f - promptBox.getSize().y/2.0f ) );
-
-}
-void MenuManager::drawPrompt(){
-    if(promptOption){
-        promptYes.setColor(Color::Red);
-        promptNo.setColor(Color::Black);
-    }
-    else{
-        promptNo.setColor(Color::Red);
-        promptYes.setColor(Color::Black);
-    }
-    getWindow_ref().draw(promptBox);
-    getWindow_ref().draw(promptYes);
-    getWindow_ref().draw(promptNo);
-    getWindow_ref().draw(promptText);
 }
