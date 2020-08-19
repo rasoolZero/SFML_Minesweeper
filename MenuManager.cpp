@@ -78,6 +78,8 @@ void MenuManager::manageInput(Keyboard::Key key)
 			setSelectedOption( (selectedOptionIndex += 1) %= 4 ); // goes to next state in the cycle
 		}
 		else if (key == Keyboard::Enter || key == Keyboard::Space) {
+            if(selectedOption == SelectedOption::exit)
+                getWindow_ref().close();
 			getManager_ref().setState(static_cast<ManagerManager::State>(this->selectedOption));
 		}
 		else if (key == Keyboard::Escape) {
