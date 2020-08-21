@@ -21,7 +21,10 @@ Cell::Cell(int i,int j,float size,Vector2f _offset,int value)
             numbers[i]=Texture();
             if(!numbers[i].loadFromFile("images/"+std::to_string(i+1)+".png"))
                 throw std::runtime_error("could not load a cell number image");
+            numbers[i].setSmooth(true);
         }
+        cellBackground.setSmooth(true);
+        revealedT.setSmooth(true);
         loaded=true;
     }
 

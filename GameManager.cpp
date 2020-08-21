@@ -33,6 +33,7 @@ GameManager::GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, 
 
 	if(!arrowTexture.loadFromFile("images/Arrow.png"))
         throw std::runtime_error("could not load arrow image");
+    arrowTexture.setSmooth(true);
     arrow=RectangleShape(Vector2f(40,40));
     arrow.setTexture(&arrowTexture);
     arrow.setPosition(getWindow_ref().getSize().x - arrow.getSize().x -50,6);

@@ -30,12 +30,16 @@ CheckBox::CheckBox(short int length, Vector2f position, Texture& unchecked, Text
 	:checked(checked)
 	,unchecked(unchecked)
 	,RectangleShape(Vector2f(length, length))
-{	
+{
+    checked.setSmooth(true);
+    unchecked.setSmooth(true);
+    this->checked.setSmooth(true);
+    this->unchecked.setSmooth(true);
 	this->setTexture(&this->unchecked);
 	setPosition(position);
 }
 
 CheckBox::CheckBox()
-{	
+{
 	this->setTexture(&this->unchecked);
 }

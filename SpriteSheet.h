@@ -23,8 +23,10 @@ class SpriteSheet
         int bombCount=10;
         int flagIndex=0;
         int bombIndex=0;
-        int flagFramesPassed=5;
-        int bombFramesPassed=5;
+        int flagFrames=8;
+        int bombFrames=6;
+        int flagFramesPassed=flagFrames;
+        int bombFramesPassed=bombFrames;
 };
 
 #endif // SPRITESHEET_H

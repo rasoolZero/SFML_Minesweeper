@@ -26,7 +26,7 @@ SpriteSheet::SpriteSheet()
 Texture* SpriteSheet::getFlagTexture(){
     int index=flagIndex;
     if(flagFramesPassed<=0){
-        flagFramesPassed=5;
+        flagFramesPassed=flagFrames;
         this->flagIndex+=1;
         this->flagIndex%=this->flagCount;
     }
@@ -37,7 +37,7 @@ Texture* SpriteSheet::getFlagTexture(){
 Texture* SpriteSheet::getBombTexture(){
     int index=bombIndex;
     if(bombFramesPassed<=0){
-        bombFramesPassed=5;
+        bombFramesPassed=bombFrames;
         this->bombIndex+=1;
         this->bombIndex%=this->bombCount;
     }
