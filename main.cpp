@@ -11,6 +11,13 @@ using namespace sf;
 
 int main() {
     RenderWindow window(VideoMode::getDesktopMode(), "SFML_Minesweeper", Style::Fullscreen);
+    Cursor cursor;
+    Image image;
+    if(image.loadFromFile("images\\cursor.png")){
+        cursor.loadFromPixels(image.getPixelsPtr(),image.getSize(),Vector2u(0,0));
+        window.setMouseCursor(cursor);
+        window.setMouseCursorVisible(true);
+    }
     window.setVerticalSyncEnabled(true);
     SoundManager soundManager;
     ManagerManager manager(&window);
