@@ -1,6 +1,7 @@
 #ifndef CELL_H
 #define CELL_H
 #include <SFML/Graphics.hpp>
+#include "SpriteSheet.h"
 using namespace sf;
 
 
@@ -25,15 +26,13 @@ class Cell : public Drawable
         int value;
         Vector2i index;
         CellState state;
-        static Texture bombT;
         static Texture cellBackground;
-        static Texture flagT;
         static Texture revealedT;
         RectangleShape shape;
         RectangleShape background;
         static std::vector<Texture> numbers;
         static bool loaded;
+        SpriteSheet sprites;
 
 };
-
 #endif // CELL_H

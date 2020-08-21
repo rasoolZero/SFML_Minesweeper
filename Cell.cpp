@@ -2,9 +2,7 @@
 #include<string>
 #include <SFML/Graphics.hpp>
 using namespace sf;
-Texture Cell::bombT;
 Texture Cell::cellBackground;
-Texture Cell::flagT;
 Texture Cell::revealedT;
 std::vector<Texture> Cell::numbers;
 bool Cell::loaded;
@@ -12,12 +10,8 @@ bool Cell::loaded;
 Cell::Cell(int i,int j,float size,Vector2f _offset,int value)
 {
     if(!loaded){
-        if(!bombT.loadFromFile("images/bomb.png"))
-            throw std::runtime_error("could not load bomb image");
         if(!cellBackground.loadFromFile("images/cell.png"))
             throw std::runtime_error("could not load cell background image");
-        if(!flagT.loadFromFile("images/flag.png"))
-            throw std::runtime_error("could not load flag image");
         if(!revealedT.loadFromFile("images/revealed.png"))
             throw std::runtime_error("could not load revealed background image");
         for(int i=0;i<8;i++){
@@ -39,6 +33,8 @@ Cell::Cell(int i,int j,float size,Vector2f _offset,int value)
     shape.setSize(Vector2f(size,size));
     background.setPosition(i*size+_offset.x,j*size+_offset.y);
     background.setSize(Vector2f(size,size));
+
+    sprites=SpriteSheet();
 }
 
 void Cell::reveal(){
@@ -60,11 +56,11 @@ bool Cell::flag(){
 
 void Cell::update(){
     if(state==CellState::Flagged)
-        shape.setTexture(&flagT);
+        shape.setTexture(sprites.getFlagTexture());
     if(state==CellState::Revealed){
         background.setTexture(&revealedT);
         if(value==-1){
-            shape.setTexture(&bombT);
+            shape.setTexture(sprites.getBombTexture());
         }
         if(value>0){
             shape.setTexture(&numbers[value-1]);
