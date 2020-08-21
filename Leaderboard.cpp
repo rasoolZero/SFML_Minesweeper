@@ -87,7 +87,6 @@ void Leaderboard::addScore(Time time,const char name[16],Difficulties difficulty
 }
 
 void Leaderboard::update(){
-    //checkInput();
     draw();
 }
 

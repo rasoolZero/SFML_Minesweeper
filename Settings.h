@@ -12,7 +12,6 @@ class ManagerManager;
 class Settings : public Screen
 {
 private:
-	//SoundManager& soundManager_ref;
 	enum class SelectedOption {soundToggle, soundAdjust, musicToggle, musicAdjust, leaderboardReset, back};
 	SelectedOption selectedOption = SelectedOption::soundToggle;
 	Text options[6];

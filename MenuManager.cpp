@@ -106,7 +106,6 @@ void MenuManager::manageInput(Keyboard::Key key)
 
 void MenuManager::update()
 {
-	//manageInput();
 	draw();
 }
 

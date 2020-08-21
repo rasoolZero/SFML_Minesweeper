@@ -11,7 +11,6 @@ void Settings::update()
 	draw();
     save();
 
-	//manageInput();
 }
 
 Settings::Settings(RenderWindow& window, ManagerManager& manager_ref,SoundManager & _soundManager_ref,Leaderboard & _leaderBoard_ref)

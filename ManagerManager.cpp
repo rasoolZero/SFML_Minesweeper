@@ -24,7 +24,6 @@ void ManagerManager::setPointers(GameManager* gameManager_ptr, Settings* setting
 
 void ManagerManager::manage()
 {
-	//update();
 	checkEvents();
 }
 

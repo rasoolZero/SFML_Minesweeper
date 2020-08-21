@@ -61,7 +61,6 @@ void GameManager::update()
 			customOptions.draw();
 		}
 		timerStarted=false;
-		//gameOver=false;
 	}
 
 }
@@ -165,18 +164,6 @@ void GameManager::manageInput(Keyboard::Key key)
 		}
 		if (key == Keyboard::Escape || ( (key == Keyboard::Enter || key == Keyboard::Space) && selectedOptionIndex == 4)) { //back
 			reset();
-			/*options[selectedOptionIndex].setFillColor(getNormalTextColor());
-			difficulty = Difficulty::easy;
-			options[selectedOptionIndex].setCharacterSize(getNormalFontSize());
-			selectedOptionIndex = 0;
-
-			setState(State::difficultySelection);
-			if (soundManager_ref.isPlaying(SoundManager::GameMusic)) {
-				soundManager_ref.stopAll();
-				soundManager_ref.play(SoundManager::MenuMusic);
-			}
-			customOptions.reset();
-			getManager_ref().setState();*/
 		}
 		else if (key == Keyboard::Enter || key == Keyboard::Space) {
 			if (difficulty == Difficulty::easy) {
@@ -250,13 +237,9 @@ void GameManager::checkClick(){
     if(Mouse::isButtonPressed(Mouse::Left) && !prevLeftButtonStatus){
 
         Vector2i mousePosition=Mouse::getPosition(getWindow_ref());
-        if(mousePosition.x >= arrow.getGlobalBounds().left &&
-            mousePosition.x <= arrow.getGlobalBounds().left + arrow.getSize().x &&
-            mousePosition.y >= arrow.getGlobalBounds().top &&
-            mousePosition.y <= arrow.getGlobalBounds().top + arrow.getSize().y){
+        if( static_cast<IntRect>(arrow.getGlobalBounds()).contains(mousePosition)){
             grid.setupGrid(grid.getWidth(),grid.getHeight(),grid.getBombCount());
             timerStarted=false;
-            //gameOver=false;
 			setState(State::playing);
             timer.restart();
             soundManager_ref.play(SoundManager::Reveal);
@@ -292,7 +275,6 @@ void GameManager::reset(bool isHighScore)
 }
 
 void GameManager::stopTimer(){
-    //gameOver=true;
 	setState(State::finished);
     score=timer.getElapsedTime();
     if(grid.getState() == Grid::Won){
@@ -332,14 +314,6 @@ void GameManager::stopTimer(){
 }
 
 void GameManager::drawGameOver(){
-    /*if(won){
-        if(hasHighScore)
-            drawHighScore();
-        else
-            drawWon();
-    }
-    else
-        drawLost();*/
 	getWindow_ref().draw(resultFrame);
 	getWindow_ref().draw(result);
 	if (hasHighScore) {

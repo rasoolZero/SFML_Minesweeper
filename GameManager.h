@@ -51,7 +51,6 @@ private:
 
 	Clock timer;
 	Time score;
-	//bool gameOver;
 	bool won;
 	bool hasHighScore;
 	bool timerStarted;
