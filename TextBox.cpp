@@ -54,6 +54,7 @@ void TextBox::reset()
 {
 	setSize(Vector2f(80, fontSize + 6));
 	setOrigin(40, 0);
-	content = "";
+	content.clear();
 	text.setString(content);
+	text.setOrigin(getLocalBounds().width / 2, 0);
 }

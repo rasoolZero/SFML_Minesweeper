@@ -124,9 +124,9 @@ void GameManager::manageInput(Keyboard::Key key)
 			getManager_ref().setState();
 		}
 		if (state == State::finished) {
-			if (key == Keyboard::Space || key == Keyboard::Enter) {
+			if (key == Keyboard::Enter) {
 				if (hasHighScore) {
-					if (highScoreName.getContent() != "") {
+					if (highScoreName.getContent().length()) {
 						leaderboard_ref.addScore(score, highScoreName.getContent().data(), static_cast<Leaderboard::Difficulties>(difficulty));
 					}
 					else {
@@ -280,6 +280,8 @@ void GameManager::reset(bool isHighScore)
 	}
 	customOptions.reset();
 	highScoreName.reset();
+	won = false;
+	hasHighScore = false;
 	if (isHighScore) {
 		getManager_ref().setState(ManagerManager::State::leaderboard);
 	}
