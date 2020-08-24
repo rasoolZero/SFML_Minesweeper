@@ -108,8 +108,11 @@ void MenuManager::manageInput(Keyboard::Key key)
 	}
 }
 
-void MenuManager::manageInput(Mouse::Button button)
+void MenuManager::manageInput(Mouse::Button button, bool released)
 {
+	if (released) {
+		return;
+	}
 	if (button == Mouse::Left) {
 		if (!prompting) {
 			for (int i = 0; i < 4; i++)

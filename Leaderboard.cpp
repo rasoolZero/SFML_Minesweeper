@@ -168,8 +168,11 @@ void Leaderboard::manageInput(Keyboard::Key key) {
 	}
 }
 
-void Leaderboard::manageInput(Mouse::Button button)
+void Leaderboard::manageInput(Mouse::Button button, bool released)
 {
+    if (released) {
+        return;
+    }
     if (button == Mouse::Left) {
         if (optionBoxes[3].contains(Mouse::getPosition())) {
             reset();

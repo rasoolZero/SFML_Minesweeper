@@ -94,6 +94,19 @@ Settings::Settings(RenderWindow& window, ManagerManager& manager_ref,SoundManage
 	promptOptionBoxes[1].left = prompt.getTextRect(-1).left + prompt.getTextRect(-1).width / 2;
 }
 
+void Settings::applyAdjust()
+{
+	bars[adjusting - 1].setValue_mouse();
+	if (adjusting == 1) {
+		soundEffectVolume = bars[adjusting - 1].getValue();
+		soundManager_ref.setVolumeSoundEffects(soundEffectVolume);
+	}
+	else if (adjusting == 2) {
+		musicVolume = bars[adjusting - 1].getValue();
+		soundManager_ref.setVolumeMusics(musicVolume);
+	}
+}
+
 void Settings::toggleSound()
 {
 	if (soundEffects_enabled) {
@@ -213,6 +226,9 @@ void Settings::setSelectedOption(short int selectedOptionIndex)
 
 void Settings::manageInput(Keyboard::Key key)
 {
+	if (adjusting) {
+		return;
+	}
     if(prompting){
         if(key==Keyboard::Right || key==Keyboard::Left)
             prompt.changeOption();
@@ -242,10 +258,12 @@ void Settings::manageInput(Keyboard::Key key)
 		setSelectedOption((selectedOptionIndex += 1) %= 6); // goes to next state in the cycle
 	}
 	else if (key == Keyboard::Escape) {
-		options[selectedOptionIndex].setFillColor(getNormalTextColor());
+		reset();
+		return;
+		/*options[selectedOptionIndex].setFillColor(getNormalTextColor());
 		selectedOption = SelectedOption::soundToggle;
 		selectedOptionIndex = 0;
-		getManager_ref().setState();
+		getManager_ref().setState();*/
 	}
 	else if(key == Keyboard::Left || key == Keyboard::Right ){
 	    short int delta;
@@ -319,9 +337,16 @@ void Settings::manageInput(Keyboard::Key key)
 	options[selectedOptionIndex].setFillColor(getSelectedTextColor());
 }
 
-void Settings::manageInput(Mouse::Button button)
+void Settings::manageInput(Mouse::Button button, bool released)
 {
 	if (button == Mouse::Left) {
+		if (released) {
+			if (adjusting == 1) {
+				soundManager_ref.play(SoundManager::Reveal);
+			}
+			adjusting = false;
+			return;
+		}
 		if (!prompting) {
 			for (int i = 0; i < 6; i++)
 			{
@@ -337,7 +362,14 @@ void Settings::manageInput(Mouse::Button button)
 					}
 					else if (i == 5) {
 						reset();
-						return;
+					}
+					else if (i == 1) {
+						adjusting = 1;
+						applyAdjust();
+					}
+					else if (i == 3) {
+						adjusting = 2;
+						applyAdjust();
 					}
 					return;
 				}
@@ -361,17 +393,31 @@ void Settings::manageInput(Mouse::Button button)
 void Settings::updateMouse()
 {
 	if (!prompting) {
-		int selectedOptionIndex = static_cast<int>(this->selectedOption);
-		options[selectedOptionIndex].setFillColor(getNormalTextColor());
-		for (int i = 0; i < 6; i++)
-		{
-			if (optionBoxes[i].contains(Mouse::getPosition())) {
-				setSelectedOption(i);
-				selectedOptionIndex = i;
-				break;
+		if (adjusting) {
+			applyAdjust();
+			/*bars[adjusting - 1].setValue_mouse();
+			if (adjusting == 1) {
+				soundEffectVolume = bars[adjusting - 1].getValue();
+				soundManager_ref.setVolumeSoundEffects(soundEffectVolume);
 			}
+			else if (adjusting == 2) {
+				musicVolume = bars[adjusting - 1].getValue();
+				soundManager_ref.setVolumeMusics(musicVolume);
+			}*/
 		}
-		options[selectedOptionIndex].setFillColor(getSelectedTextColor());
+		else {
+			int selectedOptionIndex = static_cast<int>(this->selectedOption);
+			options[selectedOptionIndex].setFillColor(getNormalTextColor());
+			for (int i = 0; i < 6; i++)
+			{
+				if (optionBoxes[i].contains(Mouse::getPosition())) {
+					setSelectedOption(i);
+					selectedOptionIndex = i;
+					break;
+				}
+			}
+			options[selectedOptionIndex].setFillColor(getSelectedTextColor());
+		}
 	}
 	else {
 		for (int i = 0; i < 2; i++)

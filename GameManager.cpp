@@ -215,8 +215,11 @@ void GameManager::manageInput(Keyboard::Key key)
         }
 	}
 }
-void GameManager::manageInput(Mouse::Button button)
+void GameManager::manageInput(Mouse::Button button, bool released)
 {
+	if (released) {
+		return;
+	}
 	if (button == Mouse::Left) {
 		if (state == State::difficultySelection) {
 			for (int i = 0; i < 5; i++)
@@ -240,7 +243,7 @@ void GameManager::manageInput(Mouse::Button button)
 			}
 		}
 		else if (state == State::customSelection) {
-
+			customOptions.manageInput(button);
 		}
 	}
 	

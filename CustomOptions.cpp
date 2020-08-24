@@ -146,6 +146,19 @@ void CustomOptions::manageInput(Keyboard::Key key)
 	customTexts[selectedOptionIndex].setString(std::to_string(customAmounts[selectedOptionIndex]));
 }
 
+void CustomOptions::manageInput(Mouse::Button button)
+{
+	if (button == Mouse::Left) {
+		for (int i = 0; i < 3; i++)
+		{
+			if (static_cast<IntRect>(textBoxes[i].getGlobalBounds()).contains(Mouse::getPosition())) { //if mouse is within textbox
+				setSelectedOption(i);
+				return;
+			}
+		}
+	}
+}
+
 void CustomOptions::reset()
 {
 	setSelectedOption(0);

@@ -19,7 +19,7 @@ void DotZero::manageInput(Keyboard::Key key){
     }
 }
 
-void DotZero::manageInput(Mouse::Button button)
+void DotZero::manageInput(Mouse::Button button, bool released)
 {
     if (button == Mouse::Left || button == Mouse::Right) {
         getManager_ref().setState();

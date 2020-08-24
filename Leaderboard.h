@@ -22,7 +22,7 @@ class Leaderboard : public Screen
 
         virtual void update(); //from Screen
         virtual void manageInput(Keyboard::Key key); //from Screen
-        virtual void manageInput(Mouse::Button button); //from Screen
+        virtual void manageInput(Mouse::Button button, bool released = 0); //from Screen
         virtual void updateMouse(); //from screen
 
         void resetScores();

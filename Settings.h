@@ -24,6 +24,8 @@ private:
 	short int musicVolume = 100;
 	bool music_enabled = true;
 	bool soundEffects_enabled = true;
+	short int adjusting = 0;
+	void applyAdjust();
 
 	void toggleSound();
 	void toggleMusic();
@@ -58,7 +60,7 @@ public:
 
 	virtual void update(); // from screen
 	virtual void manageInput(Keyboard::Key key); // from screen
-	virtual void manageInput(Mouse::Button button); //from Screen
+	virtual void manageInput(Mouse::Button button, bool released = 0); //from Screen
 	virtual void updateMouse(); //from screen
 
 	Settings(RenderWindow& window, ManagerManager& manager_ref ,SoundManager & _soundManager_ref,Leaderboard & _leaderBoard_ref);

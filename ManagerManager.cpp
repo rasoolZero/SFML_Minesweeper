@@ -63,6 +63,9 @@ void ManagerManager::checkEvents()
 			else if (event.type == Event::MouseButtonPressed) {
 				screen_ptr[State_to_int()]->manageInput(event.mouseButton.button);
 			}
+			else if (event.type == Event::MouseButtonReleased) {
+				screen_ptr[State_to_int()]->manageInput(event.mouseButton.button, true);
+			}
 		}
 
 
