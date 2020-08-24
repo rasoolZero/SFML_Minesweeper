@@ -49,7 +49,9 @@ void ManagerManager::checkEvents()
 			else if (event.type == Event::LostFocus) {
 				isFocused = false;
 			}
-
+			else if (event.type == Event::MouseMoved) {
+				screen_ptr[State_to_int()]->updateMouse();
+			}
 			else if (event.type == Event::KeyPressed) {
 				screen_ptr[State_to_int()]->manageInput(event.key.code);
 			}
@@ -57,6 +59,9 @@ void ManagerManager::checkEvents()
 				if (event.text.unicode < 128 && State_to_int() == 0) { //ASCII only, gameManager only
 					static_cast<GameManager*>(screen_ptr[State_to_int()])->pushChar(static_cast<char>(event.text.unicode));
 				}
+			}
+			else if (event.type == Event::MouseButtonPressed) {
+				screen_ptr[State_to_int()]->manageInput(event.mouseButton.button);
 			}
 		}
 

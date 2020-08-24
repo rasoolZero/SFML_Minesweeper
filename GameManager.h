@@ -18,6 +18,9 @@ public:
 	enum State {difficultySelection,customSelection, playing, finished};
 	void setState(State state) { this->state = state; }
 	virtual void update(); // from Screen
+	virtual void manageInput(Keyboard::Key key); //from Screen
+	virtual void manageInput(Mouse::Button button); //from Screen
+	virtual void updateMouse(); //from screen
 	void pushChar(char input);
 	void startTimer();
 	void stopTimer();
@@ -28,6 +31,7 @@ private:
 	SoundManager& soundManager_ref;
 	Leaderboard& leaderboard_ref;
 	Text options[5];
+	IntRect optionBoxes[5];
 	short int selectedFontSize = 48;
 
 	enum Difficulty { easy, medium, hard, custom};
@@ -45,9 +49,9 @@ private:
 
     string timeToString(Time t);
 
-	virtual void manageInput(Keyboard::Key key); //from Screen
 	void checkClick();
 	void reset(bool isHighScore = false);
+	void startGame();
 
 	Clock timer;
 	Time score;

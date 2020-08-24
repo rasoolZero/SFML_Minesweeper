@@ -21,8 +21,11 @@ class Leaderboard : public Screen
         void addScore(Time time,const char name[16],Difficulties difficulty);
 
         virtual void update(); //from Screen
+        virtual void manageInput(Keyboard::Key key); //from Screen
+        virtual void manageInput(Mouse::Button button); //from Screen
+        virtual void updateMouse(); //from screen
 
-        void reset();
+        void resetScores();
 
     protected:
 
@@ -32,7 +35,8 @@ class Leaderboard : public Screen
 
         short int selectedFontSize = 30;
         Font font;
-        Text options[3];
+        Text options[4];
+        IntRect optionBoxes[4];
 
         Difficulties selectedOption = Difficulties::Easy;
 
@@ -43,12 +47,12 @@ class Leaderboard : public Screen
         void init();
         void load();
         void save();
+        void reset();
 
-        virtual void manageInput(Keyboard::Key key); //from Screen
         void draw();
         void drawScores();
         void drawOptions();
-        void drawBack();
+        //void drawBack();
 
 };
 

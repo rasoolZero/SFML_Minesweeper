@@ -19,6 +19,13 @@ void DotZero::manageInput(Keyboard::Key key){
     }
 }
 
+void DotZero::manageInput(Mouse::Button button)
+{
+    if (button == Mouse::Left || button == Mouse::Right) {
+        getManager_ref().setState();
+    }
+}
+
 void DotZero::update(){
     if(shown)
         alpha-=2;
@@ -30,6 +37,11 @@ void DotZero::update(){
         getManager_ref().setState();
     text.setFillColor(Color(0,0,0,alpha));
     draw();
+}
+
+void DotZero::updateMouse()
+{
+
 }
 
 void DotZero::draw(){

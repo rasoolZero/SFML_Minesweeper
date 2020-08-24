@@ -23,15 +23,33 @@ Leaderboard::Leaderboard(RenderWindow& _window_ref, ManagerManager& manager_ref)
 	options[0].setString("Easy highscores");
 	options[1].setString("Normal highscores");
 	options[2].setString("Hard highscores");
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 4; i++) {
 		options[i].setFont(font);
         if (i) {
 		options[i].setFillColor(getNormalTextColor());
         }
 		options[i].setCharacterSize(getNormalFontSize());
+        if (i == 3) {
+            continue;
+        }
 		options[i].setPosition( (getWindow_ref().getSize().x/6*(i*2+1)) - options[i].getGlobalBounds().width/2 , 24);
 	}
     options[0].setFillColor(getSelectedTextColor());
+
+    options[3].setString("[Esc] back");
+    options[3].setPosition(5, getWindow_ref().getSize().y - 40);
+
+    for (int i = 0; i < 4; i++)
+    {
+        optionBoxes[i].top = options[i].getGlobalBounds().top - 10;
+        optionBoxes[i].height = options[i].getGlobalBounds().height + 20;
+        optionBoxes[i].left = options[i].getGlobalBounds().left - 10;
+        if (i == 3) {
+            continue;
+        }
+        optionBoxes[i].width = 200;
+    }
+    optionBoxes[3].width = 150;
 }
 void Leaderboard::init(){
     for(int j=0;j<3;j++)
@@ -53,6 +71,18 @@ void Leaderboard::save(){
     f.open(fileName,ios::binary | ios::out);
     f.write( (char *)&highScores ,30*sizeof(Record));
     f.close();
+}
+
+void Leaderboard::reset()
+{
+    int selectedOptionIndex = static_cast<int>(this->selectedOption);
+    options[selectedOptionIndex].setFillColor(getNormalTextColor());
+    selectedOption = Difficulties::Easy;
+    selectedOptionIndex = 0;
+    options[selectedOptionIndex].setFillColor(getSelectedTextColor());
+    options[selectedOptionIndex].setCharacterSize(getNormalFontSize());
+    options[3].setFillColor(getNormalTextColor());
+    getManager_ref().setState();
 }
 
 bool Leaderboard::isHighscore(Time time,Difficulties difficulty){
@@ -110,7 +140,7 @@ void Leaderboard::draw(){
 
     drawOptions();
     drawScores();
-    drawBack();
+    //drawBack();
 }
 
 void Leaderboard::manageInput(Keyboard::Key key) {
@@ -127,17 +157,56 @@ void Leaderboard::manageInput(Keyboard::Key key) {
 			setSelectedOption( (selectedOptionIndex += 1) %= 3 ); // goes to next state in the cycle
 		}
         else if (key == Keyboard::Escape) {
-            options[selectedOptionIndex].setFillColor(getNormalTextColor());
+            reset();
+            return;
+            /*options[selectedOptionIndex].setFillColor(getNormalTextColor());
             selectedOption = Difficulties::Easy;
             selectedOptionIndex = 0;
-            getManager_ref().setState();
+            getManager_ref().setState();*/
         }
 		options[selectedOptionIndex].setFillColor(getSelectedTextColor());
 	}
 }
 
+void Leaderboard::manageInput(Mouse::Button button)
+{
+    if (button == Mouse::Left) {
+        if (optionBoxes[3].contains(Mouse::getPosition())) {
+            reset();
+            /*int selectedOptionIndex = static_cast<int>(this->selectedOption);
+            options[selectedOptionIndex].setFillColor(getNormalTextColor());
+            selectedOption = Difficulties::Easy;
+            selectedOptionIndex = 0;
+            getManager_ref().setState();
+            options[selectedOptionIndex].setFillColor(getSelectedTextColor());
+            options[3].setFillColor(getNormalTextColor());*/
+        }
+    }
+}
+
+void Leaderboard::updateMouse()
+{
+    int selectedOptionIndex = static_cast<int>(this->selectedOption);
+    options[selectedOptionIndex].setFillColor(getNormalTextColor());
+    for (int i = 0; i < 3; i++)
+    {
+        if (optionBoxes[i].contains(Mouse::getPosition())) {
+            setSelectedOption(i);
+            selectedOptionIndex = i;
+            break;
+        }
+    }
+    options[selectedOptionIndex].setFillColor(getSelectedTextColor());
+    if (optionBoxes[3].contains(Mouse::getPosition())) {
+        options[3].setFillColor(getSelectedTextColor());
+    }
+    else {
+        options[3].setFillColor(getNormalTextColor());
+    }
+}
+
 void Leaderboard::drawOptions(){
-    for(int i=0;i<3;i++){
+    for(int i=0;i<4;i++){
         getWindow_ref().draw(options[i]);
     }
 }
@@ -163,15 +232,9 @@ void Leaderboard::drawScores(){
         getWindow_ref().draw(text);
     }
 }
-void Leaderboard::drawBack(){
-    Text text;
-    text.setFillColor(Color::Black);
-    text.setFont(font);
-    text.setCharacterSize(getNormalFontSize());
-    text.setString("[Esc] back");
-    text.setPosition(5,getWindow_ref().getSize().y-40);
-    getWindow_ref().draw(text);
-}
+/*void Leaderboard::drawBack(){
+    getWindow_ref().draw(options[3]);
+}*/
 
 void Leaderboard::setSelectedOption(Difficulties selectedOption)
 {
@@ -184,6 +247,6 @@ void Leaderboard::setSelectedOption(short int selectedOptionIndex)
 
 }
 
-void Leaderboard::reset(){
+void Leaderboard::resetScores(){
     init();
 }

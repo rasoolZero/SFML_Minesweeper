@@ -15,6 +15,7 @@ private:
 	enum class SelectedOption {soundToggle, soundAdjust, musicToggle, musicAdjust, leaderboardReset, back};
 	SelectedOption selectedOption = SelectedOption::soundToggle;
 	Text options[6];
+	IntRect optionBoxes[6];
 	Texture textures[2];
 	CheckBox toggles[2];
 	AdjustBar bars[2];
@@ -23,6 +24,9 @@ private:
 	short int musicVolume = 100;
 	bool music_enabled = true;
 	bool soundEffects_enabled = true;
+
+	void toggleSound();
+	void toggleMusic();
 
 	SoundManager & soundManager_ref;
 	Leaderboard & leaderBoard_ref;
@@ -38,20 +42,24 @@ private:
 	void drawModifiers();
 
 	Prompt prompt;
+	IntRect promptOptionBoxes[2];
     bool prompting=false;
 
+	void reset();
     void load();
     void save();
     string fileName="settings.dat";
 
 	void setSelectedOption(SelectedOption selectedOption);
 	void setSelectedOption(short int selectedOptionIndex);
-	virtual void manageInput(Keyboard::Key key);
 public:
 
 	SelectedOption getSelectedOption() { return this->selectedOption; }
 
-	virtual void update();
+	virtual void update(); // from screen
+	virtual void manageInput(Keyboard::Key key); // from screen
+	virtual void manageInput(Mouse::Button button); //from Screen
+	virtual void updateMouse(); //from screen
 
 	Settings(RenderWindow& window, ManagerManager& manager_ref ,SoundManager & _soundManager_ref,Leaderboard & _leaderBoard_ref);
 

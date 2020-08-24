@@ -73,6 +73,55 @@ Settings::Settings(RenderWindow& window, ManagerManager& manager_ref,SoundManage
 	bars[0] = AdjustBar( soundEffectVolume,options[1].getGlobalBounds() );
 	bars[1] = AdjustBar( musicVolume,options[3].getGlobalBounds());
 
+	for (int i = 0; i < 6; i++)
+	{
+		optionBoxes[i].top = options[i].getGlobalBounds().top - 10;
+		optionBoxes[i].left = options[i].getGlobalBounds().left - 30;
+		optionBoxes[i].height = options[i].getGlobalBounds().height + 20;
+	}
+	optionBoxes[0].width = optionBoxes[2].width = 350;
+	optionBoxes[1].width = optionBoxes[3].width = 450;
+	optionBoxes[4].width = 400;
+	optionBoxes[5].width = 230;
+
+	for (int i = 0; i < 2; i++)
+	{
+		promptOptionBoxes[i].top = prompt.getTextRect(i).top - 10;
+		promptOptionBoxes[i].height = prompt.getTextRect(i).height + 20;
+		promptOptionBoxes[i].width = prompt.getTextRect(-1).width / 2;
+	}
+	promptOptionBoxes[0].left = prompt.getTextRect(-1).left;
+	promptOptionBoxes[1].left = prompt.getTextRect(-1).left + prompt.getTextRect(-1).width / 2;
+}
+
+void Settings::toggleSound()
+{
+	if (soundEffects_enabled) {
+		soundEffects_enabled = false;
+		soundManager_ref.setVolumeSoundEffects(0);
+	}
+	else {
+		soundEffects_enabled = true;
+		soundManager_ref.setVolumeSoundEffects(soundEffectVolume);
+		sleep(microseconds(10));
+		soundManager_ref.play(SoundManager::Reveal);
+	}
+	toggles[0].setState(soundEffects_enabled);
+}
+
+void Settings::toggleMusic()
+{
+	if (music_enabled) {
+		music_enabled = false;
+		soundManager_ref.setVolumeMusics(0);
+		soundManager_ref.stopAll();
+	}
+	else {
+		music_enabled = true;
+		soundManager_ref.setVolumeMusics(musicVolume);
+		soundManager_ref.play(SoundManager::MenuMusic);
+	}
+	toggles[1].setState(music_enabled);
 }
 
 void Settings::draw()
@@ -169,7 +218,7 @@ void Settings::manageInput(Keyboard::Key key)
             prompt.changeOption();
         if(key==Keyboard::Space || key==Keyboard::Enter){
             if(prompt.getState()){
-                leaderBoard_ref.reset();
+                leaderBoard_ref.resetScores();
                 soundManager_ref.play(SoundManager::Reveal);
 
             }
@@ -228,7 +277,8 @@ void Settings::manageInput(Keyboard::Key key)
 	}
 	else if (key == Keyboard::Enter || key == Keyboard::Space) {
 		if (selectedOption == SelectedOption::soundToggle) {
-			if(soundEffects_enabled){
+			toggleSound();
+			/*if(soundEffects_enabled){
                 soundEffects_enabled=false;
                 soundManager_ref.setVolumeSoundEffects(0);
 			}
@@ -238,10 +288,11 @@ void Settings::manageInput(Keyboard::Key key)
                 sleep(microseconds(10));
                 soundManager_ref.play(SoundManager::Reveal);
 			}
-			toggles[0].setState(soundEffects_enabled);
+			toggles[0].setState(soundEffects_enabled);*/
 		}
 		else if (selectedOption == SelectedOption::musicToggle) {
-			if(music_enabled){
+			toggleMusic();
+			/*if(music_enabled){
                 music_enabled=false;
                 soundManager_ref.setVolumeMusics(0);
                 soundManager_ref.stopAll();
@@ -251,20 +302,94 @@ void Settings::manageInput(Keyboard::Key key)
                 soundManager_ref.setVolumeMusics(musicVolume);
                 soundManager_ref.play(SoundManager::MenuMusic);
 			}
-			toggles[1].setState(music_enabled);
+			toggles[1].setState(music_enabled);*/
 		}
 		else if (selectedOption == SelectedOption::leaderboardReset) {
             prompting=true;
 		}
 		else { //back
-
- 			options[selectedOptionIndex].setFillColor(getNormalTextColor());
+			reset();
+			return;
+ 			/*options[selectedOptionIndex].setFillColor(getNormalTextColor());
 			selectedOption = SelectedOption::soundToggle;
 			selectedOptionIndex = 0;
-			getManager_ref().setState();
+			getManager_ref().setState();*/
 		}
 	}
 	options[selectedOptionIndex].setFillColor(getSelectedTextColor());
+}
+
+void Settings::manageInput(Mouse::Button button)
+{
+	if (button == Mouse::Left) {
+		if (!prompting) {
+			for (int i = 0; i < 6; i++)
+			{
+				if (optionBoxes[i].contains(Mouse::getPosition())) {
+					if (i == 0) {
+						toggleSound();
+					}
+					else if (i == 2) {
+						toggleMusic();
+					}
+					else if (i == 4) {
+						prompting = true;
+					}
+					else if (i == 5) {
+						reset();
+						return;
+					}
+					return;
+				}
+			}
+		}
+		else {
+			for (int i = 0; i < 2; i++)
+			{
+				if (promptOptionBoxes[i].contains(Mouse::getPosition())) {
+					if (i) { //yes option
+						leaderBoard_ref.resetScores();
+						soundManager_ref.play(SoundManager::Reveal);
+					}
+					prompting = false;
+				}
+			}
+		}
+	}
+}
+
+void Settings::updateMouse()
+{
+	if (!prompting) {
+		int selectedOptionIndex = static_cast<int>(this->selectedOption);
+		options[selectedOptionIndex].setFillColor(getNormalTextColor());
+		for (int i = 0; i < 6; i++)
+		{
+			if (optionBoxes[i].contains(Mouse::getPosition())) {
+				setSelectedOption(i);
+				selectedOptionIndex = i;
+				break;
+			}
+		}
+		options[selectedOptionIndex].setFillColor(getSelectedTextColor());
+	}
+	else {
+		for (int i = 0; i < 2; i++)
+		{
+			if (promptOptionBoxes[i].contains(Mouse::getPosition())) {
+				prompt.setState(i);
+			}
+		}
+	}
+}
+
+void Settings::reset()
+{
+	int selectedOptionIndex = static_cast<int>(this->selectedOption);
+	options[selectedOptionIndex].setFillColor(getNormalTextColor());
+	selectedOption = SelectedOption::soundToggle;
+	selectedOptionIndex = 0;
+	getManager_ref().setState();
 }
 
 void Settings::load(){

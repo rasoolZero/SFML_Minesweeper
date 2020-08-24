@@ -8,7 +8,9 @@ class Prompt : public Drawable
     public:
         Prompt(RenderWindow & window_ref,Font & font);
         bool getState(){return promptOption;}
+        void setState(bool state);
         void changeOption();
+        FloatRect getTextRect(short int index);
     protected:
 
     private:

@@ -73,11 +73,15 @@ void MenuManager::manageInput(Keyboard::Key key)
         if(key==Keyboard::Space || key==Keyboard::Enter){
             if(prompt.getState())
                 getWindow_ref().close();
-            else
+			else {
                 prompting=false;
+				prompt.setState(0);
+			}
         }
-        if(key==Keyboard::Escape)
+		if (key == Keyboard::Escape) {
             prompting=false;
+			prompt.setState(0);
+		}
         return;
     }
 
@@ -101,6 +105,61 @@ void MenuManager::manageInput(Keyboard::Key key)
 		else if(key == Keyboard::Escape)
             prompting=true;
 		options[selectedOptionIndex].setFillColor(getSelectedTextColor());
+	}
+}
+
+void MenuManager::manageInput(Mouse::Button button)
+{
+	if (button == Mouse::Left) {
+		if (!prompting) {
+			for (int i = 0; i < 4; i++)
+			{
+				if (optionBoxes[i].contains(Mouse::getPosition())) {
+					if (selectedOption == SelectedOption::exit)
+						prompting = true;
+					getManager_ref().setState(static_cast<ManagerManager::State>(i));
+					break;
+				}
+			}
+		}
+		else {
+			for (int i = 0; i < 2; i++)
+			{
+				if (promptOptionBoxes[i].contains(Mouse::getPosition())) {
+					if (i) { //yes option
+						getWindow_ref().close();
+					}
+					else {
+						prompting = false;
+					}
+				}
+			}
+		}
+	}
+}
+
+void MenuManager::updateMouse()
+{
+	if (!prompting) {
+		int selectedOptionIndex = static_cast<int>(this->selectedOption);
+		options[selectedOptionIndex].setFillColor(getNormalTextColor());
+		for (int i = 0; i < 4; i++)
+		{
+			if (optionBoxes[i].contains(Mouse::getPosition())) {
+				setSelectedOption(i);
+				selectedOptionIndex = i;
+				break;
+			}
+		}
+		options[selectedOptionIndex].setFillColor(getSelectedTextColor());
+	}
+	else {
+		for (int i = 0; i < 2; i++)
+		{
+			if (promptOptionBoxes[i].contains(Mouse::getPosition())) {
+				prompt.setState(i);
+			}
+		}
 	}
 }
 
@@ -128,4 +187,19 @@ MenuManager::MenuManager(RenderWindow& window, ManagerManager& manager_ref)
 		options[i].setPosition(50, startingPoint + i * 65);
 	}
 	options[0].setFillColor(getSelectedTextColor());
+	for (int i = 0; i < 4; i++)
+	{
+		optionBoxes[i].top = options[i].getGlobalBounds().top - 10;
+		optionBoxes[i].left = options[i].getGlobalBounds().left - 30;
+		optionBoxes[i].width = 250;
+		optionBoxes[i].height = options[i].getGlobalBounds().height + 30;
+	}
+	for (int i = 0; i < 2; i++)
+	{
+		promptOptionBoxes[i].top = prompt.getTextRect(i).top - 10;
+		promptOptionBoxes[i].height = prompt.getTextRect(i).height + 20;
+		promptOptionBoxes[i].width = prompt.getTextRect(-1).width / 2;
+	}
+	promptOptionBoxes[0].left = prompt.getTextRect(-1).left;
+	promptOptionBoxes[1].left = prompt.getTextRect(-1).left + prompt.getTextRect(-1).width / 2;
 }

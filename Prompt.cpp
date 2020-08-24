@@ -53,6 +53,18 @@ void Prompt::draw(RenderTarget & target, RenderStates states) const{
     target.draw(promptNo);
     target.draw(promptText);
 }
+void Prompt::setState(bool state)
+{
+    this->promptOption = state;
+    if (promptOption) {
+        promptYes.setColor(Color::Red);
+        promptNo.setColor(Color::Black);
+    }
+    else {
+        promptNo.setColor(Color::Red);
+        promptYes.setColor(Color::Black);
+    }
+}
 void Prompt::changeOption(){
     promptOption=!promptOption;
     if(promptOption){
@@ -62,5 +74,21 @@ void Prompt::changeOption(){
     else{
         promptNo.setColor(Color::Red);
         promptYes.setColor(Color::Black);
+    }
+}
+
+FloatRect Prompt::getTextRect(short int index)
+{
+    if (index != 0 && index != 1 && index != -1) {
+        throw std::runtime_error("out-of-bounds parameter for getTextRect function");
+    }
+    if (index == 0) {
+        return promptNo.getGlobalBounds();
+    }
+    else if(index == 1){
+        return promptYes.getGlobalBounds();
+    }
+    else { // -1
+        return promptBox.getGlobalBounds();
     }
 }

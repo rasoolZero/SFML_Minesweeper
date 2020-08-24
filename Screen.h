@@ -10,7 +10,9 @@ class Screen
 {
 public:
 	virtual void manageInput(Keyboard::Key key) = 0;
+	virtual void manageInput(Mouse::Button button) = 0;
 	virtual void update() = 0;
+	virtual void updateMouse() = 0;
 	Font& getFont() { return this->font; }
 	Color getSelectedTextColor() { return this->selectedTextColor; }
 	Color getNormalTextColor() { return this->normalTextColor; }
