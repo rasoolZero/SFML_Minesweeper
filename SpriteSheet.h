@@ -27,6 +27,8 @@ class SpriteSheet
         int bombFrames=6;
         int flagFramesPassed=flagFrames;
         int bombFramesPassed=bombFrames;
+
+        int flagFramesRestart=0;
 };
 
 #endif // SPRITESHEET_H

@@ -24,14 +24,22 @@ SpriteSheet::SpriteSheet()
     }
 }
 Texture* SpriteSheet::getFlagTexture(){
-    int index=flagIndex;
-    if(flagFramesPassed<=0){
-        flagFramesPassed=flagFrames;
-        this->flagIndex+=1;
-        this->flagIndex%=this->flagCount;
+    if(flagFramesRestart == 0){
+        int index=flagIndex;
+        if(flagFramesPassed<=0){
+            flagFramesPassed=flagFrames;
+            this->flagIndex+=1;
+            this->flagIndex%=this->flagCount;
+            if(flagIndex==0)
+                flagFramesRestart=45;
+        }
+        flagFramesPassed--;
+        return &flags[index];
     }
-    flagFramesPassed--;
-    return &flags[index];
+    else{
+        flagFramesRestart--;
+        return &flags[0];
+    }
 }
 
 Texture* SpriteSheet::getBombTexture(){
