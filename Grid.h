@@ -23,6 +23,7 @@ class Grid
         int getFlagCount();
         int getWidth(){return width;}
         int getHeight(){return height;}
+        void manageInput(Mouse::Button button);
     protected:
 
     private:
@@ -36,7 +37,6 @@ class Grid
         Vector2f topLeftCorner;
         void draw();
         void drawTop();
-        void checkInput();
         Vector2i mousePos();
         bool isMouseOnGrid(Vector2i & pos);
         Vector2i mousePosToIndex(Vector2i & pos);
@@ -55,10 +55,6 @@ class Grid
         GameManager & gameManager_ref;
 
 
-
-            static bool prevRightButtonStatus;
-            static bool prevLeftButtonStatus;
-            static bool prevMiddleButtonStatus;
 };
 
 #endif // GRID_H

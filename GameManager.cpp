@@ -243,7 +243,11 @@ void GameManager::manageInput(Mouse::Button button)
 
 		}
 	}
-	
+	if(state == State::playing){
+        this->grid.manageInput(button);
+	}
+
+
 }
 void GameManager::updateMouse()
 {
