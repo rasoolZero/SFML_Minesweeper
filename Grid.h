@@ -53,6 +53,12 @@ class Grid
         GridState state;
         SoundManager & soundManager;
         GameManager & gameManager_ref;
+
+
+
+            static bool prevRightButtonStatus;
+            static bool prevLeftButtonStatus;
+            static bool prevMiddleButtonStatus;
 };
 
 #endif // GRID_H

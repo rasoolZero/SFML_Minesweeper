@@ -5,6 +5,10 @@
 using namespace std;
 using namespace sf;
 
+bool Grid::prevRightButtonStatus;
+bool Grid::prevLeftButtonStatus;
+bool Grid::prevMiddleButtonStatus;
+
 Grid::Grid(RenderWindow & w_ref,SoundManager & _soundManager,GameManager & _gameManager_ref,int width,int height,int bombNumber)
 : window_ref(w_ref) , soundManager(_soundManager),gameManager_ref(_gameManager_ref)
 {
@@ -36,6 +40,12 @@ Grid::Grid(RenderWindow & w_ref,SoundManager & _soundManager,GameManager & _game
             bombsPlaced++;
         }
     }
+
+    prevRightButtonStatus = true;
+    prevLeftButtonStatus = true;
+    prevMiddleButtonStatus = true;
+
+
 }
 
 Grid::Grid(RenderWindow& window_ref, SoundManager& soundManager,GameManager & _gameManager_ref)
@@ -54,6 +64,10 @@ void Grid::update(){
 
 void Grid::setupGrid(int width, int height, int bombNumber)
 {
+    prevRightButtonStatus = true;
+    prevLeftButtonStatus = true;
+    prevMiddleButtonStatus = true;
+
     bombs=bombNumber;
     srand(time(nullptr));
     state = GridState::Playing;
@@ -99,9 +113,6 @@ void Grid::drawTop(){
 void Grid::checkInput(){
     if(state!=GridState::Playing)
         return;
-    static bool prevRightButtonStatus = false;
-    static bool prevLeftButtonStatus = false;
-    static bool prevMiddleButtonStatus = false;
 
     if(Mouse::isButtonPressed(Mouse::Right) && !prevRightButtonStatus){
         //flag cells
