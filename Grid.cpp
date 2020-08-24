@@ -5,6 +5,7 @@
 using namespace std;
 using namespace sf;
 
+
 Grid::Grid(RenderWindow & w_ref,SoundManager & _soundManager,GameManager & _gameManager_ref,int width,int height,int bombNumber)
 : window_ref(w_ref) , soundManager(_soundManager),gameManager_ref(_gameManager_ref)
 {
@@ -36,6 +37,8 @@ Grid::Grid(RenderWindow & w_ref,SoundManager & _soundManager,GameManager & _game
             bombsPlaced++;
         }
     }
+
+
 }
 
 Grid::Grid(RenderWindow& window_ref, SoundManager& soundManager,GameManager & _gameManager_ref)
@@ -47,13 +50,13 @@ Grid::Grid(RenderWindow& window_ref, SoundManager& soundManager,GameManager & _g
 
 void Grid::update(){
     window_ref.clear(Color(200,200,200));
-    checkInput();
     drawTop();
     draw();
 }
 
 void Grid::setupGrid(int width, int height, int bombNumber)
 {
+
     bombs=bombNumber;
     srand(time(nullptr));
     state = GridState::Playing;
@@ -96,14 +99,12 @@ void Grid::drawTop(){
     window_ref.draw(shape);
 }
 
-void Grid::checkInput(){
+void Grid::manageInput(Mouse::Button button){
+
     if(state!=GridState::Playing)
         return;
-    static bool prevRightButtonStatus = false;
-    static bool prevLeftButtonStatus = false;
-    static bool prevMiddleButtonStatus = false;
 
-    if(Mouse::isButtonPressed(Mouse::Right) && !prevRightButtonStatus){
+    if(button == Mouse::Right){
         //flag cells
         Vector2i pos=mousePos();
         if(isMouseOnGrid(pos)){
@@ -117,7 +118,7 @@ void Grid::checkInput(){
             }
         }
     }
-    else if(Mouse::isButtonPressed(Mouse::Left) && !prevLeftButtonStatus){
+    else if(button == Mouse::Left){
         //revealing cells;
         Vector2i pos=mousePos();
         if(isMouseOnGrid(pos)){
@@ -144,7 +145,7 @@ void Grid::checkInput(){
             }
         }
     }
-    else if(Mouse::isButtonPressed(Mouse::Middle) && !prevMiddleButtonStatus){
+    else if(button == Mouse::Middle){
 
         Vector2i pos=mousePos();
         if(isMouseOnGrid(pos)){
@@ -157,11 +158,9 @@ void Grid::checkInput(){
         }
     }
 
-
-    prevRightButtonStatus=Mouse::isButtonPressed(Mouse::Right);
-    prevLeftButtonStatus=Mouse::isButtonPressed(Mouse::Left);
-    prevMiddleButtonStatus=Mouse::isButtonPressed(Mouse::Middle);
 }
+
+
 Vector2i Grid::mousePos(){
     return Mouse::getPosition(window_ref);
 }
