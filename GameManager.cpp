@@ -220,6 +220,10 @@ void GameManager::manageInput(Mouse::Button button, bool released)
 	if (released) {
 		return;
 	}
+	if(state == State::playing){
+        this->grid.manageInput(button);
+        return ;
+	}
 	if (button == Mouse::Left) {
 		if (state == State::difficultySelection) {
 			for (int i = 0; i < 5; i++)
@@ -245,9 +249,6 @@ void GameManager::manageInput(Mouse::Button button, bool released)
 		else if (state == State::customSelection) {
 			customOptions.manageInput(button);
 		}
-	}
-	if(state == State::playing){
-        this->grid.manageInput(button);
 	}
 
 
