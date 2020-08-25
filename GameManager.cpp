@@ -258,7 +258,7 @@ void GameManager::manageInput(Mouse::Button button, bool released)
 	}
 	else if (button == Mouse::Right) {
 		if (state == State::customSelection) {
-			state == State::difficultySelection;
+			state = State::difficultySelection;
 		}
 	}
 
