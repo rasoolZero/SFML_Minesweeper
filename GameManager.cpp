@@ -220,6 +220,10 @@ void GameManager::manageInput(Mouse::Button button, bool released)
 	if (released) {
 		return;
 	}
+	if (state == State::playing) {
+		this->grid.manageInput(button);
+		return;
+	}
 	if (button == Mouse::Left) {
 		if (state == State::difficultySelection) {
 			for (int i = 0; i < 5; i++)
@@ -243,11 +247,19 @@ void GameManager::manageInput(Mouse::Button button, bool released)
 			}
 		}
 		else if (state == State::customSelection) {
+			if (customOptions.getMouseBox(0).contains(Mouse::getPosition())) {
+				state = State::difficultySelection;
+			}
+			else if (customOptions.getMouseBox(1).contains(Mouse::getPosition())) {
+				startGame();
+			}
 			customOptions.manageInput(button);
 		}
 	}
-	if(state == State::playing){
-        this->grid.manageInput(button);
+	else if (button == Mouse::Right) {
+		if (state == State::customSelection) {
+			state == State::difficultySelection;
+		}
 	}
 
 
@@ -266,6 +278,9 @@ void GameManager::updateMouse()
 			}
 		}
 		options[selectedOptionIndex].setFillColor(getSelectedTextColor());
+	}
+	else if (state == State::customSelection) {
+		customOptions.updateMouse();
 	}
 }
 void GameManager::startTimer(){

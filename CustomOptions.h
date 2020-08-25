@@ -13,11 +13,13 @@ public:
 	void setSelectedOption(short int selectedOptionIndex);
 	void manageInput(Keyboard::Key key);
 	void manageInput(Mouse::Button button);
+	void updateMouse();
 	void reset();
 
 	short int getWidth() { return this->customAmounts[0]; }
 	short int getHeight() { return this->customAmounts[1]; }
 	short int getBombCount() { return this->customAmounts[2]; }
+	IntRect getMouseBox(bool index);
 private:
 	Text customTexts[3]; //modifiable value
 	short int customAmounts[3];
@@ -28,6 +30,8 @@ private:
 	RectangleShape textBoxes[3]; //frame for modifiable values
 
 	Text descriptions[3];
+
+	Text custom_mouseBoxes[2];
 
 	RenderWindow& window_ref;
 

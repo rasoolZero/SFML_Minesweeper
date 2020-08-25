@@ -45,7 +45,14 @@ CustomOptions::CustomOptions(RenderWindow& window_ref, Font& font)
 		limits[i].setFont(font);
 		limits[i].setFillColor(Color(25, 25, 25));
 	}
-
+	for (int i = 0; i < 2; i++)
+	{
+		custom_mouseBoxes[i].setFont(font);
+		custom_mouseBoxes[i].setFillColor(Color::Black);
+		custom_mouseBoxes[i].setCharacterSize(27);
+	}
+	custom_mouseBoxes[0].setString("[Esc/RMB] back");
+	custom_mouseBoxes[1].setString("[Enter] start");
 }
 
 void CustomOptions::moveGroup(float x, float y)
@@ -59,6 +66,9 @@ void CustomOptions::moveGroup(float x, float y)
 	}
 	for (int i = 0; i < 6; i++) {
 		limits[i].move(x, y);
+	}
+	for (int i = 0; i < 2; i++) {
+		custom_mouseBoxes[i].move(x, y);
 	}
 }
 
@@ -74,6 +84,10 @@ void CustomOptions::setGroupPosition(Vector2f position)
 	for (int i = 0; i < 6; i++)
 	{
 		limits[i].setPosition(position.x + 60 + 170 * (i % 2), position.y + 100 + 100 * (i / 2));
+	}
+	for (int i = 0; i < 2; i++)
+	{
+		custom_mouseBoxes[i].setPosition(limits[i + 4].getPosition() + Vector2f(-40 + 30 * i, 50));
 	}
 }
 
@@ -100,6 +114,10 @@ void CustomOptions::draw()
 	}
 	for (int i = 0; i < 6; i++) {
 		window_ref.draw(limits[i]);
+	}
+	for (int i = 0; i < 2; i++)
+	{
+		window_ref.draw(custom_mouseBoxes[i]);
 	}
 }
 
@@ -159,6 +177,20 @@ void CustomOptions::manageInput(Mouse::Button button)
 	}
 }
 
+void CustomOptions::updateMouse()
+{
+	for (int i = 0; i < 2; i++)
+	{
+		if (static_cast<IntRect>(custom_mouseBoxes[i].getGlobalBounds()).contains(Mouse::getPosition())) {
+			custom_mouseBoxes[i].setFillColor(Color::Red);
+			return;
+		}
+		else {
+			custom_mouseBoxes[i].setFillColor(Color::Black);
+		}
+	}
+}
+
 void CustomOptions::reset()
 {
 	setSelectedOption(0);
@@ -171,4 +203,9 @@ void CustomOptions::reset()
 	{
 		customTexts[i].setString(std::to_string(customAmounts[i]));
 	}
+}
+
+IntRect CustomOptions::getMouseBox(bool index)
+{
+	return static_cast<IntRect>(custom_mouseBoxes[index].getGlobalBounds());
 }
