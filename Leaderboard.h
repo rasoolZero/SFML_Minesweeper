@@ -52,7 +52,6 @@ class Leaderboard : public Screen
         void draw();
         void drawScores();
         void drawOptions();
-        //void drawBack();
 
 };
 

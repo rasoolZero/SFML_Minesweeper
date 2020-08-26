@@ -140,7 +140,6 @@ void Leaderboard::draw(){
 
     drawOptions();
     drawScores();
-    //drawBack();
 }
 
 void Leaderboard::manageInput(Keyboard::Key key) {
@@ -159,10 +158,6 @@ void Leaderboard::manageInput(Keyboard::Key key) {
         else if (key == Keyboard::Escape) {
             reset();
             return;
-            /*options[selectedOptionIndex].setFillColor(getNormalTextColor());
-            selectedOption = Difficulties::Easy;
-            selectedOptionIndex = 0;
-            getManager_ref().setState();*/
         }
 		options[selectedOptionIndex].setFillColor(getSelectedTextColor());
 	}
@@ -176,13 +171,6 @@ void Leaderboard::manageInput(Mouse::Button button, bool released)
     if (button == Mouse::Left) {
         if (optionBoxes[3].contains(Mouse::getPosition())) {
             reset();
-            /*int selectedOptionIndex = static_cast<int>(this->selectedOption);
-            options[selectedOptionIndex].setFillColor(getNormalTextColor());
-            selectedOption = Difficulties::Easy;
-            selectedOptionIndex = 0;
-            getManager_ref().setState();
-            options[selectedOptionIndex].setFillColor(getSelectedTextColor());
-            options[3].setFillColor(getNormalTextColor());*/
         }
     }
 }
@@ -235,9 +223,6 @@ void Leaderboard::drawScores(){
         getWindow_ref().draw(text);
     }
 }
-/*void Leaderboard::drawBack(){
-    getWindow_ref().draw(options[3]);
-}*/
 
 void Leaderboard::setSelectedOption(Difficulties selectedOption)
 {

@@ -9,8 +9,6 @@ using namespace std;
 void Settings::update()
 {
 	draw();
-    save();
-
 }
 
 Settings::Settings(RenderWindow& window, ManagerManager& manager_ref,SoundManager & _soundManager_ref,Leaderboard & _leaderBoard_ref)
@@ -229,6 +227,7 @@ void Settings::manageInput(Keyboard::Key key)
 	if (adjusting) {
 		return;
 	}
+	bool changedSettings = false;
     if(prompting){
         if(key==Keyboard::Right || key==Keyboard::Left)
             prompt.changeOption();
@@ -260,10 +259,6 @@ void Settings::manageInput(Keyboard::Key key)
 	else if (key == Keyboard::Escape) {
 		reset();
 		return;
-		/*options[selectedOptionIndex].setFillColor(getNormalTextColor());
-		selectedOption = SelectedOption::soundToggle;
-		selectedOptionIndex = 0;
-		getManager_ref().setState();*/
 	}
 	else if(key == Keyboard::Left || key == Keyboard::Right ){
 	    short int delta;
@@ -281,6 +276,7 @@ void Settings::manageInput(Keyboard::Key key)
                 soundManager_ref.setVolumeSoundEffects(soundEffectVolume);
                 soundManager_ref.play(SoundManager::Reveal);
             }
+			changedSettings = true;
         }
         if (selectedOption == SelectedOption::musicAdjust){
             musicVolume+=delta;
@@ -291,36 +287,17 @@ void Settings::manageInput(Keyboard::Key key)
             if(music_enabled){
                 soundManager_ref.setVolumeMusics(musicVolume);
             }
+			changedSettings = true;
         }
 	}
 	else if (key == Keyboard::Enter || key == Keyboard::Space) {
 		if (selectedOption == SelectedOption::soundToggle) {
 			toggleSound();
-			/*if(soundEffects_enabled){
-                soundEffects_enabled=false;
-                soundManager_ref.setVolumeSoundEffects(0);
-			}
-			else{
-                soundEffects_enabled=true;
-                soundManager_ref.setVolumeSoundEffects(soundEffectVolume);
-                sleep(microseconds(10));
-                soundManager_ref.play(SoundManager::Reveal);
-			}
-			toggles[0].setState(soundEffects_enabled);*/
+			changedSettings = true;
 		}
 		else if (selectedOption == SelectedOption::musicToggle) {
 			toggleMusic();
-			/*if(music_enabled){
-                music_enabled=false;
-                soundManager_ref.setVolumeMusics(0);
-                soundManager_ref.stopAll();
-			}
-			else{
-                music_enabled=true;
-                soundManager_ref.setVolumeMusics(musicVolume);
-                soundManager_ref.play(SoundManager::MenuMusic);
-			}
-			toggles[1].setState(music_enabled);*/
+			changedSettings = true;
 		}
 		else if (selectedOption == SelectedOption::leaderboardReset) {
             prompting=true;
@@ -328,65 +305,74 @@ void Settings::manageInput(Keyboard::Key key)
 		else { //back
 			reset();
 			return;
- 			/*options[selectedOptionIndex].setFillColor(getNormalTextColor());
-			selectedOption = SelectedOption::soundToggle;
-			selectedOptionIndex = 0;
-			getManager_ref().setState();*/
 		}
 	}
 	options[selectedOptionIndex].setFillColor(getSelectedTextColor());
+	if (changedSettings) {
+		save();
+	}
 }
 
 void Settings::manageInput(Mouse::Button button, bool released)
 {
+	bool changedSettings = false;
 	if (button == Mouse::Left) {
 		if (released) {
-			if (adjusting == 1) {
-				soundManager_ref.play(SoundManager::Reveal);
+			if (adjusting) {
+				changedSettings = true;
+				if (adjusting == 1) {
+					soundManager_ref.play(SoundManager::Reveal);
+				}
 			}
 			adjusting = false;
-			return;
-		}
-		if (!prompting) {
-			for (int i = 0; i < 6; i++)
-			{
-				if (optionBoxes[i].contains(Mouse::getPosition())) {
-					if (i == 0) {
-						toggleSound();
-					}
-					else if (i == 2) {
-						toggleMusic();
-					}
-					else if (i == 4) {
-						prompting = true;
-					}
-					else if (i == 5) {
-						reset();
-					}
-					else if (i == 1) {
-						adjusting = 1;
-						applyAdjust();
-					}
-					else if (i == 3) {
-						adjusting = 2;
-						applyAdjust();
-					}
-					return;
-				}
-			}
 		}
 		else {
-			for (int i = 0; i < 2; i++)
-			{
-				if (promptOptionBoxes[i].contains(Mouse::getPosition())) {
-					if (i) { //yes option
-						leaderBoard_ref.resetScores();
-						soundManager_ref.play(SoundManager::Reveal);
+			if (!prompting) {
+				for (int i = 0; i < 6; i++)
+				{
+					if (optionBoxes[i].contains(Mouse::getPosition())) {
+						if (i == 0) {
+							toggleSound();
+							changedSettings = true;
+						}
+						else if (i == 2) {
+							toggleMusic();
+							changedSettings = true;
+						}
+						else if (i == 4) {
+							prompting = true;
+						}
+						else if (i == 5) {
+							reset();
+						}
+						else if (i == 1) {
+							adjusting = 1;
+							applyAdjust();
+						}
+						else if (i == 3) {
+							adjusting = 2;
+							applyAdjust();
+						}
+						break;
 					}
-					prompting = false;
+				}
+			}
+			else {
+				for (int i = 0; i < 2; i++)
+				{
+					if (promptOptionBoxes[i].contains(Mouse::getPosition())) {
+						if (i) { //yes option
+							leaderBoard_ref.resetScores();
+							soundManager_ref.play(SoundManager::Reveal);
+						}
+						prompting = false;
+					}
 				}
 			}
 		}
+	}
+	if (changedSettings) {
+		save();
 	}
 }
 
@@ -395,15 +381,6 @@ void Settings::updateMouse()
 	if (!prompting) {
 		if (adjusting) {
 			applyAdjust();
-			/*bars[adjusting - 1].setValue_mouse();
-			if (adjusting == 1) {
-				soundEffectVolume = bars[adjusting - 1].getValue();
-				soundManager_ref.setVolumeSoundEffects(soundEffectVolume);
-			}
-			else if (adjusting == 2) {
-				musicVolume = bars[adjusting - 1].getValue();
-				soundManager_ref.setVolumeMusics(musicVolume);
-			}*/
 		}
 		else {
 			int selectedOptionIndex = static_cast<int>(this->selectedOption);
