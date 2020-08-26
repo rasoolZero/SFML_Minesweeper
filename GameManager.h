@@ -17,6 +17,7 @@ public:
 
 	enum State {difficultySelection,customSelection, playing, finished};
 	void setState(State state) { this->state = state; }
+	State getState(){return state;}
 	virtual void update(); // from Screen
 	virtual void manageInput(Keyboard::Key key); //from Screen
 	virtual void manageInput(Mouse::Button button, bool released = 0); //from Screen

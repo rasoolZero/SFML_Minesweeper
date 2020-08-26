@@ -3,12 +3,14 @@
 ManagerManager::ManagerManager(RenderWindow* window_ptr, GameManager* gameManager_ptr, Settings* settings_ptr, Leaderboard* leaderboard_ptr, MenuManager* menuManager_ptr, DotZero* DotZero_ptr)
 	:window_ptr(window_ptr)
 	, screen_ptr{gameManager_ptr, settings_ptr, leaderboard_ptr, menuManager_ptr ,DotZero_ptr}
+	,background(*window_ptr)
 {
 
 }
 
 ManagerManager::ManagerManager(RenderWindow* window_ptr)
 	:window_ptr(window_ptr)
+	,background(*window_ptr)
 {
 
 }
@@ -80,5 +82,15 @@ void ManagerManager::checkEvents()
 
 void ManagerManager::update()
 {
+    if(state == State::menu || state == State::settings ||
+        ( state == State::game &&
+        (dynamic_cast<GameManager*>(screen_ptr[State_to_int()])->getState() == GameManager::difficultySelection ||
+         dynamic_cast<GameManager*>(screen_ptr[State_to_int()])->getState() == GameManager::customSelection
+         ))
+        ){
+            background.update();
+            window_ptr->draw(background);
+        }
+
 	screen_ptr[State_to_int()]->update();
 }

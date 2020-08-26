@@ -8,6 +8,7 @@
 #include "Settings.h"
 #include "Leaderboard.h"
 #include "DotZero.h"
+#include "Background.h"
 using namespace sf;
 
 class ManagerManager //the ultimate manager, manager of managers (manages game state and events)
@@ -30,7 +31,7 @@ private:
 	int State_to_int() { return static_cast<int>(this->state); }
 	void checkEvents();
 	void update();
-
+    Background background;
 
 };
 
