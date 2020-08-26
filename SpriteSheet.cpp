@@ -35,7 +35,6 @@ Texture* SpriteSheet::getFlagTexture(){
             this->flagIndex+=1;
             this->flagIndex%=this->flagCount;
             if(flagIndex==0){
-                srand(seed);
                 int multiplier = rand()%5+1;
                 flagFramesRestart=60*multiplier;
             }

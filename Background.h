@@ -14,12 +14,10 @@ class Background : public Drawable
     protected:
 
     private:
-        RectangleShape flag1;
-        RectangleShape flag2;
-        RectangleShape bomb;
+        RectangleShape shapes[5];
+        bool isFlag[5];
         Texture bombT;
-        SpriteSheet sprite1;
-        SpriteSheet sprite2;
+        SpriteSheet sprites[5];
 };
 
 #endif // BACKGROUND_H
