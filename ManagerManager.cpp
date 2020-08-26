@@ -49,25 +49,26 @@ void ManagerManager::checkEvents()
 			else if (event.type == Event::LostFocus) {
 				isFocused = false;
 			}
-			else if (event.type == Event::MouseMoved) {
-				screen_ptr[State_to_int()]->updateMouse();
-			}
-			else if (event.type == Event::KeyPressed) {
-				screen_ptr[State_to_int()]->manageInput(event.key.code);
-			}
-			else if (event.type == Event::TextEntered) {
-				if (event.text.unicode < 128 && State_to_int() == 0) { //ASCII only, gameManager only
-					static_cast<GameManager*>(screen_ptr[State_to_int()])->pushChar(static_cast<char>(event.text.unicode));
+			if (isFocused) {
+				if (event.type == Event::MouseMoved) {
+					screen_ptr[State_to_int()]->updateMouse();
+				}
+				else if (event.type == Event::KeyPressed) {
+					screen_ptr[State_to_int()]->manageInput(event.key.code);
+				}
+				else if (event.type == Event::TextEntered) {
+					if (event.text.unicode < 128 && State_to_int() == 0) { //ASCII only, gameManager only
+						dynamic_cast<GameManager*>(screen_ptr[State_to_int()])->pushChar(static_cast<char>(event.text.unicode));
+					}
+				}
+				else if (event.type == Event::MouseButtonPressed) {
+					screen_ptr[State_to_int()]->manageInput(event.mouseButton.button);
+				}
+				else if (event.type == Event::MouseButtonReleased) {
+					screen_ptr[State_to_int()]->manageInput(event.mouseButton.button, true);
 				}
 			}
-			else if (event.type == Event::MouseButtonPressed) {
-				screen_ptr[State_to_int()]->manageInput(event.mouseButton.button);
-			}
-			else if (event.type == Event::MouseButtonReleased) {
-				screen_ptr[State_to_int()]->manageInput(event.mouseButton.button, true);
-			}
 		}
-
 
 		if (isFocused) {
 			window_ptr->clear(Color(235, 235, 250));

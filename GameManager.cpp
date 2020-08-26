@@ -84,10 +84,6 @@ void GameManager::drawDifficulty()
 {
 	for (int i = 0; i < 5; i++)
 	{
-        /*if(i!=static_cast<int>(difficulty))
-            options[i].setFillColor(getNormalTextColor());
-        else
-            options[i].setFillColor(getSelectedTextColor());*/
 		short int currentSize = options[i].getCharacterSize();
 		if (i == static_cast<int>(difficulty)) {
 			if (currentSize != selectedFontSize) {
