@@ -64,8 +64,9 @@ private:
 	Text back;
 	RectangleShape resultFrame;
 	TextBox highScoreName;
-    sf::RectangleShape arrow;
-    sf::Texture arrowTexture;
+    RectangleShape arrow;
+    Texture arrowTexture;
+    Texture redArrowTexture;
 
 	CustomOptions customOptions;
 

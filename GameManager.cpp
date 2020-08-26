@@ -33,10 +33,11 @@ GameManager::GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, 
 
 	if(!arrowTexture.loadFromFile("images/Arrow.png"))
         throw std::runtime_error("could not load arrow image");
+	if(!redArrowTexture.loadFromFile("images/RedArrow.png"))
+        throw std::runtime_error("could not load red arrow image");
     arrowTexture.setSmooth(true);
+    redArrowTexture.setSmooth(true);
     arrow=RectangleShape(Vector2f(40,40));
-    arrow.setTexture(&arrowTexture);
-    arrow.setPosition(getWindow_ref().getSize().x - arrow.getSize().x -50,6);
 
 	result.setFont(getFont());
 	result.setFillColor(Color::Black);
@@ -58,7 +59,8 @@ GameManager::GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, 
 	back.setFont(getFont());
 	back.setCharacterSize(30);
 	back.setString("[Esc] back");
-	back.setPosition( window_ref.getSize().x - arrow.getSize().x - back.getGlobalBounds().width - 75 ,6);
+	back.setPosition( 36 ,6);
+    arrow.setPosition( 50 + back.getGlobalBounds().width ,6);
 }
 
 void GameManager::update()
@@ -290,7 +292,7 @@ void GameManager::drawBombCount(){
 
     Text text(bombs,getFont(),30);
     text.setFillColor(Color::Black);
-    text.setPosition(30,6);
+    text.setPosition( getWindow_ref().getSize().x - 36 - text.getGlobalBounds().width ,6);
     getWindow_ref().draw(text);
 }
 void GameManager::drawBack(){
@@ -303,6 +305,11 @@ void GameManager::drawBack(){
     getWindow_ref().draw(back);
 }
 void GameManager::drawRestart(){
+
+    if( static_cast<IntRect>(arrow.getGlobalBounds()).contains(Mouse::getPosition(getWindow_ref()) ))
+        arrow.setTexture(&redArrowTexture);
+    else
+        arrow.setTexture(&arrowTexture);
     getWindow_ref().draw(arrow);
 }
 
