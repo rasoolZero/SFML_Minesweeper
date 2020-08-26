@@ -80,7 +80,7 @@ void Prompt::changeOption(){
 FloatRect Prompt::getTextRect(short int index)
 {
     if (index != 0 && index != 1 && index != -1) {
-        throw std::runtime_error("out-of-bounds parameter for getTextRect function");
+        throw std::out_of_range("out-of-bounds parameter for getTextRect function");
     }
     if (index == 0) {
         return promptNo.getGlobalBounds();
