@@ -177,6 +177,40 @@ void CustomOptions::manageInput(Mouse::Button button)
 	}
 }
 
+void CustomOptions::pushChar(char input)
+{
+	bool changed = false;
+	short int selectedOptionIndex = static_cast<short int>(selectedOption);
+	if (input == '\b') {
+		if (customAmounts[selectedOptionIndex] / 10 > limits_amount[selectedOptionIndex * 2]) {
+			customAmounts[selectedOptionIndex] /= 10;
+		}
+		else {
+			customAmounts[selectedOptionIndex] = limits_amount[selectedOptionIndex * 2];
+		}
+		changed = true;
+	}
+	else if (isdigit(input)) {
+		short int amount = input - '0';
+		if (customAmounts[selectedOptionIndex] * 10 + amount < limits_amount[selectedOptionIndex * 2 + 1]) {
+			customAmounts[selectedOptionIndex] = customAmounts[selectedOptionIndex] * 10 + amount;
+			changed = true;
+		}
+	}
+	if (changed) {
+		customTexts[selectedOptionIndex].setString(std::to_string(customAmounts[selectedOptionIndex]));
+		customTexts[selectedOptionIndex].setOrigin(customTexts[selectedOptionIndex].getLocalBounds().width / 2, 0);
+		if (selectedOptionIndex != 2) {
+			limits_amount[5] = customAmounts[0] * customAmounts[1] - 1;
+			limits[5].setString("< " + std::to_string(limits_amount[5]));
+			if (customAmounts[2] > limits_amount[5]) {
+				customAmounts[2] = limits_amount[5];
+				customTexts[2].setString(std::to_string(customAmounts[2]));
+			}
+		}
+	}
+}
+
 void CustomOptions::updateMouse()
 {
 	for (int i = 0; i < 2; i++)
