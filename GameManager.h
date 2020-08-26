@@ -46,6 +46,7 @@ private:
     void drawBombCount();
     void drawRestart();
     void drawGameOver();
+    void drawBack();
 
     string timeToString(Time t);
 
@@ -60,6 +61,7 @@ private:
 	bool timerStarted;
 	Text result;
 	Text highScoreMessage;
+	Text back;
 	RectangleShape resultFrame;
 	TextBox highScoreName;
     sf::RectangleShape arrow;

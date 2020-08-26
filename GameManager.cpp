@@ -55,6 +55,10 @@ GameManager::GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, 
 		optionBoxes[i].width = 250;
 		optionBoxes[i].height = options[i].getGlobalBounds().height + 30;
 	}
+	back.setFont(getFont());
+	back.setCharacterSize(30);
+	back.setString("[Esc] back");
+	back.setPosition( window_ref.getSize().x - arrow.getSize().x - back.getGlobalBounds().width - 75 ,6);
 }
 
 void GameManager::update()
@@ -110,6 +114,7 @@ void GameManager::drawGame()
 	drawTimer();
 	drawBombCount();
 	drawRestart();
+	drawBack();
 	if(state == State::finished){
         drawGameOver();
 	}
@@ -195,6 +200,9 @@ void GameManager::manageInput(Mouse::Button button, bool released)
 	}
 	if (state == State::playing) {
 		this->grid.manageInput(button);
+		if(button == Mouse::Left)
+            if( static_cast<IntRect>(back.getGlobalBounds()).contains(Mouse::getPosition(getWindow_ref()) ))
+                reset();
 		return;
 	}
 	if (button == Mouse::Left) {
@@ -288,6 +296,15 @@ void GameManager::drawBombCount(){
     text.setFillColor(Color::Black);
     text.setPosition(30,6);
     getWindow_ref().draw(text);
+}
+void GameManager::drawBack(){
+    if( static_cast<IntRect>(back.getGlobalBounds()).contains(Mouse::getPosition(getWindow_ref()) )){
+        back.setFillColor(getSelectedTextColor());
+    }
+    else{
+        back.setFillColor(getNormalTextColor());
+    }
+    getWindow_ref().draw(back);
 }
 void GameManager::drawRestart(){
     getWindow_ref().draw(arrow);
