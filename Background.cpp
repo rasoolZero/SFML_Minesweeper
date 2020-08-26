@@ -1,7 +1,7 @@
 #include "Background.h"
 using namespace sf;
 
-Background::Background(RenderWindow & window_ref)
+Background::Background(RenderWindow & window_ref):sprite1(1),sprite2(2)
 {
     if(!bombT.loadFromFile("images\\sprites\\bomb\\0.png"))
         throw std::runtime_error("could not load bomb sprite");

@@ -5,8 +5,12 @@ vector<Texture> SpriteSheet::flags;
 vector<Texture> SpriteSheet::bombs;
 bool SpriteSheet::loaded=false;
 
-SpriteSheet::SpriteSheet()
+SpriteSheet::SpriteSheet(int seed)
 {
+    this->seed=seed+time(0);
+    srand(seed);
+    int multiplier = rand()%5+1;
+    flagFramesRestart=60*multiplier;
     if(!loaded){
         loaded=true;
         for(int i=0;i<flagCount;i++){
@@ -30,8 +34,11 @@ Texture* SpriteSheet::getFlagTexture(){
             flagFramesPassed=flagFrames;
             this->flagIndex+=1;
             this->flagIndex%=this->flagCount;
-            if(flagIndex==0)
-                flagFramesRestart=45;
+            if(flagIndex==0){
+                srand(seed);
+                int multiplier = rand()%5+1;
+                flagFramesRestart=60*multiplier;
+            }
         }
         flagFramesPassed--;
         return &flags[index];

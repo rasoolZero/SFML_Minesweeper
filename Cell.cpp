@@ -7,7 +7,7 @@ Texture Cell::revealedT;
 std::vector<Texture> Cell::numbers;
 bool Cell::loaded;
 
-Cell::Cell(int i,int j,float size,Vector2f _offset,int value)
+Cell::Cell(int i,int j,float size,Vector2f _offset,int seed,int value):sprites(seed)
 {
     if(!loaded){
         if(!cellBackground.loadFromFile("images/cell.png"))
@@ -36,8 +36,6 @@ Cell::Cell(int i,int j,float size,Vector2f _offset,int value)
     shape.setSize(Vector2f(size,size));
     background.setPosition(i*size+_offset.x,j*size+_offset.y);
     background.setSize(Vector2f(size,size));
-
-    sprites=SpriteSheet();
 }
 
 void Cell::reveal(){

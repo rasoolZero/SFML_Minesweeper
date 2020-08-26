@@ -27,7 +27,7 @@ Grid::Grid(RenderWindow & w_ref,SoundManager & _soundManager,GameManager & _game
     // bomb based on a fixed amount of bombs and a random index
     for(int j=0;j<height;j++)
         for(int i=0;i<width;i++)
-            cells.push_back(Cell(i,j,maxSize,topLeftCorner));
+            cells.push_back(Cell(i,j,maxSize,topLeftCorner,indexConverter(i,j)));
 
     int bombsPlaced=0;
     while(bombsPlaced!=bombNumber){
@@ -75,7 +75,7 @@ void Grid::setupGrid(int width, int height, int bombNumber)
     // bomb based on a fixed amount of bombs and a random index
     for (int j = 0; j < height; j++)
         for (int i = 0; i < width; i++)
-            cells.push_back(Cell(i, j, maxSize, topLeftCorner));
+            cells.push_back(Cell(i, j, maxSize, topLeftCorner,indexConverter(i,j)));
 
     int bombsPlaced = 0;
     while (bombsPlaced != bombNumber) {
