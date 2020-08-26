@@ -201,11 +201,15 @@ void GameManager::manageInput(Mouse::Button button, bool released)
 	if (released) {
 		return;
 	}
+    if ( state == State::finished || state == State::playing){
+		if(button == Mouse::Left)
+            if( static_cast<IntRect>(back.getGlobalBounds()).contains(Mouse::getPosition(getWindow_ref()) )){
+                reset();
+                return;
+            }
+	}
 	if (state == State::playing) {
 		this->grid.manageInput(button);
-		if(button == Mouse::Left)
-            if( static_cast<IntRect>(back.getGlobalBounds()).contains(Mouse::getPosition(getWindow_ref()) ))
-                reset();
 		return;
 	}
 	if (button == Mouse::Left) {
