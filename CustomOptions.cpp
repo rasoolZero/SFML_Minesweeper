@@ -156,6 +156,7 @@ void CustomOptions::manageInput(Keyboard::Key key)
 				if (customAmounts[2] > limits_amount[5]) {
 					customAmounts[2] = limits_amount[5];
 					customTexts[2].setString(std::to_string(customAmounts[2]));
+					customTexts[2].setOrigin(customTexts[2].getLocalBounds().width / 2, 0);
 				}
 			}
 			customTexts[selectedOptionIndex].setOrigin(customTexts[selectedOptionIndex].getLocalBounds().width / 2, 0);
@@ -171,6 +172,24 @@ void CustomOptions::manageInput(Mouse::Button button)
 		{
 			if (static_cast<IntRect>(textBoxes[i].getGlobalBounds()).contains(Mouse::getPosition())) { //if mouse is within textbox
 				setSelectedOption(i);
+				return;
+			}
+		}
+		for (int i = 0; i < 6; i++)
+		{
+			if (static_cast<IntRect>(limits[i].getGlobalBounds()).contains(Mouse::getPosition())) {
+				customAmounts[i / 2] = limits_amount[i];
+				customTexts[i / 2].setString(std::to_string(customAmounts[i / 2]));
+				customTexts[i / 2].setOrigin(customTexts[i / 2].getLocalBounds().width / 2, 0);
+				if (i / 2 != 2) {
+					limits_amount[5] = customAmounts[0] * customAmounts[1] - 1;
+					limits[5].setString("< " + std::to_string(limits_amount[5]));
+					if (customAmounts[2] > limits_amount[5]) {
+						customAmounts[2] = limits_amount[5];
+						customTexts[2].setString(std::to_string(customAmounts[2]));
+						customTexts[2].setOrigin(customTexts[2].getLocalBounds().width / 2, 0);
+					}
+				}
 				return;
 			}
 		}
@@ -221,6 +240,15 @@ void CustomOptions::updateMouse()
 		}
 		else {
 			custom_mouseBoxes[i].setFillColor(Color::Black);
+		}
+	}
+	for (int i = 0; i < 6; i++)
+	{
+		if (static_cast<IntRect>(limits[i].getGlobalBounds()).contains(Mouse::getPosition())) {
+			limits[i].setStyle(Text::Style::Bold);
+		}
+		else {
+			limits[i].setStyle(Text::Style::Regular);
 		}
 	}
 }
