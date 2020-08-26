@@ -60,7 +60,9 @@ GameManager::GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, 
 	back.setCharacterSize(30);
 	back.setString("[Esc] back");
 	back.setPosition( 36 ,6);
+	back.setColor(getNormalTextColor());
     arrow.setPosition( 50 + back.getGlobalBounds().width ,6);
+    arrow.setTexture(&arrowTexture);
 }
 
 void GameManager::update()
@@ -259,6 +261,19 @@ void GameManager::updateMouse()
 	else if (state == State::customSelection) {
 		customOptions.updateMouse();
 	}
+    else if (state == State::playing || state == State::finished){
+
+        if( static_cast<IntRect>(back.getGlobalBounds()).contains(Mouse::getPosition(getWindow_ref()) ))
+            back.setFillColor(getSelectedTextColor());
+        else
+            back.setFillColor(getNormalTextColor());
+
+
+        if( static_cast<IntRect>(arrow.getGlobalBounds()).contains(Mouse::getPosition(getWindow_ref()) ))
+            arrow.setTexture(&redArrowTexture);
+        else
+            arrow.setTexture(&arrowTexture);
+    }
 }
 void GameManager::startTimer(){
     this->timer.restart();
@@ -296,20 +311,9 @@ void GameManager::drawBombCount(){
     getWindow_ref().draw(text);
 }
 void GameManager::drawBack(){
-    if( static_cast<IntRect>(back.getGlobalBounds()).contains(Mouse::getPosition(getWindow_ref()) )){
-        back.setFillColor(getSelectedTextColor());
-    }
-    else{
-        back.setFillColor(getNormalTextColor());
-    }
     getWindow_ref().draw(back);
 }
 void GameManager::drawRestart(){
-
-    if( static_cast<IntRect>(arrow.getGlobalBounds()).contains(Mouse::getPosition(getWindow_ref()) ))
-        arrow.setTexture(&redArrowTexture);
-    else
-        arrow.setTexture(&arrowTexture);
     getWindow_ref().draw(arrow);
 }
 
