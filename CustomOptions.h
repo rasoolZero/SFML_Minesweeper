@@ -13,6 +13,7 @@ public:
 	void setSelectedOption(short int selectedOptionIndex);
 	void manageInput(Keyboard::Key key);
 	void manageInput(Mouse::Button button);
+	void pushChar(char input);
 	void updateMouse();
 	void reset();
 

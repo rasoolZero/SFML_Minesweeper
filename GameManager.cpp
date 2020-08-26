@@ -83,7 +83,10 @@ void GameManager::update()
 
 void GameManager::pushChar(char input)
 {
-	if (hasHighScore) {
+	if (state == State::customSelection) {
+		customOptions.pushChar(input);
+	}
+	else if (hasHighScore) {
 		highScoreName.manageInput(input);
 	}
 }
