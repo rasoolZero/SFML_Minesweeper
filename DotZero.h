@@ -15,7 +15,7 @@ class DotZero : public Screen
         virtual void update(); //from Screen
         virtual void updateMouse(); //from Screen
     protected:
-
+        virtual void drawSelected(); //from screen
     private:
         int alpha=0;
         bool shown=false;

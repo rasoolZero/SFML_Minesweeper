@@ -11,7 +11,7 @@ CustomOptions::CustomOptions(RenderWindow& window_ref, Font& font)
 	customAmounts[2] = 40;
 	for (int i = 0; i < 3; i++)
 	{
-		descriptions[i].setFillColor(Color(10, 10, 10));
+		descriptions[i].setFillColor(Color(180, 180, 180));
 		descriptions[i].setCharacterSize(36);
 		descriptions[i].setFont(font);
 
@@ -25,7 +25,7 @@ CustomOptions::CustomOptions(RenderWindow& window_ref, Font& font)
 		customTexts[i].setCharacterSize(34);
 		customTexts[i].setFont(font);
 		customTexts[i].setOrigin(customTexts[i].getLocalBounds().width / 2, 0);
-		customTexts[i].setFillColor(Color::Black);
+		customTexts[i].setFillColor(Color(220, 220, 220));
 	}
 	Vector2u windowSize = window_ref.getSize();
 	limits_amount[0] = limits_amount[2] = 5;

@@ -10,6 +10,7 @@ GameManager::GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, 
 	,customOptions{ getWindow_ref(), getFont() }
 	,leaderboard_ref(_leaderboard_ref)
 	,highScoreName{ Vector2f(getWindow_ref().getSize().x / 2, getWindow_ref().getSize().y / 2 + 80) , getNormalFontSize(), getFont()}
+	, selectBoxes{ Color::White, Color::White, Color::White, Color::White, Color::White }
 {
 	options[0].setString("easy");
 	options[1].setString("medium");
@@ -56,6 +57,13 @@ GameManager::GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, 
 		optionBoxes[i].width = 250;
 		optionBoxes[i].height = options[i].getGlobalBounds().height + 30;
 	}
+	for (int i = 0; i < 5; i++)
+	{
+		selectBoxes[i].setBox(optionBoxes[i]);
+		if (i) {
+			selectBoxes[i].setAlpha(0);
+		}
+	}
 	back.setFont(getFont());
 	back.setCharacterSize(30);
 	back.setString("[Esc] back");
@@ -72,6 +80,7 @@ void GameManager::update()
 		checkClick();
 	}
 	else {
+		drawSelected();
 		drawDifficulty();
 		if (state == State::customSelection) {
 			customOptions.draw();
@@ -167,11 +176,13 @@ void GameManager::manageInput(Keyboard::Key key)
 			if (key == Keyboard::Up) {
 				options[selectedOptionIndex].setFillColor(getNormalTextColor());
 				setDifficulty((selectedOptionIndex += 4) %= 5); // goes to previous state in the cycle
+				setHover(-1);
 			}
 			else if (key == Keyboard::Down)
 			{
 				options[selectedOptionIndex].setFillColor(getNormalTextColor());
 				setDifficulty((selectedOptionIndex += 1) %= 5); // goes to next state in the cycle
+				setHover(-1);
 			}
 		}
 		if (key == Keyboard::Escape || ( (key == Keyboard::Enter || key == Keyboard::Space) && selectedOptionIndex == 4)) { //back
@@ -180,6 +191,7 @@ void GameManager::manageInput(Keyboard::Key key)
 		}
 		else if (key == Keyboard::Enter || key == Keyboard::Space) {
 			if (difficulty == Difficulty::custom) {
+				setHover(-1);
 				state = State::customSelection;
 			}
 			else {
@@ -221,6 +233,7 @@ void GameManager::manageInput(Mouse::Button button, bool released)
 						setDifficulty(i);
 						if (i == 3) { //custom
 							state = State::customSelection;
+							setHover(-1);
 						}
 						else {
 							startGame();
@@ -260,8 +273,10 @@ void GameManager::updateMouse()
 			if (optionBoxes[i].contains(Mouse::getPosition())) {
 				setDifficulty(i);
 				selectedOptionIndex = i;
+				setHover(i);
 				break;
 			}
+			setHover(-1);
 		}
 		options[selectedOptionIndex].setFillColor(getSelectedTextColor());
 	}
@@ -427,6 +442,34 @@ void GameManager::stopTimer(){
 		resultFrame.setSize(Vector2f(width + 40, result.getLocalBounds().height + 45));
 	}
 	resultFrame.setOrigin(resultFrame.getSize().x / 2, 0);
+}
+
+void GameManager::drawSelected()
+{
+	short int selected;
+	if (getHover() != -1) {
+		selected = getHover();
+	}
+	else {
+		selected = static_cast<short int>(difficulty);
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		if (i == selected) {
+			if (getHover() != -1) {
+				selectBoxes[i].select(Mouse::getPosition().x);
+			}
+			else {
+				selectBoxes[i].select();
+			}
+		}
+		else {
+			selectBoxes[i].deselect();
+		}
+		if (selectBoxes[i].getAlpha()) {
+			getWindow_ref().draw(selectBoxes[i]);
+		}
+	}
 }
 
 void GameManager::drawGameOver(){

@@ -15,6 +15,7 @@ Settings::Settings(RenderWindow& window, ManagerManager& manager_ref,SoundManage
 	:Screen(window, manager_ref, "fonts\\Roboto-Light.ttf"),soundManager_ref(_soundManager_ref),leaderBoard_ref(_leaderBoard_ref)
 	,bars {  {100,FloatRect()},{100,FloatRect()} }
 	,prompt(window,getFont())
+	, selectBoxes{ Color::White, Color::White, Color::White, Color::White, Color::White, Color::White }
 {
 
 	if (!textures[0].loadFromFile("images\\unchecked.png")) {
@@ -81,7 +82,13 @@ Settings::Settings(RenderWindow& window, ManagerManager& manager_ref,SoundManage
 	optionBoxes[1].width = optionBoxes[3].width = 450;
 	optionBoxes[4].width = 400;
 	optionBoxes[5].width = 230;
-
+	for (int i = 0; i < 6; i++)
+	{
+		selectBoxes[i].setBox(optionBoxes[i]);
+		if (i) {
+			selectBoxes[i].setAlpha(0);
+		}
+	}
 	for (int i = 0; i < 2; i++)
 	{
 		promptOptionBoxes[i].top = prompt.getTextRect(i).top - 10;
@@ -137,7 +144,7 @@ void Settings::toggleMusic()
 
 void Settings::draw()
 {
-
+	drawSelected();
 	drawTitle();
 	drawSoundEffectOption();
 	drawMusicOption();
@@ -222,6 +229,34 @@ void Settings::setSelectedOption(short int selectedOptionIndex)
 	this->selectedOption = static_cast<SelectedOption>(selectedOptionIndex);
 }
 
+void Settings::drawSelected()
+{
+	short int selected;
+	if (getHover() != -1) {
+		selected = getHover();
+	}
+	else {
+		selected = static_cast<short int>(selectedOption);
+	}
+	for (int i = 0; i < 6; i++)
+	{
+		if (i == selected) {
+			if (getHover() != -1) {
+				selectBoxes[i].select(Mouse::getPosition().x);
+			}
+			else {
+				selectBoxes[i].select();
+			}
+		}
+		else {
+			selectBoxes[i].deselect();
+		}
+		if (selectBoxes[i].getAlpha()) {
+			getWindow_ref().draw(selectBoxes[i]);
+		}
+	}
+}
+
 void Settings::manageInput(Keyboard::Key key)
 {
 	if (adjusting) {
@@ -250,11 +285,13 @@ void Settings::manageInput(Keyboard::Key key)
 	if (key == Keyboard::Up) {
 		options[selectedOptionIndex].setFillColor(getNormalTextColor());
 		setSelectedOption((selectedOptionIndex += 5) %= 6); // goes to previous state in the cycle
+		setHover(-1);
 	}
 	else if (key == Keyboard::Down)
 	{
 		options[selectedOptionIndex].setFillColor(getNormalTextColor());
 		setSelectedOption((selectedOptionIndex += 1) %= 6); // goes to next state in the cycle
+		setHover(-1);
 	}
 	else if (key == Keyboard::Escape) {
 		reset();
@@ -341,6 +378,7 @@ void Settings::manageInput(Mouse::Button button, bool released)
 						}
 						else if (i == 4) {
 							prompting = true;
+							setHover(-1);
 						}
 						else if (i == 5) {
 							reset();
@@ -390,8 +428,10 @@ void Settings::updateMouse()
 				if (optionBoxes[i].contains(Mouse::getPosition())) {
 					setSelectedOption(i);
 					selectedOptionIndex = i;
+					setHover(i);
 					break;
 				}
+				setHover(-1);
 			}
 			options[selectedOptionIndex].setFillColor(getSelectedTextColor());
 		}
