@@ -211,7 +211,7 @@ void CustomOptions::pushChar(char input)
 	}
 	else if (isdigit(input)) {
 		short int amount = input - '0';
-		if (customAmounts[selectedOptionIndex] * 10 + amount < limits_amount[selectedOptionIndex * 2 + 1]) {
+		if (customAmounts[selectedOptionIndex] * 10 + amount <= limits_amount[selectedOptionIndex * 2 + 1]) {
 			customAmounts[selectedOptionIndex] = customAmounts[selectedOptionIndex] * 10 + amount;
 			changed = true;
 		}
