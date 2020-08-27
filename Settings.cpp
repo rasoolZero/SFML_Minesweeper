@@ -78,10 +78,10 @@ Settings::Settings(RenderWindow& window, ManagerManager& manager_ref,SoundManage
 		optionBoxes[i].left = options[i].getGlobalBounds().left - 30;
 		optionBoxes[i].height = options[i].getGlobalBounds().height + 20;
 	}
-	optionBoxes[0].width = optionBoxes[2].width = 350;
-	optionBoxes[1].width = optionBoxes[3].width = 450;
-	optionBoxes[4].width = 400;
-	optionBoxes[5].width = 230;
+	optionBoxes[0].width = optionBoxes[2].width = 360;
+	optionBoxes[1].width = optionBoxes[3].width = 500;
+	optionBoxes[4].width = 440;
+	optionBoxes[5].width = 200;
 	for (int i = 0; i < 6; i++)
 	{
 		selectBoxes[i].setBox(optionBoxes[i]);
@@ -162,7 +162,7 @@ void Settings::drawTitle()
 	title.setCharacterSize(70);
 	title.setFont(getFont());
 	title.setPosition(50, 50);
-	title.setFillColor(Color(120, 120, 120));
+	title.setFillColor(Color(180, 180, 180));
 	getWindow_ref().draw(title);
 }
 
@@ -450,6 +450,7 @@ void Settings::reset()
 {
 	int selectedOptionIndex = static_cast<int>(this->selectedOption);
 	options[selectedOptionIndex].setFillColor(getNormalTextColor());
+	selectBoxes[selectedOptionIndex].setAlpha(0);
 	selectedOption = SelectedOption::soundToggle;
 	selectedOptionIndex = 0;
 	getManager_ref().setState();

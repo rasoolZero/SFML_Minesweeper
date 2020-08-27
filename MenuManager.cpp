@@ -51,7 +51,7 @@ void MenuManager::drawExit()
 void MenuManager::drawTitle(){
     Text text("SFML\nMinesweeper",getFont(),60);
     text.setPosition(50,20);
-    text.setColor(Color(20,20,40));
+    text.setColor(Color(180,180,180));
     getWindow_ref().draw(text);
 }
 

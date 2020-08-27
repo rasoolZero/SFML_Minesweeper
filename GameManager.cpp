@@ -362,6 +362,7 @@ void GameManager::reset(bool isHighScore)
 {
 	int selectedOptionIndex = static_cast<int>(this->difficulty);
 	options[selectedOptionIndex].setFillColor(getNormalTextColor());
+	selectBoxes[selectedOptionIndex].setAlpha(0);
 	difficulty = Difficulty::easy;
 	options[selectedOptionIndex].setCharacterSize(getNormalFontSize());
 	selectedOptionIndex = 0;

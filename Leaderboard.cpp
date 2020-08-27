@@ -44,13 +44,14 @@ Leaderboard::Leaderboard(RenderWindow& _window_ref, ManagerManager& manager_ref)
     {
         optionBoxes[i].top = options[i].getGlobalBounds().top - 10;
         optionBoxes[i].height = options[i].getGlobalBounds().height + 20;
-        optionBoxes[i].left = options[i].getGlobalBounds().left - 10;
         if (i == 3) {
             continue;
         }
-        optionBoxes[i].width = 200;
+        optionBoxes[i].left = i * getWindow_ref().getSize().x / 3;
+        optionBoxes[i].width = getWindow_ref().getSize().x / 3;
     }
     optionBoxes[3].width = 150;
+    optionBoxes[3].top = options[3].getGlobalBounds().top - 10;
     for (int i = 0; i < 3; i++)
     {
         selectBoxes[i].setBox(optionBoxes[i], true);
@@ -85,6 +86,7 @@ void Leaderboard::reset()
 {
     int selectedOptionIndex = static_cast<int>(this->selectedOption);
     options[selectedOptionIndex].setFillColor(getNormalTextColor());
+    selectBoxes[selectedOptionIndex].setAlpha(0);
     selectedOption = Difficulties::Easy;
     selectedOptionIndex = 0;
     options[selectedOptionIndex].setFillColor(getSelectedTextColor());

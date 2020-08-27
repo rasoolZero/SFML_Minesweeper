@@ -32,6 +32,7 @@ void ManagerManager::manage()
 void ManagerManager::setState(State state)
 {
 	this->state = state;
+	screen_ptr[State_to_int()]->updateMouse();
 }
 
 void ManagerManager::checkEvents()

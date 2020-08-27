@@ -31,7 +31,7 @@ Prompt::Prompt(RenderWindow & window_ref,Font & font)
 
 
     promptBox.setSize(Vector2f (promptText.getGlobalBounds().width+10, textRect.height + promptNo.getGlobalBounds().height+50));
-    promptBox.setFillColor(Color(250,250,250,100));
+    promptBox.setFillColor(Color(250,250,250,160));
     promptBox.setOutlineColor(Color::Black);
     promptBox.setOutlineThickness(3);
     promptBox.setPosition(Vector2f ( window_ref.getSize().x/2.0f - promptBox.getSize().x/2.0f , window_ref.getSize().y/2.0f - promptBox.getSize().y/2.0f ) );
