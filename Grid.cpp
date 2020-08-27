@@ -179,25 +179,43 @@ Vector2i Grid::mousePosToIndex(Vector2i & pos){
     return result;
 }
 void Grid::calculateValue(){
-    for(int j=0;j<height;j++){
-        for(int i=0;i<width;i++){
-            int index=indexConverter(i,j);
-            if(cells[index].getValue()==-1)
-                continue;
+    if(bombs*2>=width*height)
+        for(int j=0;j<height;j++){
+            for(int i=0;i<width;i++){
+                int index=indexConverter(i,j);
+                if(cells[index].getValue()==-1)
+                    continue;
 
-            int neighborBombs=0;
-            for(int x=j-1;x<=j+1;x++){
-                for(int k=i-1;k<=i+1;k++){
-                    if( !(k==i && x==j) && x>=0 && x < height && k>=0 && k < width){
-                        int index2=indexConverter(k,x);
-                        if(cells[index2].getValue()==-1)
-                            neighborBombs++;
+                int neighborBombs=0;
+                for(int x=j-1;x<=j+1;x++){
+                    for(int k=i-1;k<=i+1;k++){
+                        if( !(k==i && x==j) && x>=0 && x < height && k>=0 && k < width){
+                            int index2=indexConverter(k,x);
+                            if(cells[index2].getValue()==-1)
+                                neighborBombs++;
+                        }
+                    }
+                }
+                cells[index].setValue(neighborBombs);
+            }
+        }
+    else
+        for(int j=0;j<height;j++){
+            for(int i=0;i<width;i++){
+                int index=indexConverter(i,j);
+                if(cells[index].getValue()!=-1)
+                    continue;
+                for(int x=j-1;x<=j+1;x++){
+                    for(int k=i-1;k<=i+1;k++){
+                        if( !(k==i && x==j) && x>=0 && x < height && k>=0 && k < width){
+                            int index2=indexConverter(k,x);
+                            if(cells[index2].getValue()!=-1)
+                                cells[index2].setValue(cells[index2].getValue()+1);
+                        }
                     }
                 }
             }
-            cells[index].setValue(neighborBombs);
         }
-    }
 }
 
 int Grid::indexConverter(Vector2i index){
