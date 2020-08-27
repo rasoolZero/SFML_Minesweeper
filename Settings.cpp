@@ -176,7 +176,7 @@ void Settings::drawSoundEffectOption()
 void Settings::drawSoundEffectVolume(){
 
     Text text(to_string(soundEffectVolume),getFont(),getNormalFontSize() - 10);
-    text.setFillColor(Color::Black);
+    text.setFillColor(getNormalTextColor());
 	short int initial_pos = getWindow_ref().getSize().y / 2 - 160;
     text.setPosition( 600, initial_pos + 80 + 160 * (1 / 2) );
     this->getWindow_ref().draw(text);
@@ -192,7 +192,7 @@ void Settings::drawMusicOption()
 void Settings::drawMusicVolume(){
 
     Text text(to_string(musicVolume),getFont(),getNormalFontSize() - 10);
-    text.setFillColor(Color::Black);
+    text.setFillColor(getNormalTextColor());
 	short int initial_pos = getWindow_ref().getSize().y / 2 - 160;
     text.setPosition( 600, initial_pos + 80 + 160 * (3 / 2) );
     this->getWindow_ref().draw(text);

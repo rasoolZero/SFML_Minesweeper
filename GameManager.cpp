@@ -68,7 +68,7 @@ GameManager::GameManager(RenderWindow& window_ref, ManagerManager& manager_ref, 
 	back.setCharacterSize(30);
 	back.setString("[Esc] back");
 	back.setPosition( 36 ,6);
-	back.setColor(getNormalTextColor());
+	back.setColor(Color::Black);
     arrow.setPosition( 50 + back.getGlobalBounds().width ,6);
     arrow.setTexture(&arrowTexture);
 }
@@ -288,7 +288,7 @@ void GameManager::updateMouse()
         if( static_cast<IntRect>(back.getGlobalBounds()).contains(Mouse::getPosition(getWindow_ref()) ))
             back.setFillColor(getSelectedTextColor());
         else
-            back.setFillColor(getNormalTextColor());
+            back.setFillColor(Color::Black);
 
 
         if( static_cast<IntRect>(arrow.getGlobalBounds()).contains(Mouse::getPosition(getWindow_ref()) ))

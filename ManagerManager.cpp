@@ -74,8 +74,6 @@ void ManagerManager::checkEvents()
 		}
 
 		if (isFocused) {
-			//window_ptr->clear(Color(235, 235, 250));
-			//window_ptr->clear(Color(255, 200, 0));
 			window_ptr->clear(Color(15, 15, 15));
 			update();
 			window_ptr->display();

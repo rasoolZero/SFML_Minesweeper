@@ -96,7 +96,7 @@ void DotZero::drawSelected()
 }
 
 void DotZero::draw(){
-    getWindow_ref().clear(Color(0,0,0,200));
+    getWindow_ref().clear(Color(15,15,15,200));
     for(int i=0;i<3;i++)
         getWindow_ref().draw(glitch[i]);
     getWindow_ref().draw(text);
