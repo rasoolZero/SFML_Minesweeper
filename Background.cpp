@@ -23,10 +23,13 @@ Background::Background(RenderWindow & window_ref):sprites{2,4,7,11,20}
         shapes[i].setSize(Vector2f(size,size));
         int offset;
         if(isFlag[i])
-            offset=16;
+            offset=15;
         else
             offset=25;
-        shapes[i].setPosition( window_ref.getSize().x - 185*(i+1) + ((rand()%40)-20) , window_ref.getSize().y-size+offset);
+        shapes[i].setOrigin(size/2,size-offset);
+        float factor=(((rand()%400)+700)/1000.0f);
+        shapes[i].scale(factor,factor);
+        shapes[i].setPosition( window_ref.getSize().x - 150*(i+1) + ((rand()%60)-30) , window_ref.getSize().y);
         if(!isFlag[i])
             shapes[i].setTexture(&bombT);
     }
