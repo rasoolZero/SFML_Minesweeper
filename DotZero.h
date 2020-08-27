@@ -17,8 +17,11 @@ class DotZero : public Screen
     protected:
 
     private:
+
+        Clock timer;
         int alpha=0;
         bool shown=false;
+        bool full=false;
         Text text;
         Text glitch[3];
         void draw();

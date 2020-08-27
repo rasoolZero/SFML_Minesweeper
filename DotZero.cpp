@@ -17,7 +17,6 @@ DotZero::DotZero(RenderWindow& window_ref, ManagerManager& manager_ref) : Screen
     glitch[1].setColor(Color::Green);
     glitch[2].setColor(Color::Blue);
 
-    text.setStyle(Text::Bold);
 
     FloatRect textRect = text.getLocalBounds();
     text.setOrigin(textRect.left + textRect.width/2.0f,
@@ -45,13 +44,23 @@ void DotZero::update(){
         alpha-=2;
     else
         alpha+=2;
-    if(alpha>=254)
-        shown=true;
+    if(alpha<0)
+        alpha=0;
+    if(alpha>=254){
+        if(!full){
+            timer.restart();
+            full=true;
+        }
+        alpha=255;
+        if(timer.getElapsedTime().asMilliseconds()>=700)
+            shown=true;
+
+    }
     if(shown && alpha <= 0)
         getManager_ref().setState();
-    text.setFillColor(Color(255,255,255,alpha));
-    if(alpha>=100)
-        if(!(rand() % 3 ))
+    text.setFillColor(Color(230,230,230,alpha));
+    if(alpha>=150)
+        if(!(rand() % 12 ))
             text.setPosition(Vector2f(getWindow_ref().getSize().x/2.0f + ((rand()%10)-5) ,getWindow_ref().getSize().y/2.0f + ((rand()%6)-3)));
     else
         text.setPosition(Vector2f(getWindow_ref().getSize().x/2.0f ,getWindow_ref().getSize().y/2.0f ));
@@ -60,7 +69,8 @@ void DotZero::update(){
     for(int i=0;i<3;i++){
         Color c=glitch[i].getColor();
         if(alpha>=100){
-            glitch[i].setPosition(Vector2f(getWindow_ref().getSize().x/2.0f + ((rand()%20)-10) ,getWindow_ref().getSize().y/2.0f + ((rand()%10)-5)));
+            if(rand()%2)
+                glitch[i].setPosition(Vector2f(getWindow_ref().getSize().x/2.0f + ((rand()%20)-10) ,getWindow_ref().getSize().y/2.0f + ((rand()%10)-5)));
             if(rand()%2)
                 glitch[i].setCharacterSize(getNormalFontSize());
             else
