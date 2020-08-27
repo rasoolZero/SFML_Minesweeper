@@ -15,8 +15,6 @@ class Background : public Drawable
 
     private:
         RectangleShape shapes[5];
-        bool isFlag[5];
-        Texture bombT;
         SpriteSheet sprites[5];
 };
 
