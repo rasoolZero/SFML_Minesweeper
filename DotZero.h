@@ -20,6 +20,7 @@ class DotZero : public Screen
         int alpha=0;
         bool shown=false;
         Text text;
+        Text glitch[3];
         void draw();
 };
 
