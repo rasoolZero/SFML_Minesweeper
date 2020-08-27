@@ -11,7 +11,7 @@ CustomOptions::CustomOptions(RenderWindow& window_ref, Font& font)
 	customAmounts[2] = 40;
 	for (int i = 0; i < 3; i++)
 	{
-		descriptions[i].setFillColor(Color(10, 10, 10));
+		descriptions[i].setFillColor(Color(180, 180, 180));
 		descriptions[i].setCharacterSize(36);
 		descriptions[i].setFont(font);
 
@@ -25,7 +25,7 @@ CustomOptions::CustomOptions(RenderWindow& window_ref, Font& font)
 		customTexts[i].setCharacterSize(34);
 		customTexts[i].setFont(font);
 		customTexts[i].setOrigin(customTexts[i].getLocalBounds().width / 2, 0);
-		customTexts[i].setFillColor(Color::Black);
+		customTexts[i].setFillColor(Color(220, 220, 220));
 	}
 	Vector2u windowSize = window_ref.getSize();
 	limits_amount[0] = limits_amount[2] = 5;
@@ -43,12 +43,12 @@ CustomOptions::CustomOptions(RenderWindow& window_ref, Font& font)
 		}
 		limits[i].setCharacterSize(32);
 		limits[i].setFont(font);
-		limits[i].setFillColor(Color(25, 25, 25));
+		limits[i].setFillColor(Color(190, 190, 190));
 	}
 	for (int i = 0; i < 2; i++)
 	{
 		custom_mouseBoxes[i].setFont(font);
-		custom_mouseBoxes[i].setFillColor(Color::Black);
+		custom_mouseBoxes[i].setFillColor(Color(220, 220, 220));
 		custom_mouseBoxes[i].setCharacterSize(27);
 	}
 	custom_mouseBoxes[0].setString("[Esc/RMB] back");
@@ -239,7 +239,7 @@ void CustomOptions::updateMouse()
 			return;
 		}
 		else {
-			custom_mouseBoxes[i].setFillColor(Color::Black);
+			custom_mouseBoxes[i].setFillColor(Color(220, 220, 220));
 		}
 	}
 	for (int i = 0; i < 6; i++)
@@ -264,6 +264,7 @@ void CustomOptions::reset()
 	for (int i = 0; i < 3; i++)
 	{
 		customTexts[i].setString(std::to_string(customAmounts[i]));
+		customTexts[i].setOrigin(customTexts[i].getLocalBounds().width / 2, 0);
 	}
 }
 

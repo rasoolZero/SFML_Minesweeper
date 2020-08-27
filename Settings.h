@@ -7,6 +7,7 @@
 #include "Prompt.h"
 #include "SoundManager.h"
 #include "Leaderboard.h"
+#include "SelectBox.h"
 
 class ManagerManager;
 class Settings : public Screen
@@ -16,6 +17,7 @@ private:
 	SelectedOption selectedOption = SelectedOption::soundToggle;
 	Text options[6];
 	IntRect optionBoxes[6];
+	SelectBox selectBoxes[6];
 	Texture textures[2];
 	CheckBox toggles[2];
 	AdjustBar bars[2];
@@ -54,6 +56,8 @@ private:
 
 	void setSelectedOption(SelectedOption selectedOption);
 	void setSelectedOption(short int selectedOptionIndex);
+protected:
+	virtual void drawSelected(); //from screen
 public:
 
 	SelectedOption getSelectedOption() { return this->selectedOption; }

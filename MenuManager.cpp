@@ -18,6 +18,7 @@ void MenuManager::draw()
 			}
 		}
 	}
+	drawSelected();
 	drawPlay();
 	drawLeaderBoard();
 	drawSettings();
@@ -50,8 +51,36 @@ void MenuManager::drawExit()
 void MenuManager::drawTitle(){
     Text text("SFML\nMinesweeper",getFont(),60);
     text.setPosition(50,20);
-    text.setColor(Color(20,20,40));
+    text.setColor(Color(180,180,180));
     getWindow_ref().draw(text);
+}
+
+void MenuManager::drawSelected()
+{
+	short int selected;
+	if (getHover() != -1) {
+		selected = getHover();
+	}
+	else {
+		selected = static_cast<short int>(selectedOption);
+	}
+	for (int i = 0; i < 4; i++)
+	{
+		if (i == selected) {
+			if (getHover() != -1) {
+				selectBoxes[i].select(Mouse::getPosition().x);
+			}
+			else {
+				selectBoxes[i].select();
+			}
+		}
+		else {
+			selectBoxes[i].deselect();
+		}
+		if (selectBoxes[i].getAlpha()) {
+			getWindow_ref().draw(selectBoxes[i]);
+		}
+	}
 }
 
 void MenuManager::setSelectedOption(SelectedOption selectedOption)
@@ -91,11 +120,13 @@ void MenuManager::manageInput(Keyboard::Key key)
 		if (key == Keyboard::Up) {
 			options[selectedOptionIndex].setFillColor(getNormalTextColor());
 			setSelectedOption( (selectedOptionIndex += 3) %= 4 ); // goes to previous state in the cycle
+			setHover(-1);
 		}
 		else if (key == Keyboard::Down)
 		{
 			options[selectedOptionIndex].setFillColor(getNormalTextColor());
 			setSelectedOption( (selectedOptionIndex += 1) %= 4 ); // goes to next state in the cycle
+			setHover(-1);
 		}
 		else if (key == Keyboard::Enter || key == Keyboard::Space) {
             if(selectedOption == SelectedOption::exit)
@@ -118,8 +149,13 @@ void MenuManager::manageInput(Mouse::Button button, bool released)
 			for (int i = 0; i < 4; i++)
 			{
 				if (optionBoxes[i].contains(Mouse::getPosition())) {
-					if (selectedOption == SelectedOption::exit)
+					if (i == static_cast<int>(SelectedOption::exit)) {
+						setHover(-1);
 						prompting = true;
+					}
+					options[static_cast<int>(selectedOption)].setFillColor(getNormalTextColor());
+					setSelectedOption(i);
+					options[i].setFillColor(getSelectedTextColor());
 					getManager_ref().setState(static_cast<ManagerManager::State>(i));
 					break;
 				}
@@ -151,8 +187,10 @@ void MenuManager::updateMouse()
 			if (optionBoxes[i].contains(Mouse::getPosition())) {
 				setSelectedOption(i);
 				selectedOptionIndex = i;
+				setHover(i);
 				break;
 			}
+			setHover(-1);
 		}
 		options[selectedOptionIndex].setFillColor(getSelectedTextColor());
 	}
@@ -174,6 +212,7 @@ void MenuManager::update()
 MenuManager::MenuManager(RenderWindow& window, ManagerManager& manager_ref)
 	:Screen(window, manager_ref, "fonts\\Roboto-Light.ttf", 40),
 	prompt(window,getFont())
+	,selectBoxes{Color::White, Color::White, Color::White, Color::White }
 {
 
 	options[0].setString("Play");
@@ -194,8 +233,15 @@ MenuManager::MenuManager(RenderWindow& window, ManagerManager& manager_ref)
 	{
 		optionBoxes[i].top = options[i].getGlobalBounds().top - 10;
 		optionBoxes[i].left = options[i].getGlobalBounds().left - 30;
-		optionBoxes[i].width = 250;
+		optionBoxes[i].width = 300;
 		optionBoxes[i].height = options[i].getGlobalBounds().height + 30;
+	}
+	for (int i = 0; i < 4; i++)
+	{
+		selectBoxes[i].setBox(optionBoxes[i]);
+		if (i) {
+			selectBoxes[i].setAlpha(0);
+		}
 	}
 	for (int i = 0; i < 2; i++)
 	{

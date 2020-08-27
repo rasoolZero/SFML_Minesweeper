@@ -8,6 +8,7 @@ using namespace sf;
 
 Leaderboard::Leaderboard(RenderWindow& _window_ref, ManagerManager& manager_ref)
     : Screen(_window_ref, manager_ref, "fonts\\Roboto-Light.ttf", 24)
+    , selectBoxes{ Color::White, Color::White, Color::White}
 {
 
     ifstream f(fileName);
@@ -43,13 +44,21 @@ Leaderboard::Leaderboard(RenderWindow& _window_ref, ManagerManager& manager_ref)
     {
         optionBoxes[i].top = options[i].getGlobalBounds().top - 10;
         optionBoxes[i].height = options[i].getGlobalBounds().height + 20;
-        optionBoxes[i].left = options[i].getGlobalBounds().left - 10;
         if (i == 3) {
             continue;
         }
-        optionBoxes[i].width = 200;
+        optionBoxes[i].left = i * getWindow_ref().getSize().x / 3;
+        optionBoxes[i].width = getWindow_ref().getSize().x / 3;
     }
     optionBoxes[3].width = 150;
+    optionBoxes[3].top = options[3].getGlobalBounds().top - 10;
+    for (int i = 0; i < 3; i++)
+    {
+        selectBoxes[i].setBox(optionBoxes[i], true);
+        if (i) {
+            selectBoxes[i].setAlpha(0);
+        }
+    }
 }
 void Leaderboard::init(){
     for(int j=0;j<3;j++)
@@ -77,6 +86,7 @@ void Leaderboard::reset()
 {
     int selectedOptionIndex = static_cast<int>(this->selectedOption);
     options[selectedOptionIndex].setFillColor(getNormalTextColor());
+    selectBoxes[selectedOptionIndex].setAlpha(0);
     selectedOption = Difficulties::Easy;
     selectedOptionIndex = 0;
     options[selectedOptionIndex].setFillColor(getSelectedTextColor());
@@ -121,8 +131,6 @@ void Leaderboard::update(){
 }
 
 void Leaderboard::draw(){
-    getWindow_ref().clear(Color(235,235,250));
-
 	for (int i = 0; i < 3; i++)
 	{
 		short int currentSize = options[i].getCharacterSize();
@@ -137,7 +145,7 @@ void Leaderboard::draw(){
 			}
 		}
 	}
-
+    drawSelected();
     drawOptions();
     drawScores();
 }
@@ -149,11 +157,13 @@ void Leaderboard::manageInput(Keyboard::Key key) {
 		if (key == Keyboard::Left) {
 			options[selectedOptionIndex].setFillColor(getNormalTextColor());
 			setSelectedOption( (selectedOptionIndex += 2) %= 3 ); // goes to previous state in the cycle
+            setHover(-1);
 		}
 		else if (key == Keyboard::Right)
 		{
 			options[selectedOptionIndex].setFillColor(getNormalTextColor());
 			setSelectedOption( (selectedOptionIndex += 1) %= 3 ); // goes to next state in the cycle
+            setHover(-1);
 		}
         else if (key == Keyboard::Escape) {
             reset();
@@ -184,8 +194,10 @@ void Leaderboard::updateMouse()
         if (optionBoxes[i].contains(Mouse::getPosition())) {
             setSelectedOption(i);
             selectedOptionIndex = i;
+            setHover(i);
             break;
         }
+        setHover(-1);
     }
     options[selectedOptionIndex].setFillColor(getSelectedTextColor());
     if (optionBoxes[3].contains(Mouse::getPosition())) {
@@ -202,10 +214,38 @@ void Leaderboard::drawOptions(){
     }
 }
 
+void Leaderboard::drawSelected()
+{
+    short int selected;
+    if (getHover() != -1) {
+        selected = getHover();
+    }
+    else {
+        selected = static_cast<short int>(selectedOption);
+    }
+    for (int i = 0; i < 3; i++)
+    {
+        if (i == selected) {
+            if (getHover() != -1) {
+                selectBoxes[i].select(Mouse::getPosition().x);
+            }
+            else {
+                selectBoxes[i].select();
+            }
+        }
+        else {
+            selectBoxes[i].deselect();
+        }
+        if (selectBoxes[i].getAlpha()) {
+            getWindow_ref().draw(selectBoxes[i]);
+        }
+    }
+}
+
 void Leaderboard::drawScores(){
     int diffIndex=static_cast<int>(selectedOption);
     Text text;
-    text.setFillColor(Color::Black);
+    text.setFillColor(getNormalTextColor());
     text.setFont(font);
     text.setCharacterSize(getNormalFontSize());
     for(int i=0;i<10;i++){

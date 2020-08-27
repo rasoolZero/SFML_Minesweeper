@@ -2,6 +2,7 @@
 #define MenuManager_h
 #include "Screen.h"
 #include "Prompt.h"
+#include "SelectBox.h"
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -15,6 +16,7 @@ private:
 	short int selectedFontSize = 48;
 	Text options[4];
 	IntRect optionBoxes[4];
+	SelectBox selectBoxes[4];
 
 	enum class SelectedOption { play, settings, leaderboard, exit };
 	SelectedOption selectedOption = SelectedOption::play;
@@ -32,6 +34,8 @@ private:
 
 	void setSelectedOption(SelectedOption selectedOption);
 	void setSelectedOption(short int selectedOptionIndex);
+protected:
+	virtual void drawSelected(); //from screen
 public:
 	SelectedOption getSelectedOption() { return this->selectedOption; }
 

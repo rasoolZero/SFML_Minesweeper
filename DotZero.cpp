@@ -44,6 +44,11 @@ void DotZero::updateMouse()
 
 }
 
+void DotZero::drawSelected()
+{
+
+}
+
 void DotZero::draw(){
     getWindow_ref().draw(text);
 }

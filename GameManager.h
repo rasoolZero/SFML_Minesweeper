@@ -7,7 +7,7 @@
 #include "SoundManager.h"
 #include "CustomOptions.h"
 #include "TextBox.h"
-
+#include "SelectBox.h"
 class ManagerManager;
 
 class GameManager : public Screen
@@ -25,7 +25,8 @@ public:
 	void pushChar(char input);
 	void startTimer();
 	void stopTimer();
-
+protected:
+	virtual void drawSelected(); //from screen
 private:
 	State state = State::difficultySelection;
 
@@ -33,6 +34,7 @@ private:
 	Leaderboard& leaderboard_ref;
 	Text options[5];
 	IntRect optionBoxes[5];
+	SelectBox selectBoxes[5];
 	short int selectedFontSize = 48;
 
 	enum Difficulty { easy, medium, hard, custom};
