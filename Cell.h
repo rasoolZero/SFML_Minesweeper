@@ -9,7 +9,7 @@ class Cell : public Drawable
 {
 
     public:
-        Cell(int i,int j,float size,Vector2f _offset,int seed,int value=0);
+        Cell(int i,int j,float size,Vector2f _offset,int value=0);
         enum CellState{Hidden,Revealed,Flagged};
         void setValue(int value){this->value=value;}
         int getValue(){return value;}

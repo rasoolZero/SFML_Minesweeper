@@ -11,6 +11,7 @@
 using namespace sf;
 
 int main() {
+    srand(time(0));
     try{
         RenderWindow window(VideoMode::getDesktopMode(), "SFML_Minesweeper", Style::Fullscreen);
         Cursor cursor;

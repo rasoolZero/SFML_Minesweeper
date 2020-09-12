@@ -4,7 +4,6 @@ using namespace sf;
 
 DotZero::DotZero(RenderWindow& window_ref, ManagerManager& manager_ref) : Screen(window_ref,manager_ref,"fonts\\Roboto-Light.ttf",50)
 {
-    srand(time(0));
 
     text = Text("DotZero",Screen::getFont(),getNormalFontSize());
     for(int i=0;i<3;i++){

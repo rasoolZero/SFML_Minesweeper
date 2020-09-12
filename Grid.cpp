@@ -10,7 +10,6 @@ Grid::Grid(RenderWindow & w_ref,SoundManager & _soundManager,GameManager & _game
 : window_ref(w_ref) , soundManager(_soundManager),gameManager_ref(_gameManager_ref)
 {
     bombs=bombNumber;
-    srand(time(nullptr));
     state=GridState::Playing;
     firstClick=true;
     topMargin=48;
@@ -58,7 +57,6 @@ void Grid::setupGrid(int width, int height, int bombNumber)
 {
 
     bombs=bombNumber;
-    srand(time(nullptr));
     state = GridState::Playing;
     firstClick = true;
     topMargin = 48;
@@ -75,7 +73,7 @@ void Grid::setupGrid(int width, int height, int bombNumber)
     // bomb based on a fixed amount of bombs and a random index
     for (int j = 0; j < height; j++)
         for (int i = 0; i < width; i++)
-            cells.push_back(Cell(i, j, maxSize, topLeftCorner,indexConverter(i,j)));
+            cells.push_back(Cell(i, j, maxSize, topLeftCorner));
 
     int bombsPlaced = 0;
     while (bombsPlaced != bombNumber) {

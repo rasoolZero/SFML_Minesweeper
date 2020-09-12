@@ -8,7 +8,7 @@ using namespace sf;
 class SpriteSheet
 {
     public:
-        SpriteSheet(int seed);
+        SpriteSheet();
         Texture* getFlagTexture();
         Texture* getBombTexture();
 
@@ -29,7 +29,6 @@ class SpriteSheet
         int bombFramesPassed=bombFrames;
 
         int flagFramesRestart=0;
-        unsigned int seed;
 };
 
 #endif // SPRITESHEET_H

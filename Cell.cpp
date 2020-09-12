@@ -7,7 +7,7 @@ Texture Cell::revealedT;
 std::vector<Texture> Cell::numbers;
 bool Cell::loaded;
 
-Cell::Cell(int i,int j,float size,Vector2f _offset,int seed,int value):sprites(seed)
+Cell::Cell(int i,int j,float size,Vector2f _offset,int value)
 {
     if(!loaded){
         if(!cellBackground.loadFromFile("images/cell.png"))

@@ -1,10 +1,9 @@
 #include "Background.h"
 using namespace sf;
 
-Background::Background(RenderWindow & window_ref):sprites{2,4,7,11,20}
+Background::Background(RenderWindow & window_ref)
 {
     int size=200;
-    srand(time(0));
     for(int i=0;i<5;i++){
         shapes[i].setSize(Vector2f(size,size));
         int offset=15;

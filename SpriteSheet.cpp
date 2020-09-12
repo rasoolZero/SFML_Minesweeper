@@ -5,10 +5,8 @@ vector<Texture> SpriteSheet::flags;
 vector<Texture> SpriteSheet::bombs;
 bool SpriteSheet::loaded=false;
 
-SpriteSheet::SpriteSheet(int seed)
+SpriteSheet::SpriteSheet()
 {
-    this->seed=seed+time(0);
-    srand(seed);
     int multiplier = rand()%5+1;
     flagFramesRestart=60*multiplier;
     if(!loaded){
