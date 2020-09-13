@@ -98,12 +98,12 @@ void CustomOptions::draw()
 		Color currentColor = textBoxes[i].getOutlineColor();
 		if (i == selectedOptionIndex) {
 			if (currentColor != selectedRectColor) {
-				textBoxes[i].setOutlineColor(currentColor + Color(10, 0, 0, 0));
+				textBoxes[i].setOutlineColor(currentColor + Color(10, 5, 5, 0));
 			}
 		}
 		else {
 			if (currentColor != normalRectColor) {
-				textBoxes[i].setOutlineColor(currentColor - Color(10, 0, 0, 0));
+				textBoxes[i].setOutlineColor(currentColor - Color(10, 5, 5, 0));
 			}
 		}
 	}
@@ -255,7 +255,12 @@ void CustomOptions::updateMouse()
 
 void CustomOptions::reset()
 {
+	short int selectedOptionIndex = static_cast<short int>(selectedOption);
+	if (selectedOptionIndex) {
+		textBoxes[selectedOptionIndex].setOutlineColor(normalRectColor);
+	}
 	setSelectedOption(0);
+	textBoxes[selectedOptionIndex].setOutlineColor(normalRectColor);
 	customAmounts[0] = 16;
 	customAmounts[1] = 16;
 	customAmounts[2] = 40;

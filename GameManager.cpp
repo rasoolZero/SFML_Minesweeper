@@ -193,6 +193,7 @@ void GameManager::manageInput(Keyboard::Key key)
 			if (difficulty == Difficulty::custom) {
 				setHover(-1);
 				state = State::customSelection;
+				updateMouse();
 			}
 			else {
 				startGame();
@@ -234,6 +235,7 @@ void GameManager::manageInput(Mouse::Button button, bool released)
 						if (i == 3) { //custom
 							state = State::customSelection;
 							setHover(-1);
+							updateMouse();
 						}
 						else {
 							startGame();
@@ -404,6 +406,7 @@ void GameManager::startGame()
 		soundManager_ref.stopAll();
 		soundManager_ref.play(SoundManager::GameMusic);
 	}
+	updateMouse();
 }
 
 void GameManager::stopTimer(){

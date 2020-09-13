@@ -266,17 +266,19 @@ void Settings::manageInput(Keyboard::Key key)
     if(prompting){
         if(key==Keyboard::Right || key==Keyboard::Left)
             prompt.changeOption();
-        if(key==Keyboard::Space || key==Keyboard::Enter){
+        else if(key==Keyboard::Space || key==Keyboard::Enter){
             if(prompt.getState()){
                 leaderBoard_ref.resetScores();
                 soundManager_ref.play(SoundManager::Reveal);
 
             }
             prompting=false;
+			updateMouse();
         }
-        if(key==Keyboard::Escape)
+		else if (key == Keyboard::Escape) {
             prompting=false;
-
+			updateMouse();
+		}
         return;
     }
 
@@ -404,6 +406,7 @@ void Settings::manageInput(Mouse::Button button, bool released)
 							soundManager_ref.play(SoundManager::Reveal);
 						}
 						prompting = false;
+						updateMouse();
 					}
 				}
 			}

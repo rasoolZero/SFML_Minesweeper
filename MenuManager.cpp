@@ -105,11 +105,13 @@ void MenuManager::manageInput(Keyboard::Key key)
 			else {
                 prompting=false;
 				prompt.setState(0);
+				updateMouse();
 			}
         }
 		if (key == Keyboard::Escape) {
             prompting=false;
 			prompt.setState(0);
+			updateMouse();
 		}
         return;
     }
@@ -129,12 +131,16 @@ void MenuManager::manageInput(Keyboard::Key key)
 			setHover(-1);
 		}
 		else if (key == Keyboard::Enter || key == Keyboard::Space) {
-            if(selectedOption == SelectedOption::exit)
-                prompting=true;
+			if (selectedOption == SelectedOption::exit) {
+                prompting = true;
+				setHover(-1);
+			}
 			getManager_ref().setState(static_cast<ManagerManager::State>(this->selectedOption));
 		}
-		else if(key == Keyboard::Escape)
+		else if (key == Keyboard::Escape) {
             prompting=true;
+			setHover(-1);
+		}
 		options[selectedOptionIndex].setFillColor(getSelectedTextColor());
 	}
 }
@@ -170,6 +176,7 @@ void MenuManager::manageInput(Mouse::Button button, bool released)
 					}
 					else {
 						prompting = false;
+						updateMouse();
 					}
 				}
 			}
